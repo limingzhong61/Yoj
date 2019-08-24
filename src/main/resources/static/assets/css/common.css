@@ -1,0 +1,9 @@
+@charset "UTF-8";
+/* ====== top bar =========*/
+.fixed-top .navbar-nav-svg {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-top;
+}
+/* ====== top bar =========*/
