@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/problem")
+@RequestMapping("/p")
 public class ProblemController {
 
     //@ResponseBody

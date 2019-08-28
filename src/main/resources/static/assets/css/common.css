@@ -7,3 +7,7 @@
     vertical-align: text-top;
 }
 /* ====== top bar =========*/
+
+body{
+	font-size: 0.95rem;
+}

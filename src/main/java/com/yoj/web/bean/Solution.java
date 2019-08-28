@@ -1,9 +1,59 @@
 package com.yoj.web.bean;
 
+import java.util.List;
+
+import com.yoj.judge.bean.TestResult;
+
 //@Getter
 //@Setter
 public class Solution {
-    public Integer getSolutionId() {
+	private Integer solutionId;
+
+	private Integer problemId;
+
+	private Integer userId;
+
+	private String language;
+
+	private String code;
+
+	private String result;
+    
+	private Integer time;
+    
+	private Integer memory;
+	
+	private String errorMessage;
+	
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+    
+    private List<TestResult> testResults;
+    
+	
+    public Integer getTime() {
+		return time;
+	}
+
+	public void setTime(Integer time) {
+		this.time = time;
+	}
+
+	public Integer getMemory() {
+		return memory;
+	}
+
+	public void setMemory(Integer memory) {
+		this.memory = memory;
+	}
+
+	public Integer getSolutionId() {
 		return solutionId;
 	}
 
@@ -51,16 +101,13 @@ public class Solution {
 		this.result = result;
 	}
 
-	public Integer solutionId;
+	
+	public List<TestResult> getTestResults() {
+		return testResults;
+	}
 
-    public Integer problemId;
-
-    public Integer userId;
-
-    public String language;
-
-    public String code;
-
-    public String result;
+	public void setTestResults(List<TestResult> testResults) {
+		this.testResults = testResults;
+	}
 
 }

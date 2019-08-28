@@ -10,7 +10,6 @@ import java.util.List;
 import com.alibaba.fastjson.JSONArray;
 //import com.alibaba.fastjson.JSONArray;
 import com.yoj.judge.bean.ExecMessage;
-import com.yoj.judge.bean.JudgeResult;
 import com.yoj.judge.bean.TestResult;
 import com.yoj.judge.utils.ExecutorUtil;
 import com.yoj.web.bean.Solution;
@@ -18,8 +17,7 @@ import com.yoj.web.bean.User;
 
 public class Judge {
 
-	public static JudgeResult judge(Solution solution) {
-		JudgeResult result = new JudgeResult();
+	public static void judge(Solution solution) {
 //    	String path = "/opt" + "/" + task.getSubmitId();
 		// opt authority not enough to normal user;
 		String path = "/tmp" + "/" + 1;
@@ -29,14 +27,12 @@ public class Judge {
 		file.mkdirs();
 		try {
 //			createFile(task.getCompilerId(), path, task.getSource());
-			createFile(1, path, solution.code);
+			createFile(1, path, solution.getCode());
 		} catch (Exception e) {
 			e.printStackTrace();
-//			result.setStatus(8);
-			result.setErrorMessage("system exception:create file fail");
+			solution.setErrorMessage("system exception:create file fail");
 			System.out.println("create file fail");
 			ExecutorUtil.exec("rm -rf " + path);
-			return result;
 		}
 		// compile the source
 //		String message = complie(task.getCompilerId(), path);
@@ -44,27 +40,25 @@ public class Judge {
 //		if (message != null && task.getCompilerId() != 4) {
 		if (message != null) {
 //			result.setStatus(7);
-			result.setErrorMessage(message);
+			solution.setErrorMessage(message);
 			System.out.println(message);
 			ExecutorUtil.exec("rm -rf " + path);
 			System.out.println("compile error");
-			return result;
 		}
 		// chmod -R 755 path
 		ExecutorUtil.exec("chmod -R 755 " + path);
 		// judge
 //		String process = process(task.getCompilerId(), path);
-		String process = process(1, path);
+//		String process = process(1, path);
 //		String judge_data = PropertiesUtil.StringValue("judge_data") + "/" + task.getProblemId();
 //		String cmd = "python " + PropertiesUtil.StringValue("judge_script") + " " + process + " " + judge_data + " "
 //				+ path + " " + task.getTimeLimit() + " " + task.getMemoryLimit();
 		String cmd = "python /home/nicolas/Lo-runner-master/demo/test.py " + path
 				+ "/main.c /home/nicolas/Lo-runner-master/demo/testdata 3";
-		parseToResult(cmd, result);
+		parseToResult(cmd, solution);
 		ExecutorUtil.exec("rm -rf " + path);
 //		results.add(result);
-		System.out.println(result);
-		return result;
+		System.out.println(solution);
 	}
 
 	private static String complie(int compilerId, String path) {
@@ -120,27 +114,27 @@ public class Judge {
 		output.close();
 	}
 
-	private static String process(int compileId, String path) {
-		switch (compileId) {
-		case 1:
-			return path + "/main";
-		case 2:
-			return path + "/main";
-		case 3:
-			return "javawzy-classpathwzy" + path + "wzyMain";
-		case 4:
-			return path + "/main";
-//		case 5:
-//			return "python3wzy" + path + "/__pycache__/" + PropertiesUtil.StringValue("python_cacheName");
-		}
-		return null;
-	}
+//	private static String process(int compileId, String path) {
+//		switch (compileId) {
+//		case 1:
+//			return path + "/main";
+//		case 2:
+//			return path + "/main";
+//		case 3:
+//			return "javawzy-classpathwzy" + path + "wzyMain";
+//		case 4:
+//			return path + "/main";
+////		case 5:
+////			return "python3wzy" + path + "/__pycache__/" + PropertiesUtil.StringValue("python_cacheName");
+//		}
+//		return null;
+//	}
 
-	private static void parseToResult(String cmd, JudgeResult result) {
+	private static void parseToResult(String cmd, Solution solution) {
 		ExecMessage exec = ExecutorUtil.exec(cmd);
 		if (exec.getError() != null) {
-			result.setErrorMessage(exec.getError());
-			System.out.println("=====error====" + result.getSubmitId() + ":" + exec.getError());
+			solution.setErrorMessage(exec.getError());
+			System.out.println("=====error====" + solution.getSolutionId() + ":" + exec.getError());
 			// log.error("=====error====" + result.getSubmitId() + ":" + exec.getError());
 		} else {
 //			Stdout out = JSON.parseObject(exec.getStdout(), Stdout.class);
@@ -157,12 +151,24 @@ public class Judge {
 				test.setResult(out.getResult());
 				test.setTimeUsed(out.getTimeUsed());
 				test.setMemoryUsed(out.getMemoryUsed());
+//				===============         not set errot level         ==============
+				if(!"Accepted".equals(test.getResult())) {
+					solution.setResult(test.getResult());
+					continue;
+				}
 				tests.add(test);
 				timeUsed = Math.max(timeUsed, test.getTimeUsed());
 				memoryUsed = Math.max(memoryUsed, test.getMemoryUsed());
+
 			}
 			
-			result.setTestResults(tests);
+			//null : not error
+			if(solution.getResult() == null) {
+				solution.setResult("Accepted");
+			}
+			solution.setTime(timeUsed);
+			solution.setMemory(memoryUsed);
+			solution.setTestResults(tests);
 		}
 	}
 
