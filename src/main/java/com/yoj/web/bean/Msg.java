@@ -1,5 +1,8 @@
 package com.yoj.web.bean;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +12,8 @@ import java.util.Map;
  * @author lmz
  *
  */
+@Setter
+@Getter
 public class Msg {
 	// 状态
 	private boolean success;
@@ -35,29 +40,4 @@ public class Msg {
 		this.getExtend().put(key, value);
 		return this;
 	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
-	public String getMsg() {
-		return msg;
-	}
-
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-
-	public Map<String, Object> getExtend() {
-		return extend;
-	}
-
-	public void setExtend(Map<String, Object> extend) {
-		this.extend = extend;
-	}
-
 }
