@@ -22,7 +22,8 @@ public class SolutionService {
 	 * @date 2019年8月25日
 	 */
 	public boolean insertSolution(Solution solution) {
-		return solutionMapper.insetSolution(solution) > 0;
+		boolean f = solutionMapper.insetSolution(solution) > 0;
+		return f;
 	}
 
 	/**
@@ -35,4 +36,16 @@ public class SolutionService {
 	public List<Solution> getAllByDesc() {
 		return solutionMapper.getAllByDesc();
 	}
+	
+	/**
+	 * @description:
+	 * @param: @return
+	 * @return: List<Solution>
+	 * @author nicolas
+	 * @date 2019年8月24日
+	 */
+	public List<Solution> getAllWithUserName() {
+		return solutionMapper.getAllWithUserName();
+	}
+	
 }

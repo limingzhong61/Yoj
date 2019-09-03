@@ -6,6 +6,12 @@
     height: 1rem;
     vertical-align: text-top;
 }
+/* style="background-color: #e3f2fd;" */
+.bd-navbar {
+    min-height: 4rem;
+    background-color: #563d7c;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
+}
 /* ====== top bar =========*/
 
 body{

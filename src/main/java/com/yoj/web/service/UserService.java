@@ -40,4 +40,8 @@ public class UserService {
     public User queryUserExist(User user) {
         return userMapper.queryUserExist(user);
     }
+    
+    public User getUserById(Integer userId) {
+    	return userMapper.getUserById(userId);
+    }
 }

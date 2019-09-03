@@ -1,13 +1,13 @@
 var totalRecord, currentPage;
 // 1.页面加载完成以后，直接发送ajax请求，要到分页数据
-$(function() {
-	toPage(1);
+$(function () {
+    toPage(1);
 
     function toPage(pageNumber) {
         $.ajax({
-            url : "/solution/result/" + pageNumber,
-            type : "GET",
-            success : function(result) {
+            url: "/p/main/" + pageNumber,
+            type: "GET",
+            success: function (result) {
                 console.log(result);
                 // 1.解释并显示数据
                 bulidTable(result);
@@ -23,29 +23,18 @@ $(function() {
         // 先清空
         $("tbody").empty();
         var solutions = result.extend.pageInfo.list;
-        $.each(solutions, function(index, item) {
+        $.each(solutions, function (index, item) {
             var $tableTr = $("<tr></tr>");
             // var checkBoxTd = $("<td></td>").append("<input type='checkbox'
             // class='check_item'/>");
-            $("<td></td>").append(this.solutionId).appendTo($tableTr);
-            // $("<td></td>").append(this.userId).appendTo(tableTr);
-            $("<td></td>").append(this.user.userName).appendTo($tableTr);
-            var $a = $("<a></a>").append("A+B问题").attr("href", "/p/" + this.problemId)
+            $("<td></td>").append(this.problemId).appendTo($tableTr);
+            $("<td></td>").append().appendTo($tableTr);
+            //<a th:href="@{/p/1}">A+B Problem</a>
+            var $a = $("<a></a>").append(this.title).attr("href", "/p/" + this.problemId)
             $("<td></td>").append($a).appendTo($tableTr);
-            // $("<td></td>").append("A+B问题").appendTo($tableTr);
-            // 2019-09-01T16:01:56.000+0000
-            var date = this.submitTime.substr(0, 10);
-            var time = this.submitTime.substr(11, 8);
-            $("<td></td>").append(date + " " + time).appendTo($tableTr);
-            $("<td></td>").append(this.language).appendTo($tableTr);
-            $("<td></td>").append(this.result).appendTo($tableTr);
-            // $("<td></td>").append().appendTo(tableTr);
-            $("<td></td>").append(this.runtime).appendTo($tableTr);
-            var memoryInfo = "";
-            if (this.memory != null) {
-                memoryInfo = this.memory / 10 + "KB"
-            }
-            $("<td></td>").append(memoryInfo).appendTo($tableTr);
+            $("<td></td>").append("入门").appendTo($tableTr);
+            $("<td></td>").append(this.submissions).appendTo($tableTr);
+            $("<td></td>").append(this.acRate + "%").appendTo($tableTr);
             $tableTr.appendTo("tbody");
         })
     }
@@ -76,10 +65,10 @@ $(function() {
             prePageLi.addClass("disabled");
         } else {
             // 为元素添加翻页事件
-            firstPageLi.click(function() {
+            firstPageLi.click(function () {
                 toPage(1);
             });
-            prePageLi.click(function() {
+            prePageLi.click(function () {
                 toPage(result.extend.pageInfo.pageNum - 1);
             });
         }
@@ -93,24 +82,24 @@ $(function() {
             nextPageLi.addClass("disabled");
             lastPageLi.addClass("disabled");
         } else {
-            nextPageLi.click(function() {
+            nextPageLi.click(function () {
                 toPage(result.extend.pageInfo.pageNum + 1);
             });
-            lastPageLi.click(function() {
+            lastPageLi.click(function () {
                 toPage(result.extend.pageInfo.pages);
             });
         }
 
         // 页码1，2，3，4
         ul.append(firstPageLi).append(prePageLi);
-        $.each(result.extend.pageInfo.navigatepageNums, function(index, item) {
+        $.each(result.extend.pageInfo.navigatepageNums, function (index, item) {
             var numLi = $("<li></li>").addClass("page-item").append(
                 $("<a></a>").addClass("page-link").append(item).attr("href",
                     "#"));
             if (result.extend.pageInfo.pageNum == item) {
                 numLi.addClass("active");
             }
-            numLi.click(function() {
+            numLi.click(function () {
                 toPage(item);
             });
             ul.append(numLi);

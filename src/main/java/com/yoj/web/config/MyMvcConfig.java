@@ -26,7 +26,7 @@ public class MyMvcConfig implements WebMvcConfigurer {
 		// webjar文件
 		registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
 		// thymeleaf文件
-		registry.addResourceHandler("/templates/**").addResourceLocations("classpath:/templates/");
+//		registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/");
 	}
 
 	/**

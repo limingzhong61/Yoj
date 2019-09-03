@@ -18,4 +18,7 @@ public interface UserMapper {
 
     @Select("select * from user where user_name=#{userName} and password=#{password}")
     public User queryUserExist(User user);
+    
+    @Select("select * from user where user_id = #{user_id}")
+    public User getUserById(Integer userId);
 }

@@ -11,7 +11,10 @@ debug: true
 #禁用缓存
 spring.thymeleaf.cache: false
 
+#Property 'configuration' and 'configLocation' can not specified with together
 #开启驼峰映射
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+  #config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml

@@ -19,21 +19,32 @@ import com.yoj.judge.Judge;
 import com.yoj.web.bean.Msg;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.bean.User;
+import com.yoj.web.service.ProblemService;
 import com.yoj.web.service.SolutionService;
+import com.yoj.web.service.UserService;
 
 @Controller
 @RequestMapping("/solution")
 public class SolutionController {
-
 	@Autowired
 	public SolutionService solutionService;
-
+	@Autowired
+	public ProblemService problemService;
+	@Autowired
+	private Judge Judge;
+	@Autowired
+	public UserService UserService;
+	
 	@PostMapping("/submit")
 	public String submit(Solution solution, HttpServletRequest request,Map<String, Object> map) {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
 			request.setAttribute("msg", "提交代码前请先登录");
+			return "/problem/submit";
+		}
+		if(solution.getCode() == "") {
+			request.setAttribute("msg", "提交的代码不能为空");
 			return "/problem/submit";
 		}
 		solution.setUserId(user.getUserId());
@@ -44,13 +55,23 @@ public class SolutionController {
 			map.put("msg", "insert solution fail");
 			return "error/my_error";
 		}
-		return "redirect:/problem/result";
+		problemService.updateSubmit(solution);
+		// 重定向不能被thymeleaf解析，因为redirect重新发了一个请求，接受不到。。。
+//		return "redirect:problem/result"; 
+		return "redirect:/solution/result"; 
 	}
+	
+	@RequestMapping("result")
+	public String result() {
+		return "/problem/result";
+	}
+	
 	@ResponseBody
 	@RequestMapping("result/{pageNumber}")
 	public Msg result(@PathVariable("pageNumber") Integer pageNumber) {
 		PageHelper.startPage(pageNumber, 10);
-		List<Solution> emps = solutionService.getAllByDesc();
+		//需要获得用户名
+		List<Solution> emps = solutionService.getAllWithUserName();
 		PageInfo<Solution> page = new PageInfo<Solution>(emps, 5);
 		return Msg.success().add("pageInfo", page);
 	}

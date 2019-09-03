@@ -6,21 +6,34 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Problem {
-    public Integer problemId;
+    private Integer problemId;
 
-    public Integer userId;
+    private Integer userId;
 
-    public String title;
+    private String title;
 
-    public String description;
+    private String description;
 
-    public Integer memoryLimit;
+    private Integer memoryLimit;
 
-    public Integer timeLimit;
+    private Integer timeLimit;
 
-    public Integer accepted;
+    private Integer accepted;
 
-    public Integer submissions;
+    private Integer submissions;
+
+    private Integer state;
+    
+    // 通过的百分率
+    private Integer acRate;
+    
+	public Integer getAcRate() {
+		return acRate;
+	}
+
+	public void setAcRate(Integer acRate) {
+		this.acRate = acRate;
+	}
 
 	public Integer getProblemId() {
 		return problemId;

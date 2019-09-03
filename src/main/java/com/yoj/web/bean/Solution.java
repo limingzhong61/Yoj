@@ -1,5 +1,6 @@
 package com.yoj.web.bean;
 
+import java.util.Date;
 import java.util.List;
 
 import com.yoj.judge.bean.TestResult;
@@ -19,12 +20,35 @@ public class Solution {
 
 	private String result;
     
-	private Integer time;
+	private Integer runtime;
     
 	private Integer memory;
 	
 	private String errorMessage;
 	
+	private User user;
+	
+	private List<TestResult> testResults;
+	
+	private Date submitTime;
+	
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Date getSubmitTime() {
+		return submitTime;
+	}
+
+	public void setSubmitTime(Date submitTime) {
+		this.submitTime = submitTime;
+	}
+
 	public String getErrorMessage() {
 		return errorMessage;
 	}
@@ -33,16 +57,12 @@ public class Solution {
 		this.errorMessage = errorMessage;
 	}
 
-    
-    private List<TestResult> testResults;
-    
-	
-    public Integer getTime() {
-		return time;
+	public Integer getRuntime() {
+		return runtime;
 	}
 
-	public void setTime(Integer time) {
-		this.time = time;
+	public void setRuntime(Integer runtime) {
+		this.runtime = runtime;
 	}
 
 	public Integer getMemory() {
