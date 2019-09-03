@@ -89,7 +89,6 @@ $(function () {
                 toPage(result.extend.pageInfo.pages);
             });
         }
-
         // 页码1，2，3，4
         ul.append(firstPageLi).append(prePageLi);
         $.each(result.extend.pageInfo.navigatepageNums, function (index, item) {
