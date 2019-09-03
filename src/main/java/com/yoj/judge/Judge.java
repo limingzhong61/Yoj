@@ -1,16 +1,6 @@
 package com.yoj.judge;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSONArray;
-//import com.alibaba.fastjson.JSONArray;
 import com.yoj.judge.bean.ExecMessage;
 import com.yoj.judge.bean.TestResult;
 import com.yoj.judge.utils.ExecutorUtil;
@@ -18,6 +8,16 @@ import com.yoj.judge.utils.SSH2Util;
 import com.yoj.judge.utils.impl.RemoteExecutor;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.bean.User;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+//import com.alibaba.fastjson.JSONArray;
 
 @Component
 public class Judge {
@@ -70,8 +70,8 @@ public class Judge {
 //		String judge_data = PropertiesUtil.StringValue("judge_data") + "/" + task.getProblemId();
 //		String cmd = "python " + PropertiesUtil.StringValue("judge_script") + " " + process + " " + judge_data + " "
 //				+ path + " " + task.getTimeLimit() + " " + task.getMemoryLimit();
-		String cmd = "python /home/nicolas/Lo-runner-master/demo/test.py " + linuxPath
-				+ "/main.c /home/nicolas/Lo-runner-master/demo/testdata 3";
+		String cmd = "python /home/nicolas/judge/demo/test.py " + linuxPath
+				+ "/main.c /home/nicolas/judge/demo/testdata 3";
 		parseToResult(cmd, solution);
 		executor.execute("rm -rf " + linuxPath);
 //		results.add(result);
@@ -198,9 +198,6 @@ public class Judge {
 		String code = "#include <stdio.h>\r\n" + "\r\n" + "int main()\r\n" + "{\r\n" + "int a, b;\r\n"
 				+ "scanf(\"%d%d\", &a, &b);\r\n" + "printf(\"%d\\n\", a+b);\r\n" + "return 0;\r\n" + "}";
 //        String cmd = "python test.py a+b.c testdata 3";
-//		String cmd = "python /home/nicolas/Lo-runner-master/demo/test.py /home/nicolas/Lo-runner-master/demo/a+b.c /home/nicolas/Lo-runner-master/demo/testdata 3";
-
-		// nicolas@ubuntu:~/Lo-runner-master/demo$ python test.py a+b.c testdata 3
 //        {'memoryused': 6572L, 'timeused': 0L, 'result': 'Accepted'}
 //        {'memoryused': 6640L, 'timeused': 0L, 'result': 'Accepted'}
 //        {'memoryused': 6820L, 'timeused': 0L, 'result': 'Accepted'}

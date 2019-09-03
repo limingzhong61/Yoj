@@ -13,30 +13,37 @@
 </head>
 
 <body class="text-center">
-<form class="form-signin" action="dashboard.html" th:action="@{/user/login}" method="post">
-    <img class="mb-4" src="asserts/img/bootstrap-solid.svg" th:src="@{/assets/img/bootstrap-solid.svg}" alt=""
-         width="72" height="72">
-    <h1 class="h3 mb-3 font-weight-normal">请登录</h1>
-    <!--判断-->
-    <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
-    <label class="sr-only">用户名</label>
-    <input type="text" name="userName" class="form-control" placeholder="用户名"
-           required=""
-           autofocus="">
-    <label class="sr-only">密码</label>
-    <input type="password" name="password" class="form-control" placeholder="密码"
-           required="">
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" value=""> Remember me
-        </label>
+<div class="container" style="margin-top: 80px;">
+    <div class="row">
+        <div class="col-md-12 order-md-1">
+            <form class="form-signin" action="dashboard.html" th:action="@{/user/login}" method="post">
+                <img class="mb-4" src="asserts/img/bootstrap-solid.svg" th:src="@{/assets/img/bootstrap-solid.svg}" alt=""
+                     width="72" height="72">
+                <h1 class="h3 mb-3 font-weight-normal">请登录</h1>
+                <!--判断-->
+                <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+                <label class="sr-only">用户名</label>
+                <input type="text" name="userName" class="form-control" placeholder="用户名"
+                       required=""
+                       autofocus="">
+                <label class="sr-only">密码</label>
+                <input type="password" name="password" class="form-control" placeholder="密码"
+                       required="">
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" value=""> Remember me
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+                <a class="btn btn-lg btn-primary btn-block" th:href="@{/register.html}">注册</a>
+                <!--<a class="btn btn-sm" th:href="@{/index.html(l='zh_CN')}">中文</a>-->
+                <!--<a class="btn btn-sm" th:href="@{/index.html(l='en_US')}">English</a>-->
+            </form>
+        </div>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
-    <a class="btn btn-lg btn-primary btn-block" th:href="@{/register.html}">注册</a>
-    <p class="mt-5 mb-3 text-muted">All Rights Reserved© 2019- Li Mingzhong</p>
-    <!--<a class="btn btn-sm" th:href="@{/index.html(l='zh_CN')}">中文</a>-->
-    <!--<a class="btn btn-sm" th:href="@{/index.html(l='en_US')}">English</a>-->
-</form>
+    <!--引入footer-->
+    <footer th:replace="commons/bar::footer"></footer>
+</div>
 
 </body>
 

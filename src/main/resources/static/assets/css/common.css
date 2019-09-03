@@ -17,3 +17,56 @@
 body{
 	font-size: 0.95rem;
 }
+
+/***********************尾部的样式***********************/
+#lk_footer {
+    width: 100%;
+    height: 200px;
+    background: url("/assets/img/ft_bg.png ") no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+
+    color: #fff;
+    font-size: 16px;
+}
+
+#lk_footer ul {
+    list-style: none;
+}
+
+#lk_footer .one,
+#lk_footer .two {
+    padding: 10px;
+    border-right: 1px solid #666;
+    height: 180px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#lk_footer .one li {
+    line-height: 40px;
+}
+
+#lk_footer .one li a {
+    color: #fff;
+}
+
+#lk_footer .three {
+    padding: 10px 50px;
+    height: 180px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#lk_footer .three a {
+    margin-right: 15px;
+    text-decoration: none;
+}
+
+/***********************尾部的样式***********************/
