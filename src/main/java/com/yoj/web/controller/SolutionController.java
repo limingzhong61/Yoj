@@ -1,18 +1,5 @@
 package com.yoj.web.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.judge.Judge;
@@ -22,6 +9,17 @@ import com.yoj.web.bean.User;
 import com.yoj.web.service.ProblemService;
 import com.yoj.web.service.SolutionService;
 import com.yoj.web.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/solution")
@@ -41,11 +39,11 @@ public class SolutionController {
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
 			request.setAttribute("msg", "提交代码前请先登录");
-			return "/problem/submit";
+			return "problem/submit";
 		}
 		if(solution.getCode() == "") {
 			request.setAttribute("msg", "提交的代码不能为空");
-			return "/problem/submit";
+			return "problem/submit";
 		}
 		solution.setUserId(user.getUserId());
 		solution.setProblemId((Integer) session.getAttribute("pid"));
@@ -57,13 +55,13 @@ public class SolutionController {
 		}
 		problemService.updateSubmit(solution);
 		// 重定向不能被thymeleaf解析，因为redirect重新发了一个请求，接受不到。。。
-//		return "redirect:problem/result"; 
-		return "redirect:/solution/result"; 
+//		return "redirect:problem/result";
+		return "redirect:/solution/result";
 	}
 	
 	@RequestMapping("result")
 	public String result() {
-		return "/problem/result";
+		return "problem/result";
 	}
 	
 	@ResponseBody

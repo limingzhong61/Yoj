@@ -1,3 +1,4 @@
+
 #配置数据源
 spring:
   datasource:
@@ -18,3 +19,5 @@ mybatis:
     map-underscore-to-camel-case: true
   #config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
+#server:
+#  port: 80

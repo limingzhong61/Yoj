@@ -1,16 +1,27 @@
 @charset "UTF-8";
 /* ====== top bar =========*/
+/*图标*/
 .fixed-top .navbar-nav-svg {
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
     vertical-align: text-top;
 }
-/* style="background-color: #e3f2fd;" */
-.bd-navbar {
+
+.navbar.fixed-top{
     min-height: 4rem;
-    background-color: #563d7c;
+    background-color: #24292e;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
+}
+
+.fixed-top .navbar-nav .nav-link.active {
+    font-weight: 600;
+}
+/*登录 注册btn*/
+.btn-bd-download {
+    font-weight: 600;
+    color:  #fff;
+    border-color: #fff;
 }
 /* ====== top bar =========*/
 
@@ -19,54 +30,5 @@ body{
 }
 
 /***********************尾部的样式***********************/
-#lk_footer {
-    width: 100%;
-    height: 200px;
-    background: url("/assets/img/ft_bg.png ") no-repeat center;
-    -webkit-background-size: cover;
-    background-size: cover;
-
-    color: #fff;
-    font-size: 16px;
-}
-
-#lk_footer ul {
-    list-style: none;
-}
-
-#lk_footer .one,
-#lk_footer .two {
-    padding: 10px;
-    border-right: 1px solid #666;
-    height: 180px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-#lk_footer .one li {
-    line-height: 40px;
-}
-
-#lk_footer .one li a {
-    color: #fff;
-}
-
-#lk_footer .three {
-    padding: 10px 50px;
-    height: 180px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-#lk_footer .three a {
-    margin-right: 15px;
-    text-decoration: none;
-}
 
 /***********************尾部的样式***********************/

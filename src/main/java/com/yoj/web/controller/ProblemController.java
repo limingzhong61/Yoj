@@ -26,12 +26,12 @@ public class ProblemController {
     @RequestMapping("/{pid}")
     public String getProblem(@PathVariable("pid") Integer pid, HttpServletRequest request) {
         request.getSession().setAttribute("pid",pid);
-        return "/problem/problemView";
+        return "problem/problemView";
     }
 
     @RequestMapping("/{pid}/submit")
     public String toSubmitView(@PathVariable("pid") int pid, Map<String, Object> map) {
-        return "/problem/submit";
+        return "problem/submit";
     }
     
 

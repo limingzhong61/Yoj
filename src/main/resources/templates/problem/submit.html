@@ -14,11 +14,12 @@
     <link href="../static/assets/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}"
           rel="stylesheet">
     <link href="../assets/css/common.css" th:href="@{/assets/css/common.css}"
-          rel="stylesheet">  
+          rel="stylesheet">
     <style>
-        .section__title{
+        .section__title {
             font-size: 1.125em;
         }
+
         textarea.textbox {
             height: 295px;
         }
@@ -35,7 +36,7 @@
         <div class="col-md-10 order-md-1 offset-1 pl-3" style="background-color: rgb(228, 241, 255);">
             <div class="section visible mx-3">
                 <div class="section__header">
-                    <h2 class="section__title my-4" >递交以评测</h2>
+                    <h2 class="section__title my-4">递交以评测</h2>
                     <!--判断-->
                     <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
                 </div>
@@ -85,5 +86,9 @@
         th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
 <script type="text/javascript" src="../static/assets/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+<script type="text/javascript"
+        th:src="@{/assets/js/common.js}"></script>
+
+</body>
 </body>
 </html>
