@@ -10,10 +10,7 @@ import com.yoj.web.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -62,8 +59,8 @@ public class ProblemController {
         return Msg.success().add("pageInfo", page);
     }
 
-    @PostMapping("add")
-    public String addProblem(Problem problem){
+    @RequestMapping("add")
+    public String addProblem( Problem problem){
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = (User) userDetails.getUser();
         if(user == null){
