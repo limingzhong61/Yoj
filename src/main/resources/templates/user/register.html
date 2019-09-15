@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://v4.bootcss.com/favicon.ico">
+
+    <title>注册</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/assets/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}"
+          rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container">
+    <!--<div class="py-5 text-center">-->
+        <!--<img class="d-block mx-auto mb-4"-->
+             <!--th:src="@{/assets/img/bootstrap-solid.svg}" alt=""-->
+             <!--width="72" height="72">-->
+        <!--<h2>Checkout form</h2>-->
+        <!--<p class="lead">Below is an example form built entirely with-->
+            <!--Bootstrap's form controls. Each required form group has a validation-->
+            <!--state that can be triggered by attempting to submit the form without-->
+            <!--completing it.</p>-->
+    <!--</div>-->
+    <div class="row">
+        <div class="col-md-8 order-md-1 offset-md-2">
+            <h4 class="mb-3 " style="text-align: center;">注册账号</h4>
+            <!--判断-->
+            <p style="color: red; text-align: center" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+            <form class="needs-validation" novalidate="" th:action="@{/user/register}" method="post">
+                <div class="mb-3">
+                    <label for="userName">用户名</label>
+                    <input type="text" class="form-control needs-validation" id="userName" name="userName" placeholder="" required="required">
+                    <div class="invalid-feedback">
+                        用户名不能为空.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="password">密码</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="" required="required">
+                    <div class="invalid-feedback">
+                        密码不能为空.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="secondPassword">确认密码</label>
+                    <input type="password" class="form-control" id="secondPassword" name="password" placeholder="">
+                    <div class="invalid-feedback">
+                        两次密码不一致.
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="email">Email <span class="text-muted">(可选)</span></label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">
+                    <div class="invalid-feedback">
+                        请输入一个有效的电子邮件地址.
+                    </div>
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block col-3 offset-4" type="submit">注册</button>
+            </form>
+        </div>
+    </div>
+
+    <!--引入footer-->
+    <footer th:replace="commons/bar::footer"></footer>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="../../static/assets/js/jquery-3.2.1.slim.min.js"
+        th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<script type="text/javascript" src="../../static/assets/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+<script th:src="@{/assets/js/util/validate.js}"></script>
+<script th:src="@{/assets/js/user/register.js}"></script>
+
+</body>
+
+</body>
+</html>

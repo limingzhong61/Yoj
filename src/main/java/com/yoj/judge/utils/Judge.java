@@ -8,15 +8,15 @@
 //import org.apache.logging.log4j.util.PropertiesUtil;
 //
 //import com.yoj.judge.bean.ExecMessage;
-//import com.yoj.judge.bean.JudgeResult;
+//import com.yoj.judge.bean.Results;
 //
 //import bean.JudgeTask;
 //
 ////@Log4j
 //public class Judge {
 //
-//	public static JudgeResult judge(JudgeTask task) {
-//		JudgeResult result = new JudgeResult();
+//	public static Results judge(JudgeTask task) {
+//		Results result = new Results();
 //		result.setSubmitId(task.getSubmitId());
 //		//String path = PropertiesUtil.StringValue("workspace") + "/" + task.getSubmitId();
 //		String path = "/opt" + "/" + task.getSubmitId();
@@ -120,7 +120,7 @@
 //		return null;
 //	}
 //
-//	private static void parseToResult(String cmd, JudgeResult result) {
+//	private static void parseToResult(String cmd, Results result) {
 //		ExecMessage exec = ExecutorUtil.exec(cmd);
 //		if (exec.getError() != null) {
 //			result.setStatus(5);

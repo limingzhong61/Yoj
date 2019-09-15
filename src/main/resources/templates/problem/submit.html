@@ -40,6 +40,7 @@
                     <!--判断-->
                     <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
                 </div>
+                <input hidden="hidden" value="${pid}" name="problemId">
                 <div class="section__body">
                     <form th:action="@{/solution/submit}" method="post">
                         <div class="input-group mb-4  col-6" style="padding-left: 0;">
@@ -47,9 +48,10 @@
                                 <label class="input-group-text" for="inputGroupSelect01">代码语言</label>
                             </div>
                             <select class="custom-select" id="inputGroupSelect01" name="language">
-                                <option selected value="c">C</option>
-                                <!--<option value="1">C++</option>-->
-                                <!--<option value="2">Java</option>-->
+                                <option selected value="0">C</option>
+                                <option value="1">C++</option>
+                                <option value="2">Java</option>
+                                <option value="3">Python</option>
                             </select>
                         </div>
 

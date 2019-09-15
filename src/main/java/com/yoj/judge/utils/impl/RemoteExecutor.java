@@ -1,19 +1,17 @@
 package com.yoj.judge.utils.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
+import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.Session;
+import com.yoj.judge.bean.ExecMessage;
+import com.yoj.judge.utils.ExecutorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.yoj.judge.bean.ExecMessage;
-import com.yoj.judge.utils.ExecutorUtil;
-
-import ch.ethz.ssh2.Connection;
-import ch.ethz.ssh2.Session;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @author lmz 远程连接linux使用

@@ -1,30 +1,31 @@
 // Example starter JavaScript for disabling form submissions if there are invalid fields
-(function () {
-    'use strict';
-    window.addEventListener('load', function () {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('needs-validation');
+$(function () {
+    var cnt = 0;
+    $("form").submit(function () {
+        cnt = 0;
+        $(this).find("input").trigger("change");
+        // $("#secondPassword").trigger("change");
+        return cnt === 2;
+    });
+    // $("form").find("input").each(function () {
+    //     $(this).change(function () {
+    //         validate(this,$(this).val() === "");
+    //     });
+    // })
 
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function (form) {
-            form.addEventListener('submit', function (event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-                //改回确认密码验证
-                $("#secondPassword").trigger("change");
-            }, false);
-        });
-    }, false);
-    $("#secondPassword").change(function () {
-        if($(this).val() != $("#password").val()){
-            $(this).removeClass("is-valid");
-            $(this).addClass('is-invalid');
-        }else{
-            $(this).removeClass("is-invalid");
-            $(this).addClass("is-valid");
+    $("#userName").change(function () {
+        cnt += validate(this,this.value != "");
+    });
+    $("#password").change(function () {
+        validate(this,this.value != "");
+        if($("#password").val() != ""){
+            validate("#secondPassword",$("#secondPassword").val() == $("#password").val());
         }
     });
-})();
+    $("#secondPassword").change(function () {
+        if($("#password").val() != ""){
+            cnt += validate(this,this.value == $("#password").val());
+        }
+    });
+
+});

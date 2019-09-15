@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://v4.bootcss.com/favicon.ico">
+
+    <title>添加题目</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/assets/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}"
+          rel="stylesheet">
+    <link href="../assets/css/common.css" th:href="@{/assets/css/common.css}"
+          rel="stylesheet">
+    <style>
+        .problem .des {
+            margin: 20px 80px 12px 80px;
+            padding: 16px 40px 16px 40px;
+            background: #e4f1ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "宋体", "Times New Roman";
+        }
+
+        .problem .des .sec_header, .problem .des .pdsec {
+            font-family: "微软雅黑", "黑体", "宋体";
+            margin: 16px 0px 8px 0px;
+            font-size: 16px;
+        }
+
+    </style>
+</head>
+
+<body class="bg-light">
+
+<!--引入topbar-->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container" style="margin-top: 80px;">
+    <div class="row">
+        <div class="col-md-12 order-md-1">
+            <form th:action="@{/p/add}" method="post">
+                <div class="problem" style="display:block;">
+                    <div class="input-group mb-3 col-md-6 offset-md-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon0">题目</span>
+                        </div>
+                        <input name="title" type="text" class="form-control" placeholder="题目" aria-label="Username"
+                               aria-describedby="basic-addon1">
+                    </div>
+                    <div id="prbinfos">
+                        <div class="input-group mb-3 col-md-6 offset-md-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">时间限制(ms)</span>
+                            </div>
+                            <input name="timeLimit" type="text" class="form-control" placeholder="时间限制(ms)" aria-label="Username"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                        <div class="input-group mb-3 col-md-6 offset-md-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon2">内存限制(MB)</span>
+                            </div>
+                            <input name="memoryLimit" type="text" class="form-control" placeholder="内存限制(MB)" aria-label="Username"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="des">
+                        <div class="sec_header">问题描述</div>
+                        <div class="sec_cont">
+                            <div name="description" class="textarea-container monospace">
+                                <textarea name="description" placeholder="" class="textbox form-control" autofocus=""
+                                          data-autofocus="">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="sec_header">输入格式</div>
+                        <div name="formatInput" class="textarea-container monospace">
+                                <textarea name="formatInput" placeholder="" class="textbox form-control" autofocus=""
+                                          data-autofocus="">
+                                </textarea>
+                        </div>
+                        <div class="sec_header">输出格式</div>
+                        <div name="formatOutput" class="textarea-container monospace">
+                                <textarea name="formatOutput" placeholder="" class="textbox form-control" autofocus=""
+                                          data-autofocus="">
+                                </textarea>
+                        </div>
+                        <div class="sec_header">样例输入</div>
+                        <div name="sampleInput" class="textarea-container monospace">
+                                <textarea name="sampleInput" placeholder="" class="textbox form-control" autofocus=""
+                                          data-autofocus="">
+                                </textarea>
+                        </div>
+                        <div class="sec_header">样例输出</div>
+                        <div name="sampleOutput" class="textarea-container monospace">
+                                <textarea name="sampleOutput" placeholder="" class="textbox form-control" autofocus=""
+                                          data-autofocus="">
+                                </textarea>
+                        </div>
+                        <div class="sec_header">提示</div>
+                        <div name="hint" class="textarea-container monospace">
+                                <textarea name="hint" placeholder="" class="textbox form-control" autofocus=""
+                                          data-autofocus="">
+                                </textarea>
+                        </div>
+                        <div style="text-align:center">
+                            <button class="btn btn-primary btn-lg btn-block col-md-3 offset-4" type="submit">添加此题</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--引入footer-->
+    <footer th:replace="commons/bar::footer"></footer>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="../static/assets/js/jquery-3.2.1.slim.min.js"
+        th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<script type="text/javascript" src="../static/assets/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+<script type="text/javascript"
+        src="../static/assets/js/bootstrap.min.js"
+        th:src="@{/assets/js/common.js}"></script>
+<script type="text/javascript"
+        th:src="@{/assets/js/problem/addProblem.js}"></script>
+</body>
+</body>
+</html>

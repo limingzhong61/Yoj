@@ -28,7 +28,11 @@ $(function () {
             // var checkBoxTd = $("<td></td>").append("<input type='checkbox'
             // class='check_item'/>");
             $("<td></td>").append(this.problemId).appendTo($tableTr);
-            $("<td></td>").append().appendTo($tableTr);
+            var status = "未提交";
+            if(this.solved){
+                status = "已解决"
+            }
+            $("<td></td>").append(status).appendTo($tableTr);
             //<a th:href="@{/p/1}">A+B Problem</a>
             var $a = $("<a></a>").append(this.title).attr("href", "/p/" + this.problemId)
             $("<td></td>").append($a).appendTo($tableTr);

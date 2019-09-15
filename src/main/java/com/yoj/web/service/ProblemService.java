@@ -1,12 +1,10 @@
 package com.yoj.web.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
-import com.yoj.web.bean.static_fianl.JudgeResult;
 import com.yoj.web.mapper.ProblemMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -22,7 +20,7 @@ public class ProblemService {
 	 * @return
 	 */
 	public boolean updateSubmit(Solution solution) {
-		if(JudgeResult.ACCEPT.equals(solution.getResult())) {
+		if("accept".equals(solution.getResult())) {
 			return problemMapper.updateAccept() > 0;
 		}else {
 			return problemMapper.updateSubmit() > 0;
@@ -35,5 +33,13 @@ public class ProblemService {
 
     public List<Problem> getAll() {
 		return problemMapper.getAll();
+    }
+
+    public Boolean isSolved(Integer problemId, Integer userId) {
+		return problemMapper.isSolved(problemId, userId) > 0;
+    }
+
+    public boolean insert(Problem problem) {
+		return problemMapper.insert(problem) > 0;
     }
 }

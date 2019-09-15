@@ -25,22 +25,21 @@ $(function() {
         var solutions = result.extend.pageInfo.list;
         $.each(solutions, function(index, item) {
             var $tableTr = $("<tr></tr>");
-            // var checkBoxTd = $("<td></td>").append("<input type='checkbox'
-            // class='check_item'/>");
             $("<td></td>").append(this.solutionId).appendTo($tableTr);
-            // $("<td></td>").append(this.userId).appendTo(tableTr);
             $("<td></td>").append(this.user.userName).appendTo($tableTr);
             var $a = $("<a></a>").append("A+B问题").attr("href", "/p/" + this.problemId)
             $("<td></td>").append($a).appendTo($tableTr);
-            // $("<td></td>").append("A+B问题").appendTo($tableTr);
             // 2019-09-01T16:01:56.000+0000
             var date = this.submitTime.substr(0, 10);
             var time = this.submitTime.substr(11, 8);
             $("<td></td>").append(date + " " + time).appendTo($tableTr);
-            $("<td></td>").append(this.language).appendTo($tableTr);
-            $("<td></td>").append(this.result).appendTo($tableTr);
-            // $("<td></td>").append().appendTo(tableTr);
-            $("<td></td>").append(this.runtime).appendTo($tableTr);
+            $("<td></td>").append(this.languageStr).appendTo($tableTr);
+            $("<td></td>").append(this.resultStr).appendTo($tableTr);
+            var timeInfo = "";
+            if(this.time != null){
+                this.runtime+"ms"
+            }
+            $("<td></td>").append(timeInfo).appendTo($tableTr);
             var memoryInfo = "";
             if (this.memory != null) {
                 memoryInfo = this.memory / 10 + "KB"

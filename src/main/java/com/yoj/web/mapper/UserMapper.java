@@ -18,7 +18,13 @@ public interface UserMapper {
 
     @Select("select * from user where user_name=#{userName} and password=#{password}")
     public User queryUserExist(User user);
-    
+
+    @Select("select count(1) from user where user_name=#{userName}")
+    public int queryExistByName(String userName);
+
     @Select("select * from user where user_id = #{user_id}")
     public User getUserById(Integer userId);
+
+    @Select("SELECT * FROM `user` WHERE user_name = #{userName}")
+    public User getUserByName(String userName);
 }

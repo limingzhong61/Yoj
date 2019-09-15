@@ -3,10 +3,12 @@ package com.yoj.judge;
 import com.alibaba.fastjson.JSONArray;
 import com.yoj.judge.bean.ExecMessage;
 import com.yoj.judge.bean.TestResult;
+import com.yoj.judge.bean.static_fianl.Results;
 import com.yoj.judge.utils.SSH2Util;
 import com.yoj.judge.utils.impl.RemoteExecutor;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.bean.User;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +16,26 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
+@Setter
 @Component
 public class Judge {
+//    RESULT_STR = [
+//            'Accepted',
+//            'Presentation Error',
+//            'Time Limit Exceeded',
+//            'Memory Limit Exceeded',
+//            'Wrong Answer',
+//            'Runtime Error',
+//            'Output Limit Exceeded',
+//            'Compile Error',
+//            'System Error'
+//            ]
 
-	@Autowired
-	private RemoteExecutor executor;
+    @Autowired
+    private RemoteExecutor executor;
+    private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
 //    @Autowired
 //    private LocalExecutor executor;
@@ -39,23 +53,22 @@ public class Judge {
         File file = new File(windowsPath);
         file.mkdirs();
         try {
-            createFile(1, windowsPath, solution.getCode());
+            createFile(solution.getLanguage(), windowsPath, solution.getCode());
             // window 环境
             SSH2Util ssh2Util = new SSH2Util("47.103.195.173", "nicolas", "nicolas", 22);
-            ssh2Util.putFile(windowsPath, "main.c", linuxPath);
+            ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
         } catch (Exception e) {
             e.printStackTrace();
             solution.setErrorMessage("system exception:create file fail");
-            solution.setResult("create file fail");
+            solution.setResult(Results.SystemError);
             System.out.println("create file fail");
             executor.execute("rm -rf " + linuxPath);
         }
         // compile the source
-//		String message = complie(task.getCompilerId(), path);
-        String message = complie(1, linuxPath);
+        String message = compile(solution.getLanguage(), linuxPath);
 //		if (message != null && task.getCompilerId() != 4) {
         if (message != null) {
-            solution.setResult("compile error");
+            solution.setResult(Results.CompileError);
             solution.setErrorMessage(message);
             System.out.println(message);
             executor.execute("rm -rf " + linuxPath);
@@ -66,63 +79,73 @@ public class Judge {
         executor.execute("chmod -R 755 " + linuxPath);
         // judge
 //		String process = process(task.getCompilerId(), path);
-//		String process = process(1, path);
+        String process = process(solution.getLanguage(), linuxPath);
 //		String judge_data = PropertiesUtil.StringValue("judge_data") + "/" + task.getProblemId();
 //		String cmd = "python " + PropertiesUtil.StringValue("judge_script") + " " + process + " " + judge_data + " "
 //				+ path + " " + task.getTimeLimit() + " " + task.getMemoryLimit();
-        String cmd = "python /home/nicolas/judge/demo/test.py " + linuxPath
-                + "/main.c /home/nicolas/judge/demo/testdata 3";
+        String path = linuxPath + "/" + fileNames[solution.getLanguage()];
+        String judge_data = "/home/nicolas/judge/demo/testdata";
+        String[] wzies = process.split("wzy");
+        for(String s : wzies){
+            System.out.println(s);
+        }
+        String cmd = "python " + "/home/nicolas/judge/judge1.py" + " " + process + " " + judge_data + " "
+                + linuxPath + " " + 1000 + " " + 20000;
+//        String cmd = "python /home/nicolas/judge/lmzJudge.py " + linuxPath
+//                + "/" + fileNames[solution.getLanguage()] + " /home/nicolas/judge/demo/testdata 3";
         parseToResult(cmd, solution);
         executor.execute("rm -rf " + linuxPath);
-//		results.add(result);
         System.out.println(solution);
     }
 
-    private String complie(int compilerId, String path) {
+    private String compile(int compilerId, String path) {
         /**
-         * '1': 'gcc','g++', '3': 'java', '4': 'pascal', '5': 'python', -o outfile
+         * '0': 'gcc','1' 'g++', '2': 'java', '3': 'python', '4': 'pascal', -o outfile
          */
         String cmd = "";
         switch (compilerId) {
-            case 1:
+            case 0:
                 cmd = "gcc " + path + "/main.c -o " + path + "/main";
                 break;
-            case 2:
+            case 1:
                 cmd = "g++ " + path + "/main.cpp -o " + path + "/main";
                 break;
+            case 2:
+                //liunx
+//                cmd = "javac " + path + "/Main.java";
+                //windows
+                cmd = ". /etc/profile; javac " + path + "/Main.java";
+                break;
             case 3:
-                cmd = "javac " + path + "/Main.java";
-                break;
-            case 4:
-                cmd = "fpc " + path + "/main.pas -O2 -Co -Ct -Ci";
-                break;
-            case 5:
                 cmd = "python3 -m py_compile " + path + "/main.py";
                 break;
+//            case 4:
+//                cmd = "fpc " + path + "/main.pas -O2 -Co -Ct -Ci";
+//                break;
         }
         return executor.execute(cmd).getError();
     }
 
     private void createFile(int compilerId, String path, String source) throws Exception {
-        String filename = "";
-        switch (compilerId) {
-            case 1:
-                filename = "main.c";
-                break;
-            case 2:
-                filename = "main.cpp";
-                break;
-            case 3:
-                filename = "Main.java";
-                break;
-            case 4:
-                filename = "main.pas";
-                break;
-            case 5:
-                filename = "main.py";
-                break;
-        }
-        File file = new File(path + "/" + filename);
+//        String filename = "";
+//        switch (compilerId) {
+//            case 0:
+//                filename = "main.c";
+//                break;
+//            case 1:
+//                filename = "main.cpp";
+//                break;
+//            case 2:
+//                filename = "Main.java";
+//                break;
+//            case 3:
+//                filename = "main.py";
+//                break;
+//            case 5:
+//                filename = "main.pas";
+//                break;
+//        }
+        File file = new File(path + "/" + fileNames[compilerId]);
         file.createNewFile();
         OutputStream output = new FileOutputStream(file);
         PrintWriter writer = new PrintWriter(output);
@@ -131,78 +154,54 @@ public class Judge {
         output.close();
     }
 
-//	private static String process(int compileId, String path) {
-//		switch (compileId) {
-//		case 1:
+    private static String process(int compileId, String path) {
+        switch (compileId) {
+            case 0:
+                return path + "/main";
+            case 1:
+                return path + "/main";
+            case 2:
+//                return "javawzy-classpathwzy" + path + "wzyMain";
+                return "\".wzy/etc/profile;wzyjavawzy-classpathwzy" + path + "wzyMain\"";
+            case 3:
+//                                #python编译生成对应的版本文件名字
+//                    python_cacheName=main.cpython-36.pyc
+            return "python3wzy" + path + "/__pycache__/" + "main.cpython-36.pyc";
+//		case 5:
 //			return path + "/main";
-//		case 2:
-//			return path + "/main";
-//		case 3:
-//			return "javawzy-classpathwzy" + path + "wzyMain";
-//		case 4:
-//			return path + "/main";
-////		case 5:
-////			return "python3wzy" + path + "/__pycache__/" + PropertiesUtil.StringValue("python_cacheName");
-//		}
-//		return null;
-//	}
+        }
+        return null;
+    }
 
     private void parseToResult(String cmd, Solution solution) {
         ExecMessage exec = executor.execute(cmd);
         if (exec.getError() != null) {
             solution.setErrorMessage(exec.getError());
-            System.out.println("=====error====" + solution.getSolutionId() + ":" + exec.getError());
+            solution.setResult(Results.SystemError);
+            System.out.println("=====error====" + solution.getSolutionId() + exec.getStdout() + "    :" + exec.getError());
             // log.error("=====error====" + result.getSubmitId() + ":" + exec.getError());
         } else {
 //			Stdout out = JSON.parseObject(exec.getStdout(), Stdout.class);
+            System.out.println("=====stdout====" + exec.getStdout());
             String jsonFormat = "[" + exec.getStdout() + "]";
             List<TestResult> outs = JSONArray.parseArray(jsonFormat, TestResult.class);
-            System.out.println("=====stdout====" + exec.getStdout());
             // log.info("=====stdout====" + out);
-            // test set
-            Integer timeUsed = 0;
-            Integer memoryUsed = 0;
-            List<TestResult> tests = new ArrayList<>();
-            for (TestResult out : outs) {
-                TestResult test = new TestResult();
-                test.setResult(out.getResult());
-                test.setTimeUsed(out.getTimeUsed());
-                test.setMemoryUsed(out.getMemoryUsed());
-//				===============         not set errot level         ==============
-                if (!"Accepted".equals(test.getResult())) {
-                    solution.setResult(test.getResult());
-                    continue;
-                }
-                tests.add(test);
-                timeUsed = Math.max(timeUsed, test.getTimeUsed());
-                memoryUsed = Math.max(memoryUsed, test.getMemoryUsed());
-
-            }
-
-            // null : not error
-            if (solution.getResult() == null) {
-                solution.setResult("Accepted");
-            }
-            solution.setRuntime(timeUsed);
-            solution.setMemory(memoryUsed);
-            solution.setTestResults(tests);
+            solution.setRuntime(outs.get(outs.size()-1).getTimeUsed());
+            solution.setMemory(outs.get(outs.size()-1).getMemoryUsed());
+            solution.setResult(outs.get(outs.size()-1).getResult());
+            solution.setTestResults(outs);
         }
     }
 
     public static void main(String[] args) {
+//        RemoteExecutor remoteExecutor = new RemoteExecutor();
+//        System.out.println(remoteExecutor.execute("ls"));
+//        System.out.println(remoteExecutor.execute("gcc"));
+//        System.out.println(remoteExecutor.execute(". /etc/profile; java"));
         Solution solution = new Solution();
         User user = new User();
         user.setUserId(1);
         solution.setUserId(user.getUserId());
         solution.setProblemId(1);
-        String code = "#include <stdio.h>\r\n" + "\r\n" + "int main()\r\n" + "{\r\n" + "int a, b;\r\n"
-                + "scanf(\"%d%d\", &a, &b);\r\n" + "printf(\"%d\\n\", a+b);\r\n" + "return 0;\r\n" + "}";
-//        String cmd = "python test.py a+b.c testdata 3";
-//        {'memoryused': 6572L, 'timeused': 0L, 'result': 'Accepted'}
-//        {'memoryused': 6640L, 'timeused': 0L, 'result': 'Accepted'}
-//        {'memoryused': 6820L, 'timeused': 0L, 'result': 'Accepted'}
-
-        solution.setCode(code);
-        new Judge().judge(solution);
     }
 }

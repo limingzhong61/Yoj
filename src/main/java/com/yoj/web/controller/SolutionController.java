@@ -3,13 +3,17 @@ package com.yoj.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.judge.Judge;
+import com.yoj.judge.bean.static_fianl.Languages;
+import com.yoj.judge.bean.static_fianl.Results;
 import com.yoj.web.bean.Msg;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.bean.User;
+import com.yoj.web.bean.UserDetailsImpl;
 import com.yoj.web.service.ProblemService;
 import com.yoj.web.service.SolutionService;
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +40,8 @@ public class SolutionController {
 	@PostMapping("/submit")
 	public String submit(Solution solution, HttpServletRequest request,Map<String, Object> map) {
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) userDetails.getUser();
 		if (user == null) {
 			request.setAttribute("msg", "提交代码前请先登录");
 			return "problem/submit";
@@ -46,7 +51,7 @@ public class SolutionController {
 			return "problem/submit";
 		}
 		solution.setUserId(user.getUserId());
-		solution.setProblemId((Integer) session.getAttribute("pid"));
+//		solution.setProblemId((Integer) session.getAttribute("pid"));
 		Judge.judge(solution);
 		//insert fail
 		if(!solutionService.insertSolution(solution)) {
@@ -71,6 +76,10 @@ public class SolutionController {
 		//需要获得用户名
 		List<Solution> emps = solutionService.getAllWithUserName();
 		PageInfo<Solution> page = new PageInfo<Solution>(emps, 5);
+		for(Solution solution : page.getList()){
+			solution.setResultStr(Results.toString(solution.getResult()));
+			solution.setLanguageStr(Languages.toString(solution.getLanguage()));
+		}
 		return Msg.success().add("pageInfo", page);
 	}
 }

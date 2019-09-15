@@ -36,6 +36,13 @@ public class Msg {
 		return msg;
 	}
 
+	public static Msg fail(String info) {
+		Msg msg = new Msg();
+		msg.setSuccess(false);
+		msg.setMsg(info);
+		return msg;
+	}
+
 	public Msg add(String key, Object value) {
 		this.getExtend().put(key, value);
 		return this;

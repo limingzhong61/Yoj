@@ -1,5 +1,6 @@
 package com.yoj.web.controller;
 
+import com.yoj.web.bean.Msg;
 import com.yoj.web.bean.User;
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,30 +13,32 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/u")
 public class UserController {
     @Autowired
     UserService userSevice;
 
-    @PostMapping("/login")
-    public String login(User user, Map<String, Object> map,HttpServletRequest request) {
-        user = userSevice.queryUserExist(user);
-        if (user != null) {
-            request.getSession().setAttribute("user",user);
-            return "redirect:/home.html";
-        }
-        map.put("msg", "用户名密码错误");
-        return "login";
-    }
+//    @PostMapping("/login")
+//    public String login(User user, Map<String, Object> map,HttpServletRequest request) {
+//        user = userSevice.queryUserExist(user);
+//        if (user != null) {
+//            request.getSession().setAttribute("user",user);
+//            return "redirect:/problem_set.html";
+//        }
+//        map.put("msg", "用户名密码错误");
+//        return "/user/login";
+//    }
 
     //
     @PostMapping("/register")
     public String register(User user, Map<String, Object> map) {
-        if (userSevice.insertUser(user)) {
+        Msg msg = userSevice.insertUser(user);
+        if (msg.isSuccess()) {
             map.put("msg", "注册成功，请登录");
             return "login";
         }
-        return "register";
+        map.put("msg",msg.getMsg());
+        return "/user/register";
     }
 
     @GetMapping("/logout")
@@ -43,6 +46,6 @@ public class UserController {
         //设置用户为null
         request.getSession().setAttribute("user",null);
        // map.put("msg", "用户名密码错误");
-        return "login";
+        return "/user/login";
     }
 }
