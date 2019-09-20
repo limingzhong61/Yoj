@@ -1,8 +1,8 @@
-package com.yoj.judge.utils;
+package com.yoj.nuts.judge.utils;
 
 import java.io.InputStream;
 
-import com.yoj.judge.bean.ExecMessage;
+import com.yoj.nuts.judge.bean.ExecMessage;
 
 public interface ExecutorUtil {
 	

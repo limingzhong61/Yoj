@@ -1,16 +1,11 @@
-package com.yoj.judge.utils;
+package com.yoj.nuts.judge.utils;
 
+
+import com.jcraft.jsch.*;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
- 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.UserInfo;
  
 /**
  * java远程上传文件
@@ -101,9 +96,10 @@ public class SSH2Util {
 	 * @param localPath
 	 *            本地路径，若为空，表示当前路径
 	 * @param localFile
-	 *            本地文件名，若为空或是“*”，表示目前下全部文件
+	 *            本地文件名，若为空或是“*”，表示目录下全部文件
 	 * @param remotePath
 	 *            远程路径，若为空，表示当前路径，若服务器上无此目录，则会自动创建
+     *            注意：只能创建最后一级目录
 	 * @throws Exception
 	 */
 	public void putFile(String localPath, String localFile, String remotePath)
@@ -117,6 +113,7 @@ public class SSH2Util {
 			try {
 				c.mkdir(remotePath);
 			} catch (Exception e) {
+			    e.printStackTrace();
 			}
 			remoteFile = remotePath + "/.";
 		} else {

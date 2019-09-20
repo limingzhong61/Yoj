@@ -1,4 +1,4 @@
-package com.yoj.web.mapper;
+package com.yoj.web.dao;
 
 import com.yoj.web.bean.Privilege;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,6 +10,6 @@ import java.util.List;
 @Mapper
 @Repository
 public interface PrivilegeMapper {
-    @Select("SELECT * FROM privilige where user_id = #{userId}")
+    @Select("SELECT * FROM privilege where user_id = #{userId}")
     public List<Privilege> queryByUserId(Integer userId);
 }

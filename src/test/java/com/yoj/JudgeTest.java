@@ -1,7 +1,8 @@
-package com.yoj.judge;
+package com.yoj;
 
-import com.yoj.judge.bean.static_fianl.Languages;
-import com.yoj.judge.bean.static_fianl.Results;
+import com.yoj.nuts.judge.Judge;
+import com.yoj.nuts.judge.bean.static_fianl.Languages;
+import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.web.bean.Solution;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class JudgeTest {
         Solution solution = new Solution();
         solution.setLanguage(Languages.C);
         solution.setCode(c);
-        judge.judge(solution);
+//        judge.judge(solution);
         if(solution.getResult() != Results.Accepted){
             int i = 1 / 0;
         }
@@ -51,7 +52,7 @@ public class JudgeTest {
         Solution solution = new Solution();
         solution.setLanguage(Languages.CPP);
         solution.setCode(cpp);
-        judge.judge(solution);
+//        judge.judge(solution);
         if(solution.getResult() != Results.Accepted){
             int i = 1 / 0;
         }
@@ -77,7 +78,7 @@ public class JudgeTest {
         Solution solution = new Solution();
         solution.setLanguage(Languages.JAVA);
         solution.setCode(java);
-        judge.judge(solution);
+//        judge.judge(solution);
         if(solution.getResult() != Results.Accepted){
             int i = 1 / 0;
         }

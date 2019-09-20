@@ -24,7 +24,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/problem_set.html}">题库</a>
+                <a class="nav-link" th:href="@{/problem/problemSet}">题库</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">用户</a>
@@ -76,20 +76,13 @@
         <!--</a>-->
         <!--</li>-->
         <!--</ul>-->
+        <!--判断用户是否存在-->
         <div class="ml-auto" sec:authorize="!isAuthenticated()">
-            <!--判断用户是否存在-->
             <a id="login" class="btn btn-bd-download d-none d-sm-inline-block cm-3 mb-sm-0 ml-sm-3"
                th:href="@{/user/login}">登录</a>
-            <a class="btn btn-bd-download d-none d-lg-inline-block mb-3 mb-sm-0 ml-sm-3" th:href="@{/register.html}"
+            <a class="btn btn-bd-download d-none d-lg-inline-block mb-3 mb-sm-0 ml-sm-3" th:href="@{/user/register}"
             >注册</a>
         </div>
-        <!--<div class="ml-auto" th:if="${session.user == null}">-->
-        <!--&lt;!&ndash;判断用户是否存在&ndash;&gt;-->
-        <!--<a id="login" class="btn btn-bd-download d-none d-sm-inline-block cm-3 mb-sm-0 ml-sm-3"-->
-        <!--th:href="@{/user/login}">登录</a>-->
-        <!--<a class="btn btn-bd-download d-none d-lg-inline-block mb-3 mb-sm-0 ml-sm-3" th:href="@{/register.html}"-->
-        <!--&gt;注册</a>-->
-        <!--</div>-->
         <ul class="navbar-nav flex-row ml-sm-auto d-none d-sm-flex" sec:authorize="isAuthenticated()">
             <li class="nav-item dropdown">
                 <a class="nav-item nav-link dropdown-toggle mr-sm-2" href="#"

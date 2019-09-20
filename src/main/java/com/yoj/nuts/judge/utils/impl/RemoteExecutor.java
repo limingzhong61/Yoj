@@ -1,9 +1,9 @@
-package com.yoj.judge.utils.impl;
+package com.yoj.nuts.judge.utils.impl;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
-import com.yoj.judge.bean.ExecMessage;
-import com.yoj.judge.utils.ExecutorUtil;
+import com.yoj.nuts.judge.bean.ExecMessage;
+import com.yoj.nuts.judge.utils.ExecutorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class RemoteExecutor implements ExecutorUtil {
 	private static Connection conn;
 
 	public RemoteExecutor() {
-		login("47.103.195.173", "nicolas", "nicolas");
+		login("106.54.94.80", "ubuntu", "nicolas!3125");
 	}
 	
 	/**

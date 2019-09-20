@@ -1,4 +1,4 @@
-package com.yoj.web.config;
+package com.yoj.nuts.config;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

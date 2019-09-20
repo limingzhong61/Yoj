@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yoj.web.mapper.SolutionMapper">
+<mapper namespace="com.yoj.web.dao.SolutionMapper">
 
 <!--     <select id="getAllWithUserName" resultType="com.yoj.web.bean.Solution"> -->
 <!--        SELECT * FROM solution ORDER BY solution_id DESC -->

@@ -1,4 +1,4 @@
-package com.yoj.judge.bean;
+package com.yoj.nuts.judge.bean;
 
 import lombok.Getter;
 import lombok.Setter;

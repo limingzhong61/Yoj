@@ -1,4 +1,4 @@
-package com.yoj.judge.bean.static_fianl;
+package com.yoj.nuts.judge.bean.static_fianl;
 
 public class Languages {
     public static final Integer C = 0;

@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="icon" href="https://v4.bootcss.com/favicon.ico">
 
-    <title>A+B Problem</title>
+    <title th:text="${problem.title}">A+B Problem</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/assets/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}"
@@ -72,13 +72,15 @@
     <div class="row">
         <div class="col-md-12 order-md-1">
             <div class="problem" style="display:block;">
-                <div class="tit" th:utext="${problem.title}">&nbsp;&nbsp;</div>
+                <div class="tit" th:utext="${problem.title}"></div>
                 <div id="prbinfos">
                     <div class="res">时间限制：1.0s &nbsp; 内存限制：256.0MB</div>
                 </div>
                 <div style="text-align:center">
                     <a class="btn btn-primary" role="button"
                        th:href="@{/p/1/submit}">提交此题</a>
+                    <a id="btn" class="btn btn-warning" role="button" th:href="@{'/p/alter/'+ ${problem.problemId}}" th:if="${alter}">修改此题
+                    </a>
                 </div>
                 <div class="des">
                     <div class="sec_header">问题描述</div>

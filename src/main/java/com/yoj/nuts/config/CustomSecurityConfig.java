@@ -1,4 +1,4 @@
-package com.yoj.web.config;
+package com.yoj.nuts.config;
 
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,18 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/").permitAll();
 //        .antMatchers("/problem/**").hasRole("problem");
-        http.formLogin().usernameParameter("userName").passwordParameter("password").loginPage("/user/login");
-        http.rememberMe().rememberMeParameter("remember");
-        http.logout().logoutSuccessUrl("/user/login");
+        http
+                .formLogin()
+                .usernameParameter("userName")
+                .passwordParameter("password")
+                .loginPage("/user/login")
+                .failureUrl("/u/login-error");
+        http
+                .rememberMe()
+                .rememberMeParameter("remember");
+        http
+                .logout()
+                .logoutSuccessUrl("/user/login");
     }
 
     @Override

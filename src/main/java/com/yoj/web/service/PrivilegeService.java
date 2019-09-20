@@ -1,7 +1,7 @@
 package com.yoj.web.service;
 
 import com.yoj.web.bean.Privilege;
-import com.yoj.web.mapper.PrivilegeMapper;
+import com.yoj.web.dao.PrivilegeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

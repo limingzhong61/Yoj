@@ -11,13 +11,12 @@
     <!-- default header name is X-CSRF-TOKEN -->
     <meta name="_csrf_header" th:content="${_csrf.headerName}" content=""/>
     <link rel="icon" href="https://v4.bootcss.com/favicon.ico">
-    <title>添加题目</title>
+    <title th:text="${problem == null ? '添加题目' : '修改题目'}">添加题目</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/assets/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}"
           rel="stylesheet">
-    <link href="../assets/css/common.css" th:href="@{/assets/css/common.css}"
-          rel="stylesheet">
+    <link th:href="@{/assets/css/common.css}" rel="stylesheet">
     <style>
         .problem .des {
             margin: 20px 80px 12px 80px;
@@ -37,7 +36,33 @@
             font-size: 16px;
         }
 
+        .caseNum {
+            font-family: "微软雅黑", "黑体", "宋体";
+            margin: 16px 0px 8px 0px;
+            font-size: 15px;
+        }
+
+        .invalid-feedback {
+            font-size: 1rem;
+        }
+
+        /*editor css*/
+        .toolbar {
+            border: 1px solid #ccc;
+        }
+
+        .text {
+            border: 1px solid #ccc;
+            min-height: 200px;
+            max-height: 400px;
+            overflow: auto;
+        }
+
+        /*editor css*/
     </style>
+    <script th:inline="javascript">
+        var prob = [[${problem}]];
+    </script>
 </head>
 
 <body class="bg-light">
@@ -48,54 +73,118 @@
 <div class="container" style="margin-top: 80px;">
     <div class="row">
         <div class="col-md-12 order-md-1">
-            <!--<form th:action="@{/p/add}" method="post">-->
             <div class="problem" style="display:block;">
                 <div class="input-group mb-3 col-md-6 offset-md-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon0">题目</span>
                     </div>
-                    <input name="title" type="text" class="form-control addInput" placeholder="题目" aria-label="Username"
+                    <input name="title" th:value="${problem != null} ? ${problem.title}" type="text"
+                           class="form-control addInput"
+                           placeholder="题目" aria-label="Username"
                            aria-describedby="basic-addon1">
+                    <div class="invalid-feedback">
+                        题目不能为空.
+                    </div>
                 </div>
                 <div id="prbinfos">
                     <div class="input-group mb-3 col-md-6 offset-md-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">时间限制(ms)</span>
                         </div>
-                        <input name="timeLimit" type="text" class="form-control addInput" placeholder="时间限制(ms)"
+                        <input name="timeLimit" th:value="${problem != null} ? ${problem.timeLimit}" type="text"
+                               class="form-control addInput" placeholder="时间限制(ms)"
                                aria-label="Username"
                                aria-describedby="basic-addon1">
+                        <div class="invalid-feedback">
+                            时间限制不能为空.
+                        </div>
                     </div>
                     <div class="input-group mb-3 col-md-6 offset-md-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon2">内存限制(MB)</span>
                         </div>
-                        <input name="memoryLimit" type="text" class="form-control addInput" placeholder="内存限制(MB)"
+                        <input name="memoryLimit" th:value="${problem != null} ? ${problem.memoryLimit}" type="text"
+                               class="form-control addInput" placeholder="内存限制(MB)"
                                aria-label="Username"
                                aria-describedby="basic-addon1">
+                        <div class="invalid-feedback">
+                            内存限制不能为空.
+                        </div>
                     </div>
                 </div>
                 <div class="des">
                     <div class="sec_header">问题描述</div>
-                    <div id="description" class="addDiv"></div>
+                    <div id="description" class="editor">
+                        <div class="toolbar"></div>
+                        <div class="text" th:utext="${problem != null} ?  ${problem.description}"></div>
+
+                    </div>
                     <div class="sec_header">输入格式</div>
-                    <div id="formatInput" class="addDiv"></div>
+                    <div id="formatInput" class="editor">
+                        <div class="toolbar"></div>
+                        <div class="text" th:utext="${problem != null} ?  ${problem.formatInput}"></div>
+                    </div>
                     <div class="sec_header">输出格式</div>
-                    <div id="formatOutput" class="addDiv"></div>
+                    <div id="formatOutput" class="editor">
+                        <div class="toolbar"></div>
+                        <div class="text" th:utext="${problem != null} ?  ${problem.formatOutput}"></div>
+                    </div>
                     <div class="sec_header">样例输入</div>
-                    <div id="sampleInput" class="addDiv"></div>
+                    <div id="sampleInput" class="editor">
+                        <div class="toolbar"></div>
+                        <div class="text" th:utext="${problem != null} ?  ${problem.sampleInput}"></div>
+                    </div>
                     <div class="sec_header">样例输出</div>
-                    <div id="sampleOutput" class="addDiv"></div>
+                    <div id="sampleOutput" class="editor">
+                        <div class="toolbar"></div>
+                        <div class="text" th:utext="${problem != null} ?  ${problem.sampleOutput}"></div>
+                    </div>
                     <div class="sec_header">提示</div>
-                    <div id="hint" class="addDiv"></div>
-                    <div style="text-align:center">
-                        <button id="btn" class="btn btn-primary btn-lg btn-block col-md-3 offset-4" type="submit">添加此题
+                    <div id="hint" class="editor">
+                        <div class="toolbar"></div>
+                        <div class="text" th:utext="${problem != null} ?  ${problem.hint}"></div>
+                    </div>
+                    <div class="sec_header">判题用例
+                        <button id="addCase" class="btn btn-primary btn-sm">添加用例</button>
+                    </div>
+                    <div id="judge-area" class="col-12 mb-3">
+                        <div class="mb-3">注意：判题用例最多不能超过10个</div>
+                        <div th:if="${problem != null}">
+                            <div th:each="data : ${problem.data}">
+                            <!--<div>-->
+                                <div class="row caseItem">
+                                    <div class="col-12 ">
+                                        <span class="caseNum" th:text="'用例'+ ${dataStat.count}">用例1</span>
+                                        <button id="caseBtn1" class="btn btn-danger btn-sm">删除用例</button>
+                                    </div>
+                                    <div class="col-12 row judge-data">
+                                        <div class="col-6">判题输入：
+                                            <textarea name="code" placeholder=""
+                                                      class="form-control judge-input"
+                                                      autofocus="" data-autofocus="" th:text="${data.in}">
+                                            </textarea>
+                                        </div>
+                                        <div class="col-6">判题输出：
+                                            <textarea name="code" placeholder=""
+                                                      class="form-control judge-output"
+                                                      autofocus="" data-autofocus="" th:text="${data.out}">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="submit-msg" class="" style="color: red; text-align: center" hidden="hidden">
+                        提交题目信息错误，请检查提交容纳是否有误！
+                    </div>
+                    <div style="display: flex; justify-content: center;">
+                        <button id="btn" class="btn btn-primary btn-lg justify-content-sm-center" type="submit"
+                                th:text="${problem == null ? '添加此题' : '修改此题'}">
                         </button>
                     </div>
                 </div>
-
             </div>
-            <!--</form>-->
         </div>
     </div>
 
@@ -112,11 +201,9 @@
         th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
 <script type="text/javascript"
         th:src="@{/assets/js/wangEditor.min.js}"></script>
-<script type="text/javascript"
-        src="../static/assets/js/bootstrap.min.js"
-        th:src="@{/assets/js/common.js}"></script>
-<script type="text/javascript"
-        th:src="@{/assets/js/problem/addProblem.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/common.js}"></script>
+<script th:src="@{/assets/js/util/validate.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/problem/addProblem.js}"></script>
 </body>
 </body>
 </html>

@@ -1,4 +1,4 @@
-package com.yoj.web.config;
+package com.yoj.nuts.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,8 +43,6 @@ public class MvcConfig implements WebMvcConfigurer {
 			public void addViewControllers(ViewControllerRegistry registry) {
 				registry.addViewController("/").setViewName("home");
 				registry.addViewController("/index.html").setViewName("home");
-				registry.addViewController("/register.html").setViewName("/user/register");
-				registry.addViewController("/problem_set.html").setViewName("problem_set");
 				registry.addViewController("/home.html").setViewName("home");
 			}
 

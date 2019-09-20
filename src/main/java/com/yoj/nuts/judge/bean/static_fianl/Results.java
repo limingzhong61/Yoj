@@ -1,6 +1,17 @@
-package com.yoj.judge.bean.static_fianl;
+package com.yoj.nuts.judge.bean.static_fianl;
 
 public class Results {
+    //    RESULT_STR = [
+//            'Accepted',
+//            'Presentation Error',
+//            'Time Limit Exceeded',
+//            'Memory Limit Exceeded',
+//            'Wrong Answer',
+//            'Runtime Error',
+//            'Output Limit Exceeded',
+//            'Compile Error',
+//            'System Error'
+//            ]
     public static final Integer Accepted = 0;
     public static final Integer PresentationError = 1;
     public static final Integer TimeLimitExceeded = 2;

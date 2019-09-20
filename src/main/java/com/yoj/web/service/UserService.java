@@ -3,7 +3,7 @@ package com.yoj.web.service;
 import com.yoj.web.bean.Msg;
 import com.yoj.web.bean.User;
 import com.yoj.web.bean.UserDetailsImpl;
-import com.yoj.web.mapper.UserMapper;
+import com.yoj.web.dao.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -7,8 +7,8 @@
 //
 //import org.apache.logging.log4j.util.PropertiesUtil;
 //
-//import com.yoj.judge.bean.ExecMessage;
-//import com.yoj.judge.bean.Results;
+//import com.yoj.nuts.judge.bean.ExecMessage;
+//import com.yoj.nuts.judge.bean.Results;
 //
 //import bean.JudgeTask;
 //

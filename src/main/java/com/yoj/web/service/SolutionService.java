@@ -1,7 +1,7 @@
 package com.yoj.web.service;
 
 import com.yoj.web.bean.Solution;
-import com.yoj.web.mapper.SolutionMapper;
+import com.yoj.web.dao.SolutionMapper;
 
 import java.util.List;
 

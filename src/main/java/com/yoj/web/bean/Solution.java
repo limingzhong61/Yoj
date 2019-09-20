@@ -1,43 +1,39 @@
 package com.yoj.web.bean;
 
-import com.yoj.judge.bean.TestResult;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.yoj.nuts.judge.bean.TestResult;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class Solution {
-	private Integer solutionId;
+    private Integer solutionId;
 
-	private Integer problemId;
+    private Integer problemId;
 
-	private Integer userId;
-//	Languages
-	private Integer language;
+    private Integer userId;
+    //	Languages
+    private Integer language;
 
-	private String languageStr;
-
-	private String code;
-//	Results
-	private Integer result;
-
-	private String resultStr;
+    private String code;
+    //	Results
+    private Integer result;
     //ms
-	private Integer runtime;
-	//memoryInfo = this.memory / 10 + "KB"
-	private Integer memory;
-	
-	private String errorMessage;
-	
-	private User user;
-	
-	private List<TestResult> testResults;
-	
-	private Date submitTime;
-	
+    private Integer runtime;
+    //memoryInfo = this.memory / 10 + "KB"
+    private Integer memory;
+
+    private String errorMessage;
+
+    private Date submitTime;
+
+    //非表格字段
+    private String languageStr;
+
+    private String resultStr;
+
+    private User user;
+
+    private List<TestResult> testResults;
 }

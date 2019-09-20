@@ -1,7 +1,7 @@
-package com.yoj.judge.utils.impl;
+package com.yoj.nuts.judge.utils.impl;
 
-import com.yoj.judge.bean.ExecMessage;
-import com.yoj.judge.utils.ExecutorUtil;
+import com.yoj.nuts.judge.bean.ExecMessage;
+import com.yoj.nuts.judge.utils.ExecutorUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
