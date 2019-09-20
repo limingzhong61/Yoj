@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+###忽略配置文件###
+judge.properties
 
 ### STS ###
 .apt_generated

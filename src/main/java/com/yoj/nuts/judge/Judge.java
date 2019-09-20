@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.bean.TestResult;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
+import com.yoj.nuts.judge.utils.PropertiesUtil;
 import com.yoj.nuts.judge.utils.SSH2Util;
 import com.yoj.nuts.judge.utils.impl.RemoteExecutor;
 import com.yoj.web.bean.Problem;
@@ -33,9 +34,9 @@ public class Judge {
         // opt authority not enough to normal user;
 
         // linux path,tmp directory store temporary files
-        String linuxPath = "/tmp" + "/" + 1;
+        String linuxPath = PropertiesUtil.get("linux.solutionFilePath") + problem.getProblemId();
         // windows path,
-        String windowsPath = "E://tmp//1";
+        String windowsPath = PropertiesUtil.get("windows.solutionFilePath")+ problem.getProblemId();
 
         System.out.println(linuxPath);
         File file = new File(windowsPath);
@@ -43,7 +44,7 @@ public class Judge {
         try {
             createFile(solution.getLanguage(), windowsPath, solution.getCode());
             // window 环境
-            SSH2Util ssh2Util = new SSH2Util("106.54.94.80", "ubuntu", "nicolas!3125", 22);
+            SSH2Util ssh2Util = new SSH2Util(PropertiesUtil.get("ip"), PropertiesUtil.get("userName"), PropertiesUtil.get("password"), 22);
             ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
         } catch (Exception e) {
             e.printStackTrace();
