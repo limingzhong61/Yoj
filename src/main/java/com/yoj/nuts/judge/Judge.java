@@ -4,13 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.bean.TestResult;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
+import com.yoj.nuts.judge.utils.ExecutorUtil;
 import com.yoj.nuts.judge.utils.PropertiesUtil;
 import com.yoj.nuts.judge.utils.SSH2Util;
-import com.yoj.nuts.judge.utils.impl.RemoteExecutor;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -22,37 +23,46 @@ import java.util.List;
 @Setter
 @Component
 public class Judge {
-    @Autowired
-    private RemoteExecutor executor;
     private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
-//    @Autowired
-//    private LocalExecutor executor;
+    @Autowired
+//    @Qualifier("remoteExecutor")
+    @Qualifier("localExecutor")
+    private ExecutorUtil executor;
 
     public void judge(Solution solution, Problem problem) {
 //    	String path = "/opt" + "/" + task.getSubmitId();
         // opt authority not enough to normal user;
-
         // linux path,tmp directory store temporary files
         String linuxPath = PropertiesUtil.get("linux.solutionFilePath") + problem.getProblemId();
         // windows path,
         String windowsPath = PropertiesUtil.get("windows.solutionFilePath")+ problem.getProblemId();
-
-        System.out.println(linuxPath);
-        File file = new File(windowsPath);
-        file.mkdirs();
+//        System.out.println(linuxPath);
+//        File file = new File(solutionPath);
+//        file.mkdirs();
         try {
-            createFile(solution.getLanguage(), windowsPath, solution.getCode());
-            // window 环境
-            SSH2Util ssh2Util = new SSH2Util(PropertiesUtil.get("ip"), PropertiesUtil.get("userName"), PropertiesUtil.get("password"), 22);
-            ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
+            if("linux".equals(PropertiesUtil.get("platform"))){
+                File file = new File(linuxPath);
+                file.mkdirs();
+                createFile(solution.getLanguage(), linuxPath, solution.getCode());
+            }else{
+                // window 环境
+                File file = new File(windowsPath);
+                file.mkdirs();
+                createFile(solution.getLanguage(), windowsPath, solution.getCode());
+                SSH2Util ssh2Util = new SSH2Util(PropertiesUtil.get("ip"), PropertiesUtil.get("userName"), PropertiesUtil.get("password"), 22);
+                ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             solution.setErrorMessage("system exception:create file fail");
             solution.setResult(Results.SystemError);
             System.out.println("create file fail");
             executor.execute("rm -rf " + linuxPath);
+            return;
         }
+
         // compile the source
         String message = compile(solution.getLanguage(), linuxPath);
 //		if (message != null && task.getCompilerId() != 4) {
@@ -73,11 +83,11 @@ public class Judge {
 //				+ path + " " + task.getTimeLimit() + " " + task.getMemoryLimit();
         String path = linuxPath + "/" + fileNames[solution.getLanguage()];
         String judgeData = "/tmp/testData/"+ problem.getProblemId();
-        String[] wzies = process.split("wzy");
         String judgePyPath = "/home/ubuntu/judge/judge1.py";
-        for(String s : wzies){
-            System.out.println(s);
-        }
+//        String[] wzies = process.split("wzy");
+//        for(String s : wzies){
+//            System.out.println(s);
+//        }
         String cmd = "python " + judgePyPath + " " + process + " " + judgeData + " "
                 + linuxPath + " " + problem.getTimeLimit()+ " " + problem.getMemoryLimit()*1024;
 //        String cmd = "python " + "/home/nicolas/judge/judge1.py" + " " + process + " " + judge_data + " "

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoj.web.dao.ProblemMapper">
+    <resultMap id="BaseResultMap" type="com.yoj.web.bean.Problem">
+        <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>
+        <result column="memory_limit" jdbcType="INTEGER" property="memoryLimit"/>
+        <result column="accepted" jdbcType="INTEGER" property="accepted"/>
+        <result column="submissions" jdbcType="INTEGER" property="submissions"/>
+        <result column="description" jdbcType="LONGVARCHAR" property="description"/>
+        <result column="format_input" jdbcType="LONGVARCHAR" property="formatInput"/>
+        <result column="format_output" jdbcType="LONGVARCHAR" property="formatOutput"/>
+        <result column="sample_input" jdbcType="LONGVARCHAR" property="sampleInput"/>
+        <result column="sample_output" jdbcType="LONGVARCHAR" property="sampleOutput"/>
+        <result column="hint" jdbcType="LONGVARCHAR" property="hint"/>
+        <result column="judge_data" jdbcType="LONGVARCHAR" property="judgeData"/>
+    </resultMap>
+    <insert id="insert" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
+            parameterType="com.yoj.web.bean.Problem">
+    insert into problem (user_id, title, time_limit,
+      memory_limit, description,
+      format_input, format_output, sample_input,sample_output,
+       hint, judge_data)
+    values (#{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{timeLimit,jdbcType=INTEGER},
+      #{memoryLimit,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR},
+      #{formatInput,jdbcType=LONGVARCHAR}, #{formatOutput,jdbcType=LONGVARCHAR},
+      #{sampleInput,jdbcType=LONGVARCHAR}, #{sampleOutput,jdbcType=LONGVARCHAR},
+      #{hint,jdbcType=LONGVARCHAR},
+      #{judgeData,jdbcType=LONGVARCHAR})
+  </insert>
+    <!--取到最后生成的主键-->
+    <insert id="insertSelective" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
+            parameterType="com.yoj.web.bean.Problem">
+        insert into problem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            -- 主键自增
+            <!--<if test="problemId != null">-->
+            <!--problem_id,-->
+            <!--</if>-->
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="timeLimit != null">
+                time_limit,
+            </if>
+            <if test="memoryLimit != null">
+                memory_limit,
+            </if>
+            <if test="accepted != null">
+                accepted,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="formatInput != null">
+                format_input,
+            </if>
+            <if test="formatOutput != null">
+                format_output,
+            </if>
+            <if test="sampleInput != null">
+                sample_input,
+            </if>
+            <if test="sampleOutput != null">
+                sample_output,
+            </if>
+            <if test="hint != null">
+                hint,
+            </if>
+            <if test="judgeData != null">
+                judge_data,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="timeLimit != null">
+                #{timeLimit,jdbcType=INTEGER},
+            </if>
+            <if test="memoryLimit != null">
+                #{memoryLimit,jdbcType=INTEGER},
+            </if>
+            <if test="accepted != null">
+                #{accepted,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="formatInput != null">
+                #{formatInput,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="formatOutput != null">
+                #{formatOutput,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="sampleInput != null">
+                #{sampleInput,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="sampleOutput != null">
+                #{sampleOutput,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="hint != null">
+                #{hint,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="judgeData != null">
+                #{judgeData,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.yoj.web.bean.Problem">
+    update problem
+    set user_id = #{userId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      memory_limit = #{memoryLimit,jdbcType=INTEGER},
+      time_limit = #{timeLimit,jdbcType=INTEGER},
+      description = #{description,jdbcType=LONGVARCHAR},
+      format_input = #{formatInput,jdbcType=LONGVARCHAR},
+      format_output = #{formatOutput,jdbcType=LONGVARCHAR},
+      sample_input = #{sampleInput,jdbcType=LONGVARCHAR},
+      sample_output = #{sampleOutput,jdbcType=LONGVARCHAR},
+      hint = #{hint,jdbcType=LONGVARCHAR},
+      judge_data = #{judgeData,jdbcType=LONGVARCHAR}
+    where problem_id = #{problemId,jdbcType=INTEGER}
+  </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.yoj.web.bean.Problem">
+        update problem
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="tag != null">
+                tag = #{tag,jdbcType=VARCHAR},
+            </if>
+            <if test="memoryLimit != null">
+                memory_limit = #{memoryLimit,jdbcType=INTEGER},
+            </if>
+            <if test="timeLimit != null">
+                time_limit = #{timeLimit,jdbcType=INTEGER},
+            </if>
+            <if test="accepted != null">
+                accepted = #{accepted,jdbcType=INTEGER},
+            </if>
+            <if test="submissions != null">
+                submissions = #{submissions,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="formatInput != null">
+                format_input = #{formatInput,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="formatOutput != null">
+                format_output = #{formatOutput,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="sampleInput != null">
+                sample_input = #{sampleInput,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="sampleOutput != null">
+                sample_output = #{sampleOutput,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="hint != null">
+                hint = #{hint,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="judgeData != null">
+                judge_data = #{judgeData,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where problem_id = #{problemId,jdbcType=INTEGER}
+    </update>
+</mapper>

@@ -2,11 +2,11 @@ var totalRecord, currentPage;
 // 1.页面加载完成以后，直接发送ajax请求，要到分页数据
 $(function() {
 	toPage(1);
-
     function toPage(pageNumber) {
         $.ajax({
-            url : "/solution/result/" + pageNumber,
+            url : "/s/set/" + pageNumber,
             type : "GET",
+            // timeout : 10000,
             success : function(result) {
                 console.log(result);
                 // 1.解释并显示数据
@@ -27,7 +27,7 @@ $(function() {
             var $tableTr = $("<tr></tr>");
             $("<td></td>").append(this.solutionId).appendTo($tableTr);
             $("<td></td>").append(this.user.userName).appendTo($tableTr);
-            var $a = $("<a></a>").append("A+B问题").attr("href", "/p/" + this.problemId)
+            var $a = $("<a></a>").append(this.problem.title).attr("href", "/p/" + this.problem.problemId)
             $("<td></td>").append($a).appendTo($tableTr);
             // 2019-09-01T16:01:56.000+0000
             var date = this.submitTime.substr(0, 10);
@@ -36,8 +36,8 @@ $(function() {
             $("<td></td>").append(this.languageStr).appendTo($tableTr);
             $("<td></td>").append(this.resultStr).appendTo($tableTr);
             var timeInfo = "";
-            if(this.time != null){
-                this.runtime+"ms"
+            if(this.runtime != null){
+                timeInfo = this.runtime + "ms"
             }
             $("<td></td>").append(timeInfo).appendTo($tableTr);
             var memoryInfo = "";

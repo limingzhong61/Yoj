@@ -46,4 +46,8 @@ public interface ProblemMapper {
     int insertSelective(Problem problem);
 
     int updateByPrimaryKey(Problem problem);
+
+    int updateByPrimaryKeySelective(Problem problem);
+    @Select("SELECT problem_id,title FROM problem WHERE problem_id = #{pid}")
+    Problem queryProblemTitleAndIdById(Integer pid);
 }

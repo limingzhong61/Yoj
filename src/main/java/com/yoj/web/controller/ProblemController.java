@@ -36,12 +36,11 @@ public class ProblemController {
         return "problem/problemView";
     }
 
-    @RequestMapping("/{pid}/submit")
+    @RequestMapping("/submit/{pid}")
     public String toSubmitView(@PathVariable("pid") int pid, Map<String, Object> map) {
         map.put("pid", pid);
-        return "problem/submit";
+        return "solution/submit";
     }
-
 
     @RequestMapping("/main/{pageNumber}")
     @ResponseBody

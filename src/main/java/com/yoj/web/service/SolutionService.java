@@ -2,11 +2,10 @@ package com.yoj.web.service;
 
 import com.yoj.web.bean.Solution;
 import com.yoj.web.dao.SolutionMapper;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SolutionService {
@@ -45,7 +44,18 @@ public class SolutionService {
 	 * @date 2019年8月24日
 	 */
 	public List<Solution> getAllWithUserName() {
-		return solutionMapper.getAllWithUserName();
+		return solutionMapper.getAllWithUserAndProblemName();
 	}
+
+
+    public int countAcceptedByProblemId(Integer pid){
+	    return solutionMapper.countAcceptedByProblemId(pid);
+    }
+
+    public int countSubmissionByProblemId(Integer pid){
+	    return solutionMapper.countSubmissionByProblemId(pid);
+    }
+
+
 	
 }

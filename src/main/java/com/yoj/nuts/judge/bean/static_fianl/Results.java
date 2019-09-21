@@ -19,8 +19,8 @@ public class Results {
     public static final Integer WrongAnswer = 4;
     public static final Integer RuntimeError = 5;
     public static final Integer OutputLimitExceeded = 6;
-    public static final Integer SystemError = 7;
-    public static final Integer CompileError = 8;
+    public static final Integer  CompileError = 7;
+    public static final Integer  SystemError = 8;
 
     public static final String[] RESULT_STR =
             {
@@ -31,8 +31,8 @@ public class Results {
                     "Wrong Answer",
                     "Runtime Error",
                     "Output Limit Exceeded",
-                    "System Error",
-                    "Compile Error"
+                    "Compile Error",
+                    "System Error"
             };
 
     public static String toString(Integer result) {

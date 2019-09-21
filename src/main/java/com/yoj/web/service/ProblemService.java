@@ -1,5 +1,6 @@
 package com.yoj.web.service;
 
+import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.nuts.judge.utils.ProblemFileUtil;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
@@ -26,7 +27,7 @@ public class ProblemService {
      * @author lmz
      */
     public boolean updateSubmit(Solution solution) {
-        if ("accept".equals(solution.getResult())) {
+        if (solution.getResult() == Results.Accepted) {
             return problemMapper.updateAccept() > 0;
         } else {
             return problemMapper.updateSubmit() > 0;
@@ -60,4 +61,9 @@ public class ProblemService {
         }
         return flag;
     }
+
+    public boolean updateByPrimaryKeySelective(Problem problem){
+        return problemMapper.updateByPrimaryKeySelective(problem) > 0;
+    }
+
 }

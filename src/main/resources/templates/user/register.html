@@ -33,7 +33,7 @@
             <h4 class="mb-3 " style="text-align: center;">注册账号</h4>
             <!--判断-->
             <p style="color: red; text-align: center" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
-            <form class="needs-validation" novalidate="" th:action="@{/user/register}" method="post">
+            <form class="needs-validation" novalidate="" th:action="@{/u/register}" method="post">
                 <div class="mb-3">
                     <label for="userName">用户名</label>
                     <input type="text" class="form-control needs-validation" id="userName" name="userName" placeholder="" required="required">
@@ -50,7 +50,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="secondPassword">确认密码</label>
-                    <input type="password" class="form-control" id="secondPassword" name="password" placeholder="">
+                    <input type="password" class="form-control" id="secondPassword" placeholder="">
                     <div class="invalid-feedback">
                         两次密码不一致.
                     </div>

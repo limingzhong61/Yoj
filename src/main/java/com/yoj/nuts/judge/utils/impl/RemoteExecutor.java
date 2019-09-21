@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 /**
  * @author lmz 远程连接linux使用
  */
-@Component("remoteExcutor")
+@Component("remoteExecutor")
 public class RemoteExecutor implements ExecutorUtil {
 
 	private static final Logger log = LoggerFactory.getLogger(RemoteExecutor.class);

@@ -1,9 +1,8 @@
 package com.yoj;
 
-import com.alibaba.fastjson.JSONArray;
-import com.yoj.web.bean.JudgeData;
-import com.yoj.web.bean.Problem;
+import com.yoj.web.bean.Solution;
 import com.yoj.web.dao.ProblemMapper;
+import com.yoj.web.dao.SolutionMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,27 +17,28 @@ public class MybatisMapperTest {
     @Autowired
     ProblemMapper problemMapper;
 
-    @Test
-    public void testSelectInsert(){
-        Problem problem = problemMapper.queryById(1);
-        System.out.println(problemMapper.insertSelective(problem));
-        System.out.println("problemId:"+problem.getProblemId());
-    }
+    @Autowired
+    SolutionMapper solutionMapper;
+
+//    @Test
+//    public void testSelectInsert(){
+//        Problem problem = problemMapper.queryById(1);
+//        System.out.println(problemMapper.insertSelective(problem));
+//        System.out.println("problemId:"+problem.getProblemId());
+//    }
 //
-    @Test
-    public void testProblemInsert(){
-        Problem problem = problemMapper.queryById(1);
-        System.out.println(problemMapper.insert(problem));
-        System.out.println("problemId:"+problem.getProblemId());
-    }
+//    @Test
+//    public void testProblemInsert(){
+//        Problem problem = problemMapper.queryById(1);
+//        System.out.println(problemMapper.insert(problem));
+//        System.out.println("problemId:"+problem.getProblemId());
+//    }
 
     @Test
-    public void testJSon(){
-        Problem problem = problemMapper.queryById(1);
-        String judgeData = problem.getJudgeData();
-//        System.out.println(judgeData);
-        List<JudgeData> parse = JSONArray.parseArray(judgeData,JudgeData.class);
-        System.out.println(parse.get(1));
-        System.out.println();
+    public void testSelect(){
+//        Problem problem = problemMapper.queryProblemTitleAndIdById(1);
+//        System.out.println(problem);
+        List<Solution> allByDesc = solutionMapper.getAllWithUserAndProblemName();
+        System.out.println(allByDesc);
     }
 }

@@ -74,11 +74,13 @@
             <div class="problem" style="display:block;">
                 <div class="tit" th:utext="${problem.title}"></div>
                 <div id="prbinfos">
-                    <div class="res">时间限制：1.0s &nbsp; 内存限制：256.0MB</div>
+                    <div class="res" th:utext="'时间限制：' + ${problem.timeLimit} + '.0s &nbsp;内存限制：' +  ${problem.memoryLimit} + '.0MB'">
+                        <!--时间限制：1.0s &nbsp; 内存限制：256.0MB-->
+                    </div>
                 </div>
                 <div style="text-align:center">
                     <a class="btn btn-primary" role="button"
-                       th:href="@{/p/1/submit}">提交此题</a>
+                       th:href="@{'/p/submit/' + ${problem.problemId}}">提交此题</a>
                     <a id="btn" class="btn btn-warning" role="button" th:href="@{'/p/alter/'+ ${problem.problemId}}" th:if="${alter}">修改此题
                     </a>
                 </div>

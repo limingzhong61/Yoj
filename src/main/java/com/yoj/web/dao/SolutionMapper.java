@@ -1,17 +1,11 @@
 package com.yoj.web.dao;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import com.yoj.web.bean.Solution;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Repository;
 
-import com.yoj.web.bean.Solution;
+import java.util.List;
 
 @Repository
 @Mapper
@@ -32,7 +26,7 @@ public interface SolutionMapper {
 	@Select("SELECT * FROM solution ORDER BY solution_id DESC")
 	@Results({
     	@Result(id=true,column="solution_id",property="solutionId"),
-    	@Result(column="problem_id",property="problemId"),
+    	@Result(column="problem_id",property="problem",one=@One(select = "com.yoj.web.dao.ProblemMapper.queryProblemTitleAndIdById",fetchType= FetchType.EAGER)),
     	@Result(column="language",property="language"),
     	@Result(column="code",property="code"),
     	@Result(column="result",property="result"),
@@ -42,5 +36,10 @@ public interface SolutionMapper {
     	@Result(column="submit_time",property="submitTime"),
     	@Result(column="user_id",property="user",one=@One(select="com.yoj.web.dao.UserMapper.getUserById",fetchType= FetchType.EAGER))
     })
-	public List<Solution> getAllWithUserName();
+	public List<Solution> getAllWithUserAndProblemName();
+    @Select("select count(1) from solution where problem_id = #{pid} and result  = 0")
+	int countAcceptedByProblemId(Integer pid);
+
+    @Select("select count(1) from solution where problem_id = #{pid}")
+    int countSubmissionByProblemId(Integer pid);
 }

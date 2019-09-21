@@ -36,4 +36,6 @@ public class Solution {
     private User user;
 
     private List<TestResult> testResults;
+
+    private Problem problem;
 }
