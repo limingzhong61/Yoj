@@ -6,15 +6,19 @@ import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.dao.ProblemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 /**
  * @Description: create和update时需要在服务器上创建目录
  * @Author: lmz
  */
+@CacheConfig(cacheNames = "problem")
+@Service
 public class ProblemService {
     @Autowired
     public ProblemMapper problemMapper;
@@ -26,6 +30,7 @@ public class ProblemService {
      * @return
      * @author lmz
      */
+    @CachePut
     public boolean updateSubmit(Solution solution) {
         if (solution.getResult() == Results.Accepted) {
             return problemMapper.updateAccept() > 0;
@@ -34,36 +39,51 @@ public class ProblemService {
         }
     }
 
+    @Cacheable(value = "problem")
     public Problem queryById(int pid) {
         return problemMapper.queryById(pid);
     }
-
+    /**
+    * @Description:  @Cacheable,分页数据未缓存
+    * @Param: []
+    * @return: java.util.List<com.yoj.web.bean.Problem>
+    * @Author: lmz
+    */
     public List<Problem> getAll() {
         return problemMapper.getAll();
     }
-
+    @Cacheable
     public Boolean isSolved(Integer problemId, Integer userId) {
         return problemMapper.isSolved(problemId, userId) > 0;
     }
 
-    public boolean insert(Problem problem) {
+    @CachePut(key="#result.problemId")
+    public Problem insert(Problem problem) {
         boolean flag = problemMapper.insert(problem) > 0;
-        if(flag){
+        if (flag) {
             ProblemFileUtil.createProblemFile(problem);
+        }else{
+            problem = null;
         }
-        return flag;
+        return problem;
     }
-
-    public boolean updateByPrimaryKey(Problem problem) {
+    @CachePut(key = "#problem.problemId")
+    public Problem updateByPrimaryKey(Problem problem) {
         boolean flag = problemMapper.updateByPrimaryKey(problem) > 0;
-        if(flag){
+        if (flag) {
             ProblemFileUtil.createProblemFile(problem);
+        }else{
+            problem = null;
         }
-        return flag;
+        return problem;
     }
-
-    public boolean updateByPrimaryKeySelective(Problem problem){
-        return problemMapper.updateByPrimaryKeySelective(problem) > 0;
+    @CachePut(key = "#problem.problemId")
+    public Problem updateByPrimaryKeySelective(Problem problem) {
+        boolean flag = problemMapper.updateByPrimaryKeySelective(problem) > 0;
+        if(flag){
+            return queryById(problem.getProblemId());
+        }
+        return null;
     }
 
 }

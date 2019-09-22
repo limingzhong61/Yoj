@@ -69,7 +69,7 @@ public class ProblemController {
             return Msg.fail("");
         }
         problem.setUserId(user.getUserId());
-        if (problemService.insert(problem)) {
+        if (problemService.insert(problem) != null) {
             return Msg.success().add("pid", problem.getProblemId());
         }
         return Msg.fail();
@@ -95,7 +95,7 @@ public class ProblemController {
             return Msg.fail("");
         }
         problem.setUserId(user.getUserId());
-        if (problemService.updateByPrimaryKey(problem)) {
+        if (problemService.updateByPrimaryKey(problem) != null) {
             return Msg.success().add("pid", problem.getProblemId());
         }
         return Msg.fail();

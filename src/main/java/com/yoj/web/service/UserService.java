@@ -6,6 +6,9 @@ import com.yoj.web.bean.UserDetailsImpl;
 import com.yoj.web.dao.UserMapper;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
  * @Author: lmz
  * @Date: 2019/9/22
  */
+@CacheConfig(cacheNames="user")
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
@@ -32,6 +36,7 @@ public class UserService implements UserDetailsService {
      * @Author: lmz
      * @Date: 2019/8/12
      */
+    @CachePut
     public Msg insertUser(User user) {
         if (userMapper.queryExistByName(user.getUserName()) > 0) {
             return Msg.fail("用户名已存在");
@@ -50,18 +55,20 @@ public class UserService implements UserDetailsService {
      * @Author: lmz
      * @Date: 2019/8/11
      */
+    @Cacheable
     public User queryUserExist(User user) {
         return userMapper.queryUserExist(user);
     }
-
+    @Cacheable
     public User getUserById(Integer userId) {
         return userMapper.getUserById(userId);
     }
-
+    @Cacheable
     public User getUserByName(String userName) {
         return userMapper.getUserByName(userName);
     }
 
+//    @Cacheable
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = getUserByName(username);

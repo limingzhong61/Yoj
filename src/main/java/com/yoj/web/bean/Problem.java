@@ -10,7 +10,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Problem {
+public class Problem{
     private Integer problemId;
     //作者
     private Integer userId;
