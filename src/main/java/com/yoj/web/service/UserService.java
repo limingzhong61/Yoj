@@ -4,32 +4,40 @@ import com.yoj.web.bean.Msg;
 import com.yoj.web.bean.User;
 import com.yoj.web.bean.UserDetailsImpl;
 import com.yoj.web.dao.UserMapper;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * @Description: insert/update时请对密码进行加密
+ * @Author: lmz
+ * @Date: 2019/9/22
+ */
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
-    UserMapper userMapper;
-
+    private UserMapper userMapper;
     @Autowired
-    PrivilegeService privilegeService;
+    private PrivilegeService privilegeService;
+    @Autowired
+    private StringEncryptor encryptor;
 
     /**
-    * @Description: 插入用户
-    * @Param: [user]
-    * @return: Msg
-    * @Author: lmz
-    * @Date: 2019/8/12
-    */
+     * @Description: 插入用户
+     * @Param: [user]
+     * @return: Msg
+     * @Author: lmz
+     * @Date: 2019/8/12
+     */
     public Msg insertUser(User user) {
-        if(userMapper.queryExistByName(user.getUserName()) > 0){
+        if (userMapper.queryExistByName(user.getUserName()) > 0) {
             return Msg.fail("用户名已存在");
         }
-        if(userMapper.insertUser(user) > 0){
+        user.setPassword(encryptor.encrypt(user.getPassword()));
+        if (userMapper.insertUser(user) > 0) {
             return Msg.success();
         }
         return Msg.fail();
@@ -47,18 +55,20 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUserById(Integer userId) {
-    	return userMapper.getUserById(userId);
+        return userMapper.getUserById(userId);
     }
-    public User getUserByName(String userName){
+
+    public User getUserByName(String userName) {
         return userMapper.getUserByName(userName);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = getUserByName(username);
-        if(user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("没有该用户");
         }
+        user.setPassword(encryptor.decrypt(user.getPassword()));
         return new UserDetailsImpl(user, privilegeService.queryByUserId(user.getUserId()));
     }
 }

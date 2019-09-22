@@ -27,12 +27,12 @@
 //		String hostname = "192.168.163.132";
 //		int port = 21;
 //		String username = "nicolas";
-//		String password = "nicolas";
+//		String EncryptTest = "nicolas";
 //		try {
 //			// 链接ftp服务器
 //			ftpClient.connect(hostname, port);
 //			// 登录ftp
-//			ftpClient.login(username, password);
+//			ftpClient.login(username, EncryptTest);
 //			int reply = ftpClient.getReplyCode();
 //			System.out.println(reply);
 //			// 如果reply返回230就算成功了，如果返回530密码用户名错误或当前用户无权限下面有详细的解释。

@@ -1,7 +1,6 @@
 package com.yoj.web.bean;
 
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,14 +11,12 @@ import java.util.List;
 
 @ToString
 public class UserDetailsImpl implements UserDetails{
+
     private User user;
     private String username;
     private String password;
     //包含着用户对应的所有Privilege，在使用时调用者给对象注入Privileges
     private List<Privilege> privilege;
-
-    @Autowired
-    private com.yoj.web.service.PrivilegeService PrivilegeService;
 
     public void setPrivilege(List<Privilege> privilege) {
         this.privilege = privilege;
@@ -40,6 +37,7 @@ public class UserDetailsImpl implements UserDetails{
     public UserDetailsImpl(User user,List<Privilege> Privileges) {
         this.user = user;
         this.username = user.getUserName();
+        System.out.println();
         this.password = user.getPassword();
         this.privilege = Privileges;
     }
