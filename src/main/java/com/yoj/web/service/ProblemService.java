@@ -33,9 +33,9 @@ public class ProblemService {
     @CachePut
     public boolean updateSubmit(Solution solution) {
         if (solution.getResult() == Results.Accepted) {
-            return problemMapper.updateAccept() > 0;
+            return problemMapper.updateAccept(solution.getProblemId()) > 0;
         } else {
-            return problemMapper.updateSubmit() > 0;
+            return problemMapper.updateSubmit(solution.getProblemId()) > 0;
         }
     }
 
@@ -62,10 +62,9 @@ public class ProblemService {
         boolean flag = problemMapper.insert(problem) > 0;
         if (flag) {
             ProblemFileUtil.createProblemFile(problem);
-        }else{
-            problem = null;
+            return problem;
         }
-        return problem;
+        return null;
     }
     @CachePut(key = "#problem.problemId")
     public Problem updateByPrimaryKey(Problem problem) {

@@ -3,6 +3,7 @@ package com.yoj.nuts.judge;
 import com.alibaba.fastjson.JSONArray;
 import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.bean.TestResult;
+import com.yoj.nuts.judge.bean.static_fianl.Languages;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.nuts.judge.utils.ExecutorUtil;
 import com.yoj.nuts.judge.utils.PropertiesUtil;
@@ -82,14 +83,19 @@ public class Judge {
 //		String cmd = "python " + PropertiesUtil.StringValue("judge_script") + " " + process + " " + judge_data + " "
 //				+ path + " " + task.getTimeLimit() + " " + task.getMemoryLimit();
         String path = linuxPath + "/" + fileNames[solution.getLanguage()];
-        String judgeData = "/tmp/testData/"+ problem.getProblemId();
-        String judgePyPath = "/home/ubuntu/judge/judge1.py";
-//        String[] wzies = process.split("wzy");
+        String judgeData = PropertiesUtil.get("linux.problemFilePath")+ problem.getProblemId();
+        String judgePyPath = PropertiesUtil.get("judgeScriptPath");
+//        String[] wzies = process.split("lmz");
 //        for(String s : wzies){
 //            System.out.println(s);
 //        }
+        int memoryLimit = problem.getMemoryLimit() * 1024;
+        //#服务器内存不够分配。。。。。给大点，和小一点都行????
+        if(solution.getLanguage() == Languages.JAVA){
+            memoryLimit = 2000000;
+        }
         String cmd = "python " + judgePyPath + " " + process + " " + judgeData + " "
-                + linuxPath + " " + problem.getTimeLimit()+ " " + problem.getMemoryLimit()*1024;
+                + linuxPath + " " + problem.getTimeLimit()+ " " + memoryLimit;
 //        String cmd = "python " + "/home/nicolas/judge/judge1.py" + " " + process + " " + judge_data + " "
 //                + linuxPath + " " + 1000 + " " + 20000;
 //        String cmd = "python /home/nicolas/judge/lmzJudge.py " + linuxPath
@@ -112,10 +118,7 @@ public class Judge {
                 cmd = "g++ " + path + "/main.cpp -o " + path + "/main";
                 break;
             case 2:
-                //liunx
-//                cmd = "javac " + path + "/Main.java";
-                //windows
-                cmd = ". /etc/profile; javac " + path + "/Main.java";
+                cmd = "javac " + path + "/Main.java";
                 break;
             case 3:
                 cmd = "python3 -m py_compile " + path + "/main.py";
@@ -162,12 +165,11 @@ public class Judge {
             case 1:
                 return path + "/main";
             case 2:
-//                return "javawzy-classpathwzy" + path + "wzyMain";
-                return "\".wzy/etc/profile;wzyjavawzy-classpathwzy" + path + "wzyMain\"";
+                return "javalmz-classpathlmz" + path + "lmzMain";
             case 3:
 //                                #python编译生成对应的版本文件名字
 //                    python_cacheName=main.cpython-36.pyc
-            return "python3wzy" + path + "/__pycache__/" + "main.cpython-36.pyc";
+            return "python3lmz" + path + "/__pycache__/" + "main.cpython-36.pyc";
 //		case 5:
 //			return path + "/main";
         }

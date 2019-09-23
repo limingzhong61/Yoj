@@ -11,8 +11,11 @@ import java.util.List;
 @Mapper
 public interface SolutionMapper {
 
-    @Insert("insert into solution(problem_id,user_id,language,code,result,runtime,memory,error_message,submit_time) "
-            + "values(#{problemId},#{userId},#{language},#{code},#{result},#{runtime},#{memory},#{errorMessage},NOW())")
+    @Insert("insert into solution" +
+            "(problem_id,user_id,language,code,result,runtime,memory,error_message,submit_time) "
+            + "values(#{problemId},#{userId},#{language},#{code},#{result},#{runtime},#{memory}," +
+            "#{errorMessage},NOW())")
+    @Options(useGeneratedKeys=true, keyProperty="solutionId", keyColumn="solution_id")
     public int insetSolution(Solution solution);
 
     /**

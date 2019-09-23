@@ -26,7 +26,7 @@ public class ProblemController {
 
     @RequestMapping("/{pid}")
     public String getProblem(@PathVariable("pid") Integer pid, Map<String, Object> map, HttpServletRequest request) {
-        request.getSession().setAttribute("pid", pid);
+//        request.getSession().setAttribute("pid", pid);
         Problem problem = problemService.queryById(pid);
         User user = UserUtils.getUser();
         if (user != null && problem.getUserId() == user.getUserId()) {

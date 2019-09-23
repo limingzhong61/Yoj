@@ -6,14 +6,15 @@ jasypt:
 spring:
   redis:
     host: 106.54.94.80
+    timeout: 5000
+  cache:
+    redis:
+      time-to-live: 1000000
   datasource:
     url: jdbc:mysql://localhost:3306/yoj?serverTimezone=UTC
     username: ENC({2IL6K8NI+eUHYpu8AsfB7Q==})
     password: ENC({+u6jN11/Ykzl5kHU0rg2Ew==})
     sql-script-encoding:
-    cache:
-      redis:
-        time-to-live:
     #DDL
     #schema:
     #  - classpath:department.sql

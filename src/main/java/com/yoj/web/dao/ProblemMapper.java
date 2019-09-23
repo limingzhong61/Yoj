@@ -16,16 +16,16 @@ public interface ProblemMapper {
      * @return
      * @author lmz
      */
-    @Update("update problem set submissions=submissions+1 where problem_id = 1")
-    int updateSubmit();
+    @Update("update problem set submissions=submissions+1 where problem_id = #{pid}")
+    int updateSubmit(Integer pid);
 
     /**
      * 修改提交数,此提交通过
      * @return
      * @author lmz
      */
-    @Update("update problem set submissions=submissions+1,accepted = accepted+1 where problem_id = 1")
-    int updateAccept();
+    @Update("update problem set submissions=submissions+1,accepted = accepted+1 where problem_id = #{pid}")
+    int updateAccept(Integer pid);
 
     @Select("SELECT * FROM problem WHERE problem_id = #{pid}")
     Problem queryById(int pid);

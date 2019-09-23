@@ -1,20 +1,21 @@
 $(function () {
-    var cnt = 0;
     $("form").submit(function () {
         if(document.getElementById("user")){
-            return;
+            return false;
         }
-        cnt = 0;
-        ("select").trigger("change");
-        ("textarea").trigger("change");
-        return cnt === 2;
+        if(!validate($("select"),$("select").val() != "-1")){
+            return false;
+        }
+        if(!validate($("textarea"),$("textarea").val() != "")){
+            return false;
+        }
+        // return false;
     });
-
     $("select").change(function () {
-        cnt += validate(this,this.value != "-1");
+        validate(this,this.value != "-1");
     });
     $("textarea").change(function () {
-        cnt += validate(this,this.value != "");
+        validate(this,this.value != "");
     });
 
 });

@@ -39,15 +39,15 @@ public class SolutionController {
 	@PostMapping("/submit")
 	public String submit(Solution solution, HttpServletRequest request,Map<String, Object> map) {
 		User user = UserUtils.getUser();
-//		if (user == null) {
-//			request.setAttribute("msg", "提交代码前请先登录");
-//			return "problem/submit";
-//		}
+		if (user == null) {
+			request.setAttribute("msg", "提交代码前请先登录");
+			return "problem/submit";
+		}
 		solution.setUserId(user.getUserId());
         Problem problem = problemService.queryById(solution.getProblemId());
         Judge.judge(solution,problem);
 		//insert fail
-		if(!solutionService.insertSolution(solution)) {
+		if(solutionService.insertSolution(solution) == null) {
 			map.put("msg", "insert solution fail");
 			return "error/my_error";
 		}

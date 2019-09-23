@@ -27,7 +27,7 @@ public class SolutionService {
 	@CachePut(key = "#result.solutionId")
 	public Solution insertSolution(Solution solution) {
 		if(solutionMapper.insetSolution(solution) > 0){
-		    return queryById(solution.getSolutionId());
+			return solution;
         }
 		return null;
 	}
