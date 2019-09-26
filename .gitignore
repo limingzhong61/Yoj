@@ -6,8 +6,6 @@ target/
 ###忽略的配置文件###
 judge.properties
 application.properties
-*.properties
-src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
