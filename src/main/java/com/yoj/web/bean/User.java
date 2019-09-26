@@ -16,4 +16,7 @@ public class User {
     String password;
 
     String email;
+
+    //非表中字段
+    String emailCheckCode;
 }

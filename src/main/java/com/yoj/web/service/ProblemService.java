@@ -30,12 +30,29 @@ public class ProblemService {
      * @return
      * @author lmz
      */
-    @CachePut
-    public boolean updateSubmit(Solution solution) {
+//    @CachePut
+//    public boolean updateSubmit(Solution solution){
+//        if (solution.getResult() == Results.Accepted) {
+//            return problemMapper.updateAccept(solution.getProblemId()) > 0;
+//        } else {
+//            return problemMapper.updateSubmit(solution.getProblemId()) > 0;
+//        }
+//    }
+    @CachePut(key = "#result.problemId")
+    public Problem updateSubmit(Solution solution){
+        Problem problem = problemMapper.queryById(solution.getProblemId());
+        problem.setSubmissions(problem.getSubmissions()+1);
         if (solution.getResult() == Results.Accepted) {
-            return problemMapper.updateAccept(solution.getProblemId()) > 0;
+            problem.setAccepted(problem.getAccepted()+1);
+            if(problemMapper.updateAccept(solution.getProblemId()) > 0){
+                return problem;
+            }
+            return null;
         } else {
-            return problemMapper.updateSubmit(solution.getProblemId()) > 0;
+            if(problemMapper.updateSubmit(solution.getProblemId()) > 0){
+                return problem;
+            }
+            return null;
         }
     }
 

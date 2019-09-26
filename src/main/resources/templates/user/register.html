@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <!--spring security-->
+    <meta name="_csrf" th:content="${_csrf.token}" content=""/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" content=""/>
     <link rel="icon" href="https://v4.bootcss.com/favicon.ico">
 
     <title>注册</title>
@@ -13,63 +17,137 @@
     <!-- Bootstrap core CSS -->
     <link href="../../static/assets/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}"
           rel="stylesheet">
+
+    <style>
+        .input-group-text {
+            background-color: #e9ecef40;
+            width: 9rem;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .invalid-feedback {
+            text-align: center;
+        }
+
+        .loading {
+            width: 200px;
+            height: 56px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            line-height: 56px;
+            color: #fff;
+            padding-left: 60px;
+            font-size: 15px;
+            background: #000 url(/assets/img/loading.gif) no-repeat 10px 50%;
+            opacity: 0.7;
+            z-index: 9999;
+            -moz-border-radius: 20px;
+            -webkit-border-radius: 20px;
+            border-radius: 20px;
+            filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+        }
+
+    </style>
 </head>
 
 <body class="bg-light">
 
 <div class="container">
-    <!--<div class="py-5 text-center">-->
-        <!--<img class="d-block mx-auto mb-4"-->
-             <!--th:src="@{/assets/img/bootstrap-solid.svg}" alt=""-->
-             <!--width="72" height="72">-->
-        <!--<h2>Checkout form</h2>-->
+    <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4"
+             th:src="@{/assets/img/bootstrap-solid.svg}" alt=""
+             width="72" height="72">
+        <h2>注册账号</h2>
         <!--<p class="lead">Below is an example form built entirely with-->
-            <!--Bootstrap's form controls. Each required form group has a validation-->
-            <!--state that can be triggered by attempting to submit the form without-->
-            <!--completing it.</p>-->
-    <!--</div>-->
+        <!--Bootstrap's form controls. Each required form group has a validation-->
+        <!--state that can be triggered by attempting to submit the form without-->
+        <!--completing it.</p>-->
+    </div>
     <div class="row">
         <div class="col-md-8 order-md-1 offset-md-2">
-            <h4 class="mb-3 " style="text-align: center;">注册账号</h4>
+            <!--<h4 class="mb-3 " style="text-align: center;">注册账号</h4>-->
             <!--判断-->
             <p style="color: red; text-align: center" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
             <form class="needs-validation" novalidate="" th:action="@{/u/register}" method="post">
-                <div class="mb-3">
-                    <label for="userName">用户名</label>
-                    <input type="text" class="form-control needs-validation" id="userName" name="userName" placeholder="" required="required">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="userName">用户名:</label>
+                    </div>
+                    <input type="text" class="form-control needs-validation" id="userName" name="userName"
+                           placeholder="" required="required">
                     <div class="invalid-feedback">
                         用户名不能为空.
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="password">密码</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="" required="required">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="password">密码:</label>
+                    </div>
+                    <input type="password" class="form-control" id="password" name="password" placeholder=""
+                           required="required">
                     <div class="invalid-feedback">
                         密码不能为空.
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="secondPassword">确认密码</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="secondPassword">确认密码:</label>
+                    </div>
                     <input type="password" class="form-control" id="secondPassword" placeholder="">
                     <div class="invalid-feedback">
                         两次密码不一致.
                     </div>
                 </div>
-
-
-                <div class="mb-3">
-                    <label for="email">Email <span class="text-muted">(可选)</span></label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="secondPassword">Email:</label>
+                    </div>
                     <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">
                     <div class="invalid-feedback">
                         请输入一个有效的电子邮件地址.
                     </div>
                 </div>
+                <!--<div class="mb-3">-->
+                <!--<label for="email"><span class="text-muted">(可选)</span></label>-->
+                <!--<input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">-->
+                <!--<div class="invalid-feedback">-->
+                <!--请输入一个有效的电子邮件地址.-->
+                <!--</div>-->
+                <!--</div>-->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="secondPassword">邮箱验证码:</label>
+                    </div>
+                    <input type="number" class="form-control col-9" id="emailCheckCode" name="email" placeholder="">
+                    <div class="col-3 md-1">
+                        <button id="emailBtn" class="btn btn-outline-info btn-md btn-block" type="button">获取验证码</button>
+                    </div>
+                    <div class="invalid-feedback">
+                        验证码错误.
+                    </div>
+                </div>
+                <div class="input-group mb-3" style="text-align: center;">
+                    <p class="mb-3" style="text-align: center;">邮箱验证码仅在10分钟内有效</p>
+                </div>
                 <hr class="mb-4">
-                <button class="btn btn-primary btn-lg btn-block col-3 offset-4" type="submit">注册</button>
+                <div style="display: flex; justify-content: center;">
+                    <button id="registerBtn" class="btn btn-primary btn-lg" type="button">
+                        &emsp;注册&emsp;
+                    </button>
+                </div>
             </form>
         </div>
     </div>
-
+    <!--加载图片model-->
+    <div class="container">
+        <div id="myModal" class="modal" data-keyboard="false"
+             data-backdrop="static" data-role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true">
+            <div id="loading" class="loading">发送邮件中。。。</div>
+        </div>
+    </div>
     <!--引入footer-->
     <footer th:replace="commons/bar::footer"></footer>
 </div>

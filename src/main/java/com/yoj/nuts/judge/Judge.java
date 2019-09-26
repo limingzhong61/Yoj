@@ -27,8 +27,8 @@ public class Judge {
     private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
-//    @Qualifier("remoteExecutor")
-    @Qualifier("localExecutor")
+    @Qualifier("remoteExecutor")
+//    @Qualifier("localExecutor")
     private ExecutorUtil executor;
 
     public void judge(Solution solution, Problem problem) {
@@ -98,8 +98,6 @@ public class Judge {
                 + linuxPath + " " + problem.getTimeLimit()+ " " + memoryLimit;
 //        String cmd = "python " + "/home/nicolas/judge/judge1.py" + " " + process + " " + judge_data + " "
 //                + linuxPath + " " + 1000 + " " + 20000;
-//        String cmd = "python /home/nicolas/judge/lmzJudge.py " + linuxPath
-//                + "/" + fileNames[solution.getLanguage()] + " /home/nicolas/judge/demo/testdata 3";
         parseToResult(cmd, solution);
         executor.execute("rm -rf " + linuxPath);
         System.out.println(solution);

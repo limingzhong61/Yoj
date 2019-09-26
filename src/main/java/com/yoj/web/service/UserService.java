@@ -49,6 +49,7 @@ public class UserService implements UserDetailsService {
     }
     @CachePut(key = "#result.userId")
     public User insertUserUseCache(User user) {
+        user.setPassword(encryptor.encrypt(user.getPassword()));
         if (userMapper.insertUser(user) > 0) {
             return user;
         }
@@ -71,9 +72,14 @@ public class UserService implements UserDetailsService {
     public User getUserById(Integer userId) {
         return userMapper.getUserById(userId);
     }
-    @Cacheable
+    @Cacheable(unless = "#result == null")
     public User getUserByName(String userName) {
         return userMapper.getUserByName(userName);
+    }
+
+//    @Cacheable 不能缓存，插入之后，就已经变了
+    public boolean queryExistByEmail(String email){
+        return userMapper.queryExistByEmail(email) > 0;
     }
 
 //    @Cacheable

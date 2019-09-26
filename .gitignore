@@ -5,6 +5,7 @@ target/
 !**/src/test/**
 ###忽略配置文件###
 judge.properties
+application.properties
 
 ### STS ###
 .apt_generated

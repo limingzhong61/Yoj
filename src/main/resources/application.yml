@@ -1,17 +1,12 @@
-jasypt:
-  encryptor:
-    password: lmz
-#    algorithm: PBEWithMD5AndDES
-#配置数据源
 spring:
   redis:
     host: 106.54.94.80
-    timeout: 5000
+    timeout: 5000ms
   cache:
     redis:
-      time-to-live: 1000000
+      time-to-live: 600000ms
   datasource:
-    url: jdbc:mysql://localhost:3306/yoj?serverTimezone=UTC
+    url: jdbc:mysql://106.54.94.80:3306/yoj?serverTimezone=UTC
     username: ENC({2IL6K8NI+eUHYpu8AsfB7Q==})
     password: ENC({+u6jN11/Ykzl5kHU0rg2Ew==})
     sql-script-encoding:
@@ -23,6 +18,7 @@ spring:
     # - classpath:insert-dept.sql
     #2.0需要开启
     #initialization-mode: always
+
 
 
 #开启debug模式

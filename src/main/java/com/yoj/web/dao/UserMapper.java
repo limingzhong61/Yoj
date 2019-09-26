@@ -24,6 +24,9 @@ public interface UserMapper {
     @Select("select count(1) from user where user_name=#{userName}")
     public int queryExistByName(String userName);
 
+    @Select("select count(1) from user where email=#{email}")
+    public int queryExistByEmail(String email);
+
     @Select("select * from user where user_id = #{user_id}")
     public User getUserById(Integer userId);
 
