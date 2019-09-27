@@ -1,8 +1,13 @@
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 $(function () {
     var emailExist = false;
+    var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+    var csrfToken = $("meta[name='_csrf']").attr("content");
+    var headers = {};
+    headers[csrfHeader] = csrfToken;
+
     $("#registerBtn").click(function () {
-        if (!validate("#userName", $("#userName").val() != "")) {
+        if (!validateWithMsg("#userName", $("#userName").val() != "","用户名不能为空")) {
             return false;
         }
         if (!validatePassword()) {
@@ -20,62 +25,91 @@ $(function () {
         });
         // console.log(formData);
 
-
-        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
-        var csrfToken = $("meta[name='_csrf']").attr("content");
-        var headers = {};
-        headers[csrfHeader] = csrfToken;
         $.ajax({
             url: "/u/register",
             method: "POST",
             data: formData,
             headers: headers,
             success(res) {
-                console.log(res);
+                // console.log(res);
                 if (res.success) {
-                    console.log(res);
+                    // console.log(res);
                     window.location.href = "/user/login";
                 } else {
                     for (var obj in res.extend) {
-                        console.log("form input[id=" + obj + "]");
+                        // console.log("form input[id=" + obj + "]");
                         var $input = $("form input[id=" + obj + "]");
                         validateWithMsg($input, false, res.extend[obj]);
                     }
                 }
             },
             error(res) {
-                console.log(res);
+                // console.log(res);
             }
         })
     });
-
+    //用户名验证
     $("#userName").change(function () {
-        validate(this, this.value != "");
+        if(this.value === ""){
+            validateWithMsg(this,false, "用户名不能为空");
+            return;
+        }
+        $.ajax({
+            url: "/u/validateUserName/"+this.value,
+            method: "GET",
+            headers: headers,
+            success(res) {
+                // console.log(res);
+                if (res.success) {
+                    // window.location.href = "/user/login";
+                    validate($("#userName"),true);
+                } else {
+                    validateWithMsg($("#userName"),false,res.msg);
+                }
+            },
+            error(res) {
+                // console.log(res);
+            }
+        })
+
     });
 
     //邮箱验证
     function validateEmailFormat() {
         var emilReg = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/i;
-        return validate('#email', emilReg.test($("#email").val()));
+        var flag = validateWithMsg('#email', emilReg.test($("#email").val()),"请输入一个有效的电子邮件地址.");
     }
 
     $("#email").change(function () {
         validateEmailFormat();
+        $.ajax({
+            url: "/u/validateEmail/" + $("#email").val(),
+            method: "GET",
+            success(res) {
+                // console.log(res);
+                if (res.success) {
+                    validate($("#email"),true);
+                } else {
+                    validateWithMsg($("#email"),false,res.msg);
+                }
+            },
+            error(res) {
+                // console.log(res);
+            }
+        })
+
     });
     $("#emailBtn").click(function () {
-        // countDown();
-        // return;
         if (!validateEmailFormat()) {
             return;
         }
-
         $('#myModal').modal('show');
         $.ajax({
             url: "/u/getEmailCheckCode/" + $("#email").val(),
             method: "GET",
             success(res) {
                 $('#myModal').modal('hide');
-                console.log(res);
+                // console.log(res);
                 if (res.success) {
                     countDown();
                 } else {
@@ -85,7 +119,7 @@ $(function () {
 
             },
             error(res) {
-                console.log(res);
+                // console.log(res);
                 $('#myModal').modal('hide');
             }
         })
