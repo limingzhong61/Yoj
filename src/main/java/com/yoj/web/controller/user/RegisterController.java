@@ -1,6 +1,6 @@
 package com.yoj.web.controller.user;
 
-import com.yoj.web.bean.Msg;
+import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.User;
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

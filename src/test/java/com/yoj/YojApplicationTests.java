@@ -1,8 +1,6 @@
 package com.yoj;
 
-import com.yoj.nuts.judge.utils.ProblemFileUtil;
 import com.yoj.used.MyInterface;
-import com.yoj.web.bean.Problem;
 import com.yoj.web.service.ProblemService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,9 +27,9 @@ public class YojApplicationTests {
 
     @Test
     public void createProblemFile() throws Exception{
-        String dirPath = "E:/tmp/testData";
-        Problem problem = problemService.queryById(1);
-        ProblemFileUtil.createProblemFile(problem);
+//        String dirPath = "E:/tmp/testData";
+//        Problem problem = problemService.queryById(1);
+//        ProblemFileUtil.createProblemFile(problem);
     }
 
     @Test

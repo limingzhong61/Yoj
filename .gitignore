@@ -6,6 +6,7 @@ target/
 ###忽略的配置文件###
 judge.properties
 application.properties
+application.yml
 
 ### STS ###
 .apt_generated

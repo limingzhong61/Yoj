@@ -1,18 +1,19 @@
 package com.yoj.nuts.reids;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+/**
+* @Description:  不在需要，内存原因
+* @Author: lmz
+*/
 @Service
 public class ScheduledService {
-    @Autowired
-    StringRedisTemplate stringRedisTemplate;
+//    @Autowired
+//    StringRedisTemplate stringRedisTemplate;
 
-    @Scheduled(cron = "0 * * * * *")
-    public void timer() {
-        System.out.println("heartbeat");
-        stringRedisTemplate.opsForValue().get("heartbeat");
-    }
+//    @Scheduled(cron = "0 * * * * *")
+//    public void timer() {
+//        System.out.println("heartbeat");
+//        stringRedisTemplate.opsForValue().get("heartbeat");
+//    }
 }

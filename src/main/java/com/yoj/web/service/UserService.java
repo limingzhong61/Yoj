@@ -1,8 +1,8 @@
 package com.yoj.web.service;
 
-import com.yoj.web.bean.Msg;
+import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.User;
-import com.yoj.web.bean.UserDetailsImpl;
+import com.yoj.web.bean.util.UserDetailsImpl;
 import com.yoj.web.dao.UserMapper;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;

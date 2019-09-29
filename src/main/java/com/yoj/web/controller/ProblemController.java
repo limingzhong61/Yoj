@@ -3,7 +3,7 @@ package com.yoj.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.nuts.auth.UserUtils;
-import com.yoj.web.bean.Msg;
+import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.User;
 import com.yoj.web.service.ProblemService;

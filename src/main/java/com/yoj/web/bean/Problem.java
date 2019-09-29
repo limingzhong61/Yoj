@@ -1,6 +1,7 @@
 package com.yoj.web.bean;
 
 import com.alibaba.fastjson.JSONArray;
+import com.yoj.web.bean.util.JudgeData;
 import lombok.*;
 
 import java.util.List;

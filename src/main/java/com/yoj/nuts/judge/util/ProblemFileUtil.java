@@ -1,7 +1,7 @@
-package com.yoj.nuts.judge.utils;
+package com.yoj.nuts.judge.util;
 
 import com.alibaba.fastjson.JSON;
-import com.yoj.web.bean.JudgeData;
+import com.yoj.web.bean.util.JudgeData;
 import com.yoj.web.bean.Problem;
 import org.apache.commons.io.FileUtils;
 

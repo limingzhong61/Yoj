@@ -1,9 +1,9 @@
-package com.yoj.nuts.judge.utils.impl;
+package com.yoj.nuts.judge.util.impl;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import com.yoj.nuts.judge.bean.ExecMessage;
-import com.yoj.nuts.judge.utils.ExecutorUtil;
+import com.yoj.nuts.judge.util.ExecutorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

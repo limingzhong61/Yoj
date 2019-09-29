@@ -1,7 +1,7 @@
 package com.yoj.nuts.auth;
 
 import com.yoj.web.bean.User;
-import com.yoj.web.bean.UserDetailsImpl;
+import com.yoj.web.bean.util.UserDetailsImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class UserUtils {

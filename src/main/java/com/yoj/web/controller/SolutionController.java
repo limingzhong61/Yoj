@@ -6,7 +6,7 @@ import com.yoj.nuts.auth.UserUtils;
 import com.yoj.nuts.judge.Judge;
 import com.yoj.nuts.judge.bean.static_fianl.Languages;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
-import com.yoj.web.bean.Msg;
+import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.bean.User;

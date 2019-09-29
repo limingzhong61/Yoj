@@ -5,21 +5,20 @@ import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.bean.TestResult;
 import com.yoj.nuts.judge.bean.static_fianl.Languages;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
-import com.yoj.nuts.judge.utils.ExecutorUtil;
-import com.yoj.nuts.judge.utils.PropertiesUtil;
-import com.yoj.nuts.judge.utils.SSH2Util;
+import com.yoj.nuts.judge.util.ExecutorUtil;
+import com.yoj.nuts.judge.util.PropertiesUtil;
+import com.yoj.nuts.judge.util.SSH2Util;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import lombok.Setter;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Component
@@ -35,12 +34,12 @@ public class Judge {
 //    	String path = "/opt" + "/" + task.getSubmitId();
         // opt authority not enough to normal user;
         // linux path,tmp directory store temporary files
-        String linuxPath = PropertiesUtil.get("linux.solutionFilePath") + problem.getProblemId();
+        //uuid 重复的可能性很低
+        UUID uuid = UUID.randomUUID();
+        String dirPath = uuid.toString();
+        String linuxPath = PropertiesUtil.get("linux.solutionFilePath") + dirPath;
         // windows path,
-        String windowsPath = PropertiesUtil.get("windows.solutionFilePath")+ problem.getProblemId();
-//        System.out.println(linuxPath);
-//        File file = new File(solutionPath);
-//        file.mkdirs();
+        String windowsPath = PropertiesUtil.get("windows.solutionFilePath")+ dirPath;
         try {
             if("linux".equals(PropertiesUtil.get("platform"))){
                 File file = new File(linuxPath);
@@ -100,6 +99,13 @@ public class Judge {
 //                + linuxPath + " " + 1000 + " " + 20000;
         parseToResult(cmd, solution);
         executor.execute("rm -rf " + linuxPath);
+        if(!"linux".equals(PropertiesUtil.get("platform"))) {
+            try {
+                FileUtils.deleteDirectory(new File(windowsPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         System.out.println(solution);
     }
 

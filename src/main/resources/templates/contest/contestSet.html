@@ -25,21 +25,27 @@
 <div class="container" style="margin-top: 80px;">
     <div class="row">
         <div class="col-md-12 order-md-1">
-            <a th:href="@{/problem/addProblem}">添加题目</a>
+            <a th:href="@{/contest/addContest}">创建比赛</a>
             <table class="table table-hover table-bordered">
                 <!---->
                 <thead class="thead-light">
                 <tr>
-                    <th scope="col">PID</th>
+                    <th scope="col">CID</th>
                     <th scope="col">状态</th>
-                    <th scope="col">名称</th>
-                    <th scope="col">标签</th>
-                    <th scope="col">递交</th>
-                    <th scope="col">AC%</th>
+                    <th scope="col">比赛名称</th>
+                    <!--<th scope="col">类型</th>-->
+                    <th scope="col">题数</th>
+                    <th scope="col">出题者</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
+                    <th scope="row">1</th>
+                    <td>未开始</td>
+                    <!--<td><a th:href="@{/p/1}">A+B Problem</a></td>-->
+                    <td>CmdOI2019 Round 2</td>
+                    <td>10-02 08:50 ~ 16:00</td>
+                    <td >1</td>
                 </tr>
                 </tbody>
             </table>
@@ -75,13 +81,9 @@
         th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
 <script type="text/javascript" src="../../static/assets/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
-<script type="text/javascript"
-        src="../../static/assets/js/bootstrap.min.js"
-        th:src="@{/assets/js/common.js}"></script>
+<script th:src="@{/assets/js/common.js}"></script>
 
-<script type="text/javascript"
-        src="../../static/assets/js/bootstrap.min.js"
-        th:src="@{/assets/js/problem/problemSet.js}"></script>
+<script th:src="@{/assets/js/contest/contestSet.js}"></script>
 
 </body>
 </html>

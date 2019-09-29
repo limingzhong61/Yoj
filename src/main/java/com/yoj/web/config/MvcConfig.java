@@ -1,4 +1,4 @@
-package com.yoj.nuts.config;
+package com.yoj.web.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

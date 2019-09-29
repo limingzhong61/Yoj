@@ -1,4 +1,4 @@
-package com.yoj.web.bean;
+package com.yoj.web.bean.util;
 
 import lombok.Getter;
 import lombok.Setter;

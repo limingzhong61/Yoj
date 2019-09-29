@@ -1,4 +1,4 @@
-package com.yoj.nuts.judge.utils;
+package com.yoj.nuts.judge.util;
 
 
 import com.jcraft.jsch.*;

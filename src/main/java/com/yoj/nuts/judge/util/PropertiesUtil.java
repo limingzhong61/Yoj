@@ -1,4 +1,4 @@
-package com.yoj.nuts.judge.utils;
+package com.yoj.nuts.judge.util;
 
 import java.io.IOException;
 import java.io.InputStream;

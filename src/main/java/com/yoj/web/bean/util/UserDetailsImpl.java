@@ -1,5 +1,7 @@
-package com.yoj.web.bean;
+package com.yoj.web.bean.util;
 
+import com.yoj.web.bean.Privilege;
+import com.yoj.web.bean.User;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
