@@ -1,6 +1,6 @@
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 $(function () {
-    var emailExist = false;
+    var emailExist = true;
     var csrfHeader = $("meta[name='_csrf_header']").attr("content");
     var csrfToken = $("meta[name='_csrf']").attr("content");
     var headers = {};
@@ -16,7 +16,7 @@ $(function () {
         if (!validateSecondPw()) {
             return false;
         }
-        if (!emailExist || !validateEmailFormat()) {
+        if (emailExist) {
             return false;
         }
         var formData = {};
@@ -26,7 +26,7 @@ $(function () {
         // console.log(formData);
 
         $.ajax({
-            url: "/u/register",
+            url: "/u/r/register",
             method: "POST",
             data: formData,
             headers: headers,
@@ -55,7 +55,7 @@ $(function () {
             return;
         }
         $.ajax({
-            url: "/u/validateUserName/"+this.value,
+            url: "/u/r/validateUserName/"+this.value,
             method: "GET",
             headers: headers,
             success(res) {
@@ -77,13 +77,13 @@ $(function () {
     //邮箱验证
     function validateEmailFormat() {
         var emilReg = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/i;
-        var flag = validateWithMsg('#email', emilReg.test($("#email").val()),"请输入一个有效的电子邮件地址.");
+        return validateWithMsg('#email', emilReg.test($("#email").val()),"请输入一个有效的电子邮件地址.");
     }
 
     $("#email").change(function () {
         validateEmailFormat();
         $.ajax({
-            url: "/u/validateEmail/" + $("#email").val(),
+            url: "/u/r/validateEmail/" + $("#email").val(),
             method: "GET",
             success(res) {
                 // console.log(res);
@@ -105,12 +105,13 @@ $(function () {
         }
         $('#myModal').modal('show');
         $.ajax({
-            url: "/u/getEmailCheckCode/" + $("#email").val(),
+            url: "/u/r/getEmailCheckCode/" + $("#email").val(),
             method: "GET",
             success(res) {
                 $('#myModal').modal('hide');
                 // console.log(res);
                 if (res.success) {
+                    emailExist = false;
                     countDown();
                 } else {
                     emailExist = true;

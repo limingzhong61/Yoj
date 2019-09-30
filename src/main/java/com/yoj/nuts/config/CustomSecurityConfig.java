@@ -15,8 +15,12 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/").permitAll();
-//        .antMatchers("/problem/**").hasRole("problem");
+        http
+                .authorizeRequests()
+                .antMatchers("/user/login", "/webjars/**","/assets/**",
+                        "/user/register","/u/login-error","/u/r/**")
+                .permitAll()
+                .anyRequest().authenticated();
         http
                 .formLogin()
                 .usernameParameter("userName")

@@ -70,7 +70,7 @@
             <!--<h4 class="mb-3 " style="text-align: center;">注册账号</h4>-->
             <!--判断-->
             <p style="color: red; text-align: center" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
-            <form class="needs-validation" novalidate="" th:action="@{/u/register}" method="post">
+            <form class="needs-validation" novalidate="" th:action="@{/u/r/register}" method="post">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="userName">用户名:</label>
