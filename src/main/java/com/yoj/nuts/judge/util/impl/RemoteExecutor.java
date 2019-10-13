@@ -4,6 +4,8 @@ import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.util.ExecutorUtil;
+import com.yoj.nuts.judge.util.PropertiesUtil;
+import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import java.io.InputStreamReader;
  * @author lmz 远程连接linux使用
  */
 @Component("remoteExecutor")
+@ToString
 public class RemoteExecutor implements ExecutorUtil {
 
 	private static final Logger log = LoggerFactory.getLogger(RemoteExecutor.class);
@@ -25,7 +28,7 @@ public class RemoteExecutor implements ExecutorUtil {
 	private static Connection conn;
 
 	public RemoteExecutor() {
-		login("106.54.94.80", "ubuntu", "nicolas!3125");
+		login(PropertiesUtil.get("ip"),PropertiesUtil.get("userName"), PropertiesUtil.get("password"));
 	}
 	
 	/**
@@ -68,11 +71,14 @@ public class RemoteExecutor implements ExecutorUtil {
 			log.info("执行命令失败,链接conn:" + conn + ",执行的命令：" + cmd + "  " + e.getMessage());
 			return new ExecMessage(e.getMessage(), null);
 		}
-
-		ExecMessage result = new ExecMessage();
-		result.setError(message(session.getStderr()));
-		result.setStdout(message(session.getStdout()));
-		session.close();
+        ExecMessage result = new ExecMessage();
+		try{
+			result.setError(message(session.getStderr()));
+			result.setStdout(message(session.getStdout()));
+            session.close();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		return result;
 	}
 	

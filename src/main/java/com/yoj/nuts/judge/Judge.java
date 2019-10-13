@@ -11,18 +11,23 @@ import com.yoj.nuts.judge.util.SSH2Util;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @Setter
 @Component
+@Slf4j
 public class Judge {
+    Logger logger;
     private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
@@ -31,21 +36,19 @@ public class Judge {
     private ExecutorUtil executor;
 
     public void judge(Solution solution, Problem problem) {
-//    	String path = "/opt" + "/" + task.getSubmitId();
-        // opt authority not enough to normal user;
         // linux path,tmp directory store temporary files
         //uuid 重复的可能性很低
         UUID uuid = UUID.randomUUID();
         String dirPath = uuid.toString();
         String linuxPath = PropertiesUtil.get("linux.solutionFilePath") + dirPath;
         // windows path,
-        String windowsPath = PropertiesUtil.get("windows.solutionFilePath")+ dirPath;
+        String windowsPath = PropertiesUtil.get("windows.solutionFilePath") + dirPath;
         try {
-            if("linux".equals(PropertiesUtil.get("platform"))){
+            if ("linux".equals(PropertiesUtil.get("platform"))) {
                 File file = new File(linuxPath);
                 file.mkdirs();
                 createFile(solution.getLanguage(), linuxPath, solution.getCode());
-            }else{
+            } else {
                 // window 环境
                 File file = new File(windowsPath);
                 file.mkdirs();
@@ -58,8 +61,8 @@ public class Judge {
             e.printStackTrace();
             solution.setErrorMessage("system exception:create file fail");
             solution.setResult(Results.SystemError);
-            System.out.println("create file fail");
-            executor.execute("rm -rf " + linuxPath);
+            log.info("Judge : create file fail");
+            deleteSolutionFile(linuxPath,windowsPath);
             return;
         }
 
@@ -69,9 +72,9 @@ public class Judge {
         if (message != null) {
             solution.setResult(Results.CompileError);
             solution.setErrorMessage(message);
-            System.out.println(message);
-            executor.execute("rm -rf " + linuxPath);
-            System.out.println("compile error");
+            log.warn("Judge : compile error");
+            log.warn("Judge :  " + message);
+            deleteSolutionFile(linuxPath,windowsPath);
             return;
         }
         // chmod -R 755 path
@@ -82,31 +85,31 @@ public class Judge {
 //		String cmd = "python " + PropertiesUtil.StringValue("judge_script") + " " + process + " " + judge_data + " "
 //				+ path + " " + task.getTimeLimit() + " " + task.getMemoryLimit();
         String path = linuxPath + "/" + fileNames[solution.getLanguage()];
-        String judgeData = PropertiesUtil.get("linux.problemFilePath")+ problem.getProblemId();
+        String judgeData = PropertiesUtil.get("linux.problemFilePath") + problem.getProblemId();
         String judgePyPath = PropertiesUtil.get("judgeScriptPath");
-//        String[] wzies = process.split("lmz");
-//        for(String s : wzies){
-//            System.out.println(s);
-//        }
         int memoryLimit = problem.getMemoryLimit() * 1024;
         //#服务器内存不够分配。。。。。给大点，和小一点都行????
-        if(solution.getLanguage() == Languages.JAVA){
+        if (solution.getLanguage() == Languages.JAVA) {
             memoryLimit = 2000000;
         }
         String cmd = "python " + judgePyPath + " " + process + " " + judgeData + " "
-                + linuxPath + " " + problem.getTimeLimit()+ " " + memoryLimit;
+                + linuxPath + " " + problem.getTimeLimit() + " " + memoryLimit;
 //        String cmd = "python " + "/home/nicolas/judge/judge1.py" + " " + process + " " + judge_data + " "
 //                + linuxPath + " " + 1000 + " " + 20000;
         parseToResult(cmd, solution);
+        deleteSolutionFile(linuxPath,windowsPath);
+        System.out.println(solution);
+    }
+
+    private void deleteSolutionFile(String linuxPath,String windowsPath){
         executor.execute("rm -rf " + linuxPath);
-        if(!"linux".equals(PropertiesUtil.get("platform"))) {
+        if (!"linux".equals(PropertiesUtil.get("platform"))) {
             try {
                 FileUtils.deleteDirectory(new File(windowsPath));
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ee) {
+                ee.printStackTrace();
             }
         }
-        System.out.println(solution);
     }
 
     private String compile(int compilerId, String path) {
@@ -135,31 +138,7 @@ public class Judge {
     }
 
     private void createFile(int compilerId, String path, String source) throws Exception {
-//        String filename = "";
-//        switch (compilerId) {
-//            case 0:
-//                filename = "main.c";
-//                break;
-//            case 1:
-//                filename = "main.cpp";
-//                break;
-//            case 2:
-//                filename = "Main.java";
-//                break;
-//            case 3:
-//                filename = "main.py";
-//                break;
-//            case 5:
-//                filename = "main.pas";
-//                break;
-//        }
-        File file = new File(path + "/" + fileNames[compilerId]);
-        file.createNewFile();
-        OutputStream output = new FileOutputStream(file);
-        PrintWriter writer = new PrintWriter(output);
-        writer.print(source);
-        writer.close();
-        output.close();
+        FileUtils.write(new File(path + "/" + fileNames[compilerId]), source, "utf-8");
     }
 
     private static String process(int compileId, String path) {
@@ -173,7 +152,7 @@ public class Judge {
             case 3:
 //                                #python编译生成对应的版本文件名字
 //                    python_cacheName=main.cpython-36.pyc
-            return "python3lmz" + path + "/__pycache__/" + "main.cpython-36.pyc";
+                return "python3lmz" + path + "/__pycache__/" + "main.cpython-36.pyc";
 //		case 5:
 //			return path + "/main";
         }
@@ -185,18 +164,22 @@ public class Judge {
         if (exec.getError() != null) {
             solution.setErrorMessage(exec.getError());
             solution.setResult(Results.SystemError);
-            System.out.println("=====error====" + solution.getSolutionId() + exec.getStdout() + "    :" + exec.getError());
-            // log.error("=====error====" + result.getSubmitId() + ":" + exec.getError());
+             log.error("=====error====" + solution.getSolutionId() + exec.getStdout() + "    :" + exec.getError());
         } else {
 //			Stdout out = JSON.parseObject(exec.getStdout(), Stdout.class);
-            System.out.println("=====stdout====" + exec.getStdout());
-            String jsonFormat = "[" + exec.getStdout() + "]";
-            List<TestResult> outs = JSONArray.parseArray(jsonFormat, TestResult.class);
-            // log.info("=====stdout====" + out);
-            solution.setRuntime(outs.get(outs.size()-1).getTimeUsed());
-            solution.setMemory(outs.get(outs.size()-1).getMemoryUsed());
-            solution.setResult(outs.get(outs.size()-1).getResult());
-            solution.setTestResults(outs);
+            try {
+                System.out.println("=====stdout====" + exec.getStdout());
+                String jsonFormat = "[" + exec.getStdout() + "]";
+                List<TestResult> outs = JSONArray.parseArray(jsonFormat, TestResult.class);
+                // log.info("=====stdout====" + out);
+                solution.setRuntime(outs.get(outs.size() - 1).getTimeUsed());
+                solution.setMemory(outs.get(outs.size() - 1).getMemoryUsed());
+                solution.setResult(outs.get(outs.size() - 1).getResult());
+                solution.setTestResults(outs);
+            } catch (Exception e) {
+                solution.setResult(Results.SystemError);
+                e.printStackTrace();
+            }
         }
     }
 }
