@@ -6,6 +6,7 @@ import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.dao.ProblemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,8 +22,11 @@ import java.util.List;
 @Service
 public class ProblemService {
     @Autowired
-    public ProblemMapper problemMapper;
+    private ProblemMapper problemMapper;
 
+    @Autowired
+    @Qualifier("localProblemFileUtil")
+    private ProblemFileUtil problemFileUtil;
     /**
      * 更新problem的提交数和通过数
      *
@@ -78,7 +82,7 @@ public class ProblemService {
     public Problem insert(Problem problem) {
         boolean flag = problemMapper.insert(problem) > 0;
         if (flag) {
-            ProblemFileUtil.createProblemFile(problem);
+            problemFileUtil.createProblemFile(problem);
             return problem;
         }
         return null;
@@ -87,7 +91,7 @@ public class ProblemService {
     public Problem updateByPrimaryKey(Problem problem) {
         boolean flag = problemMapper.updateByPrimaryKey(problem) > 0;
         if (flag) {
-            ProblemFileUtil.createProblemFile(problem);
+            problemFileUtil.createProblemFile(problem);
         }else{
             problem = null;
         }

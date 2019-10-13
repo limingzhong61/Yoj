@@ -2,19 +2,15 @@ package com.yoj.nuts.judge.util.impl;
 
 import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.util.ExecutorUtil;
+import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import org.springframework.stereotype.Component;
 
 /**
  * @author lmz
  * 	本地系统为linux时使用。
  */
-@Component("localExecutor")
+@Service
 public class LocalExecutor implements ExecutorUtil{
 
   @Override
@@ -33,30 +29,5 @@ public class LocalExecutor implements ExecutorUtil{
     return res;
   }
  
-  public String message(InputStream inputStream) {
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"));
-      StringBuilder message = new StringBuilder();
-      String str;
-      while ((str = reader.readLine()) != null) {
-        message.append(str);
-      }
-      String result = message.toString();
-      if (result.equals("")) {
-        return null;
-      }
-      return result;
-    } catch (IOException e) {
-      return e.getMessage();
-    } finally {
-      try {
-        inputStream.close();
-        reader.close();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  }
 }
  

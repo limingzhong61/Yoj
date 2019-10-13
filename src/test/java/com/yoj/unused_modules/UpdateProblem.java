@@ -7,6 +7,7 @@ import com.yoj.web.service.SolutionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -21,6 +22,10 @@ public class UpdateProblem {
 
     @Autowired
     ProblemService problemService;
+
+    @Autowired
+    @Qualifier("localProblemFileUtil")
+    ProblemFileUtil problemFileUtil;
 
     /**
      * @Description: 更新问题的submissions和accepted ？ 后期改联合，用在admin模块，或者定期改变；
@@ -52,7 +57,7 @@ public class UpdateProblem {
         int cnt = 0;
         try{
             for(Problem problem : all){
-                ProblemFileUtil.createProblemFile(problem);
+                problemFileUtil.createProblemFile(problem);
                 cnt++;
                 System.out.println(cnt);
             }

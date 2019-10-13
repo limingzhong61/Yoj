@@ -62,7 +62,7 @@ public class RemoteCommandUtil {
                 System.out.println("stdout:"+result);
                 System.out.println("error:"+processStdout(session.getStderr(), DEFAULTCHART));
                 System.out.println("state:"+session.getState());
-//                System.out.println(processStdout(session.getStdin(), DEFAULTCHART));
+//                System.out.println(processStdout(session.getStdin(), DEFAULT_CHART));
                 //如果为得到标准输出为空，说明脚本执行出错了  
                 if(StringUtils.isBlank(result)){
                     log.info("得到标准输出为空,链接conn:"+conn+",执行的命令："+cmd);
