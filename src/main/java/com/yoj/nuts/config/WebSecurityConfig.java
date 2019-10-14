@@ -33,6 +33,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .logout()
                 .logoutSuccessUrl("/user/login");
+        //关闭跨域攻击
+//        http.csrf().disable();
+        // 省略其他代码；
     }
 
     @Override
@@ -41,4 +44,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //new BCryptPasswordEncoder() 加密，密码？？
         auth.userDetailsService(userService);
     }
+
 }

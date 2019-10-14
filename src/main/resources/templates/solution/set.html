@@ -36,123 +36,125 @@
 	<!--引入topbar-->
 	<div th:replace="commons/bar::topbar"></div>
 
-	<div class="container" style="margin-top: 80px;">
+	<div id="app" class="container" style="margin-top: 80px;">
 		<div class="row">
 			<div class="col-md-12 order-md-1">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h2 class="panel-title">评测状态</h2>
 					</div>
-<!-- 					<div class="panel-body"> -->
-<!-- 						<div class="statusearch"> -->
-<!-- 							<b>搜索</b> &nbsp; <span id="senameinfo" style="display: none;">姓名包含<input -->
-<!-- 								id="sename" style="width: 80px;" value="">， -->
-<!-- 							</span>试题名包含<input id="seprname" style="width: 80px;" value=""> -->
-<!-- 							&nbsp; &nbsp; <input type="button" class="btn btn-primary" -->
-<!-- 								value="搜索" onclick="searchClick()"> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-					<table class="table table-hover table-bordered">
-						<thead class="thead-light">
-							<tr>
-								<th class="thodd">提交序号</th>
-								<th class="theven">用户名</th>
-								<th class="thodd">试题名称</th>
-								<th class="theven" style="vertical-align: middle;">提交时间</th>
-								<!-- 		<th class="thodd">代码长度</th> -->
-								<th class="theven" style="padding: 0px;"><select
-									id="langsel"
-									style="border: 0px; padding: 8px; font-weight: bold;"
-									onchange="langselChange()">
-										<option value="langall">语言</option>
-										<option value="langc">C</option>
-										<option value="langcpp">C++</option>
-										<option value="langjava">JAVA</option>
-								</select></th>
-								<th class="thodd" style="padding: 0px;">
-								评测结果
-<!-- 								<select id="retsel" -->
-<!-- 									style="border: 0px; padding: 8px; font-weight: bold;"> -->
-<!-- 										评测结果 -->
-										<!-- 										<option value="retall">评测结果</option> -->
-										<!-- 										<option value="retcorrect">正确</option> -->
-										<!-- 										<option value="retwrong">错误</option> -->
-										<!-- 										<option value="retce">编译出错</option> -->
-										<!-- 										<option value="retre">运行错误</option> -->
-										<!-- 										<option value="rettle">运行超时</option> -->
-										<!-- 										<option value="retmle">内存超限</option> -->
-										<!-- 										</select> -->
-								</th>
-<!-- 								<th class="theven" style="padding: 0px;"><select -->
-<!-- 									id="scoresel" -->
-<!-- 									style="border: 0px; padding: 8px; font-weight: bold;" -->
-<!-- 									onchange="scoreselChange()"> -->
-<!-- 										<option value="scoreall">得分</option> -->
-<!-- 										<option value="score100">100</option> -->
-<!-- 										<option value="score199">1~99</option> -->
-<!-- 										<option value="score0">0</option> -->
-<!-- 								</select></th> -->
-								<th class="thodd" th:text="运行时间">CPU使用
-									<div class="updown">
-										<a class="up" href="###" onclick="cputimeup()"></a> <a
-											class="down" href="###" onclick="cputimedown()"></a>
-									</div>
-								</th>
-								<th class="theven">内存使用
-									<div class="updown">
-										<a class="up" href="###" onclick="memuseup()"></a> <a
-											class="down" href="###" onclick="memusedown()"></a>
-									</div>
-								</th>
-								<th class="theven">评测详情
-									<div class="updown">
-										<a class="up" href="###" onclick="memuseup()"></a> <a
-											class="down" href="###" onclick="memusedown()"></a>
-									</div>
-								</th>
-								<!-- 								<th class="thodd">评测详情</th> -->
+
+
+					<div class="col-md-12 order-md-1">
+
+						<table class="table table-hover table-bordered">
+                            <thead class="thead-light">
+                            <tr>
+                                <th class="thodd">提交序号</th>
+                                <th class="theven">用户名</th>
+                                <th class="thodd">试题名称</th>
+                                <th class="theven" style="vertical-align: middle;">提交时间</th>
+                                <!-- 		<th class="thodd">代码长度</th> -->
+                                <th class="theven" style="padding: 0px;"><select
+                                        id="langsel"
+                                        style="border: 0px; padding: 8px; font-weight: bold;"
+                                        onchange="langselChange()">
+                                    <option value="langall">语言</option>
+                                    <option value="langc">C</option>
+                                    <option value="langcpp">C++</option>
+                                    <option value="langjava">JAVA</option>
+                                </select></th>
+                                <th class="thodd" style="padding: 0px;">
+                                    评测结果
+                                    <!-- 								<select id="retsel" -->
+                                    <!-- 									style="border: 0px; padding: 8px; font-weight: bold;"> -->
+                                    <!-- 										评测结果 -->
+                                    <!-- 										<option value="retall">评测结果</option> -->
+                                    <!-- 										<option value="retcorrect">正确</option> -->
+                                    <!-- 										<option value="retwrong">错误</option> -->
+                                    <!-- 										<option value="retce">编译出错</option> -->
+                                    <!-- 										<option value="retre">运行错误</option> -->
+                                    <!-- 										<option value="rettle">运行超时</option> -->
+                                    <!-- 										<option value="retmle">内存超限</option> -->
+                                    <!-- 										</select> -->
+                                </th>
+                                <!-- 								<th class="theven" style="padding: 0px;"><select -->
+                                <!-- 									id="scoresel" -->
+                                <!-- 									style="border: 0px; padding: 8px; font-weight: bold;" -->
+                                <!-- 									onchange="scoreselChange()"> -->
+                                <!-- 										<option value="scoreall">得分</option> -->
+                                <!-- 										<option value="score100">100</option> -->
+                                <!-- 										<option value="score199">1~99</option> -->
+                                <!-- 										<option value="score0">0</option> -->
+                                <!-- 								</select></th> -->
+                                <th class="thodd" th:text="运行时间">CPU使用
+                                    <div class="updown">
+                                        <a class="up" href="###" onclick="cputimeup()"></a> <a
+                                            class="down" href="###" onclick="cputimedown()"></a>
+                                    </div>
+                                </th>
+                                <th class="theven">内存使用
+                                    <div class="updown">
+                                        <a class="up" href="###" onclick="memuseup()"></a> <a
+                                            class="down" href="###" onclick="memusedown()"></a>
+                                    </div>
+                                </th>
+                                <th class="theven">评测详情
+                                    <div class="updown">
+                                        <a class="up" href="###" onclick="memuseup()"></a> <a
+                                            class="down" href="###" onclick="memusedown()"></a>
+                                    </div>
+                                </th>
+                                <!-- 								<th class="thodd">评测详情</th> -->
+                            </tr>
+                            </thead>
+							<tbody>
+							<tr v-for="item in solutionList" :key="item.problemId">
+								<td>{{item.solutionId}}</td>
+								<td>{{item.user.userName}}</td>
+								<td><a :href="'/p/'+item.problem.problemId">{{item.problem.title}}</a></td>
+								<td>{{item.submitTime.substr(0, 10) + ' ' +item.submitTime.substr(11, 8)}}</td>
+
+                                <td>{{item.languageStr}}</td>
+                                <td>{{item.resultStr}}</td>
+                                <td>{{item.runtime  ? item.runtime + 'ms' : " " }}</td>
+                                <td>{{item.memory ?  item.memory / 10 + "KB" : " "}}</td>
+								<td><a href="#">敬请期待</a></td>
 							</tr>
-						</thead>
-						<tbody id="status-list">
-							<tr>
-								<td>3228286</td>
-								<td>李明忠</td>
-								<td class="pname"><a href="problem.page?gpid=T489">According
-										to Bartjens</a></td>
-								<td>02-08 10:46</td>
-								<td>1.518KB</td>
-								<td style="text-transform: uppercase;">C++</td>
-								<td><span class="Color_AC">正确</span></td>
-								<td>100</td>
-								<td>109ms</td>
-								<td>968.0KB</td>
-								<td><a href="/detail.page?submitid=3228286">评测详情</a></td>
-							</tr>
-						</tbody>
-					</table>
-					<!-- information of devide page -->
-					<div class="row">
-						<!-- 分页文字信息 -->
-						<div class="col-md-6" id="page-info-area"></div>
-						<!-- 分页条信息 -->
-						<nav aria-label="Page navigation example" id="page_nav_area">
-							<ul class="pagination">
-								<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-								<li class="page-item"><a class="page-link" href="#">1</a></li>
-								<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
-								<li class="page-item"><a class="page-link" href="#">Next</a></li>
-							</ul>
-						</nav>
+							</tbody>
+						</table>
+						<!-- information of devide page -->
+						<div class="row">
+							<div class="col-md-6" id="page-info-area">
+								当前{{pageInfo.pageNum}}页，总
+								{{pageInfo.pages}}页，共
+								{{pageInfo.total}}条记录
+							</div>
+							<!-- 分页条信息 -->
+							<nav aria-label="Page navigation example" id="page_nav_area">
+								<ul class="pagination">
+									<li :class="{'page-item': true, disable: !pageInfo.hasPreviousPage}">
+										<a class="page-link" href="#" @click.prevent="toPage(1)">首页</a>
+									</li>
+									<li :class="{'page-item': true,disable: !pageInfo.hasPreviousPage}">
+										<a class="page-link" href="#" @click.prevent="pageInfo.hasPreviousPage && toPage(pageInfo.pageNum - 1)">«</a>
+									</li>
+
+									<li :class="{'page-item': true,active: index == pageInfo.pageNum}"
+										v-for="index in navigatepageNums" :key="index">
+										<a class="page-link" href="#" @click.prevent="toPage(index)">{{index}}</a>
+									</li>
+
+									<li class="page-item  disable: !pageInfo.hasNextPage}">
+										<a class="page-link" href="#" @click.prevent="pageInfo.hasNextPage && toPage(pageInfo.pageNum + 1)">»</a>
+									</li>
+									<li :class="{'page-item': true, disable: !pageInfo.hasNextPage}">
+										<a class="page-link" href="#" @click.prevent="toPage(pageInfo.pages)">末页</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
 					</div>
-<!-- 					<div class="panel-footer"> -->
-<!-- 						共<span id="status-list-cnt">11</span>条记录，第<input id="pagego" -->
-<!-- 							value="" style="width: 20px; text-align: center;">/<span -->
-<!-- 							id="status-list-pagecnt"></span>页 <input type="button" -->
-<!-- 							class="btn btn-sm btn-default" value="转" onclick="changePage()"> -->
-<!-- 						&nbsp; 快速跳转：<span id="quickgo"> <a -->
-<!-- 							href="?sename=&amp;seprname=A&amp;langsel=&amp;scoresel=&amp;retsel=&amp;order=&amp;page=1">&gt;1&lt;</a></span> -->
-<!-- 					</div> -->
 				</div>
 			</div>
 		</div>
@@ -170,10 +172,10 @@
 	<script type="text/javascript"
 		src="../static/assets/js/bootstrap.min.js"
 		th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+    <script type="text/javascript"
+            th:src="@{/webjars/vue/2.5.17/dist/vue.min.js}"></script>
 	<script th:src="@{/assets/js/common.js}"></script>
 	<script th:src="@{/assets/js/solution/set.js}"></script>
-
-
 </body>
 </body>
 </html>

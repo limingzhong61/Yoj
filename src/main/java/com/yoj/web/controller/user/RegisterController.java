@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +33,7 @@ public class RegisterController {
     @Value("${spring.mail.username}")
     private String from;
 
-    @RequestMapping("/register")
+    @PostMapping("/register")
     public Msg register(User user) {
         String checkCode = stringRedisTemplate.opsForValue().get(user.getEmail());
         Msg msg = new Msg();

@@ -13,7 +13,7 @@
 //import bean.JudgeTask;
 //
 ////@Log4j
-//public class Judge {
+//public class JudgeUtil {
 //
 //	public static Results judge(JudgeTask task) {
 //		Results result = new Results();

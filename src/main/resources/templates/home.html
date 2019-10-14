@@ -27,53 +27,6 @@
     <div class="row">
         <div class="col-md-12 order-md-1">
             <h1 style="text-align: center">首页</h1>
-            <table class="table table-hover table-bordered">
-                <!---->
-                <thead class="thead-light">
-                <tr>
-                    <th scope="col">PID</th>
-                    <th scope="col">状态</th>
-                    <th scope="col">名称</th>
-                    <th scope="col">标签</th>
-                    <th scope="col">递交</th>
-                    <th scope="col">AC%</th>
-                    <!--<th scope="col">质量</th>-->
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>未提交</td>
-                    <td><a th:href="@{/p/1}">A+B Problem</a></td>
-                    <td>入门</td>
-                    <td th:text="${problem!=null} ? ${problem.submissions}">0</td>
-                    <td th:text="${problem!=null} ? ${ problem.acRate}">未知</td>
-                </tr>
-                <!--<tr>-->
-                <!--<th scope="row">3</th>-->
-                <!--<td>未提交</td>-->
-                <!--<td><a href="">A+B Problem</a></td>-->
-                <!--<td>入门</td>-->
-                <!--<td>0</td>-->
-                <!--<td>未知</td>-->
-                <!--</tr>-->
-                </tbody>
-            </table>
-            <!-- information of devide page -->
-            <div class="row">
-                <!-- 分页文字信息 -->
-                <div class="col-md-6" id="page-info-area"></div>
-                <!-- 分页条信息 -->
-                <nav aria-label="Page navigation example" id="page_nav_area">
-                    <ul class="pagination">
-                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                    </ul>
-                </nav>
-            </div>
         </div>
     </div>
 

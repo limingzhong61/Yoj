@@ -57,7 +57,7 @@
 <div class="container">
     <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4"
-             th:src="@{/assets/img/bootstrap-solid.svg}" alt=""
+             th:src="@{/assets/img/astronaut.jpg}" alt=""
              width="72" height="72">
         <h2>注册账号</h2>
         <!--<p class="lead">Below is an example form built entirely with-->
@@ -65,64 +65,70 @@
         <!--state that can be triggered by attempting to submit the form without-->
         <!--completing it.</p>-->
     </div>
-    <div class="row">
+    <div id="app" class="row">
         <div class="col-md-8 order-md-1 offset-md-2">
             <!--<h4 class="mb-3 " style="text-align: center;">注册账号</h4>-->
             <!--判断-->
             <p style="color: red; text-align: center" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
-            <form class="needs-validation" novalidate="" th:action="@{/u/r/register}" method="post">
+            <form class="needs-validation" novalidate="" method="post">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="userName">用户名:</label>
                     </div>
-                    <input type="text" class="form-control needs-validation" id="userName" name="userName"
+                    <!--$(item).removeClass("is-invalid");-->
+                    <!--$(item).addClass('is-valid');-->
+                    <input type="text"
+                           :class="{'form-control': true,'is-invalid': !userNameJudge,'is-valid': userNameJudge}"
+                           id="userName" v-model="userName"
                            placeholder="" required="required">
                     <div class="invalid-feedback">
-                        用户名不能为空.
+                        {{userNameMsg}}
                     </div>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="password">密码:</label>
                     </div>
-                    <input type="password" class="form-control" id="password" name="password" placeholder=""
+                    <input type="password"
+                           :class="{'form-control': true,'is-invalid': !passwordJudge,'is-valid': passwordJudge}"
+                           id="password" v-model="password" placeholder=""
                            required="required">
                     <div class="invalid-feedback">
-                        密码不能为空.
+                        {{passwordMsg}}
                     </div>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="secondPassword">确认密码:</label>
                     </div>
-                    <input type="password" class="form-control" id="secondPassword" placeholder="">
+                    <input type="password"
+                           :class="{'form-control': true,'is-invalid': !secondPasswordJudge,'is-valid': secondPasswordJudge}"
+                           id="secondPassword" v-model="secondPassword"
+                           placeholder="">
                     <div class="invalid-feedback">
-                        两次密码不一致.
+                        {{secondPasswordMsg}}
                     </div>
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="secondPassword">Email:</label>
                     </div>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">
+                    <input type="email" :class="{'form-control': true,'is-invalid': !emailJudge,'is-valid': emailJudge}"
+                           id="email" v-model="email" placeholder="you@example.com">
                     <div class="invalid-feedback">
-                        请输入一个有效的电子邮件地址.
+                        {{emailMsg}}
                     </div>
                 </div>
-                <!--<div class="mb-3">-->
-                <!--<label for="email"><span class="text-muted">(可选)</span></label>-->
-                <!--<input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">-->
-                <!--<div class="invalid-feedback">-->
-                <!--请输入一个有效的电子邮件地址.-->
-                <!--</div>-->
-                <!--</div>-->
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="secondPassword">邮箱验证码:</label>
+                        <label class="input-group-text" for="emailCheckCode">邮箱验证码:</label>
                     </div>
-                    <input type="number" class="form-control col-9" id="emailCheckCode" name="email" placeholder="">
+                    <input type="number" class="form-control col-9" id="emailCheckCode" v-model="emailCheckCode"
+                           placeholder="">
                     <div class="col-3 md-1">
-                        <button id="emailBtn" class="btn btn-outline-info btn-md btn-block" type="button">获取验证码</button>
+                        <button id="emailBtn" @click="sendEmail"
+                                class="btn btn-outline-info btn-md btn-block" type="button">获取验证码
+                        </button>
                     </div>
                     <div class="invalid-feedback">
                         验证码错误.
@@ -133,7 +139,7 @@
                 </div>
                 <hr class="mb-4">
                 <div style="display: flex; justify-content: center;">
-                    <button id="registerBtn" class="btn btn-primary btn-lg" type="button">
+                    <button @click.prevent="register" class="btn btn-primary btn-lg" type="button">
                         &emsp;注册&emsp;
                     </button>
                 </div>
@@ -159,7 +165,8 @@
         th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
 <script type="text/javascript" src="../../static/assets/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
-<script th:src="@{/assets/js/util/validate.js}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/vue/2.5.17/dist/vue.min.js}"></script>
 <script th:src="@{/assets/js/user/register.js}"></script>
 
 </body>

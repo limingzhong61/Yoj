@@ -21,13 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @Setter
 @Component
 @Slf4j
 public class Judge {
-    Logger logger;
     private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
@@ -38,31 +36,18 @@ public class Judge {
     public void judge(Solution solution, Problem problem) {
         // linux path,tmp directory store temporary files
         //uuid 重复的可能性很低
-        UUID uuid = UUID.randomUUID();
-        String dirPath = uuid.toString();
+        String dirPath = UUID.randomUUID().toString();
         String linuxPath = PropertiesUtil.get("linux.solutionFilePath") + dirPath;
         // windows path,
         String windowsPath = PropertiesUtil.get("windows.solutionFilePath") + dirPath;
         try {
-            if ("linux".equals(PropertiesUtil.get("platform"))) {
-                File file = new File(linuxPath);
-                file.mkdirs();
-                createFile(solution.getLanguage(), linuxPath, solution.getCode());
-            } else {
-                // window 环境
-                File file = new File(windowsPath);
-                file.mkdirs();
-                createFile(solution.getLanguage(), windowsPath, solution.getCode());
-                SSH2Util ssh2Util = new SSH2Util(PropertiesUtil.get("ip"), PropertiesUtil.get("userName"), PropertiesUtil.get("password"), 22);
-                ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
-            }
-
+            createSolutionFile(solution, linuxPath, windowsPath);
         } catch (Exception e) {
             e.printStackTrace();
             solution.setErrorMessage("system exception:create file fail");
             solution.setResult(Results.SystemError);
-            log.info("Judge : create file fail");
-            deleteSolutionFile(linuxPath,windowsPath);
+            log.info("JudgeUtil : create file fail");
+            deleteSolutionFile(linuxPath, windowsPath);
             return;
         }
 
@@ -72,9 +57,9 @@ public class Judge {
         if (message != null) {
             solution.setResult(Results.CompileError);
             solution.setErrorMessage(message);
-            log.warn("Judge : compile error");
-            log.warn("Judge :  " + message);
-            deleteSolutionFile(linuxPath,windowsPath);
+            log.warn("JudgeUtil : compile error");
+            log.warn("JudgeUtil :  " + message);
+            deleteSolutionFile(linuxPath, windowsPath);
             return;
         }
         // chmod -R 755 path
@@ -97,11 +82,29 @@ public class Judge {
 //        String cmd = "python " + "/home/nicolas/judge/judge1.py" + " " + process + " " + judge_data + " "
 //                + linuxPath + " " + 1000 + " " + 20000;
         parseToResult(cmd, solution);
-        deleteSolutionFile(linuxPath,windowsPath);
+        deleteSolutionFile(linuxPath, windowsPath);
         System.out.println(solution);
     }
 
-    private void deleteSolutionFile(String linuxPath,String windowsPath){
+    private void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception{
+        //create solutionFile();
+        if ("linux".equals(PropertiesUtil.get("platform"))) {
+            File file = new File(linuxPath);
+            file.mkdirs();
+            FileUtils.write(new File(linuxPath + "/" + fileNames[solution.getLanguage()]),
+                    solution.getCode(), "utf-8");
+        } else {
+            // window 环境
+            File file = new File(windowsPath);
+            file.mkdirs();
+            FileUtils.write(new File(windowsPath + "/" + fileNames[solution.getLanguage()]),
+                    solution.getCode(), "utf-8");
+            SSH2Util ssh2Util = new SSH2Util(PropertiesUtil.get("ip"), PropertiesUtil.get("userName"), PropertiesUtil.get("password"), 22);
+            ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
+        }
+    }
+
+    private void deleteSolutionFile(String linuxPath, String windowsPath) {
         executor.execute("rm -rf " + linuxPath);
         if (!"linux".equals(PropertiesUtil.get("platform"))) {
             try {
@@ -137,10 +140,6 @@ public class Judge {
         return executor.execute(cmd).getError();
     }
 
-    private void createFile(int compilerId, String path, String source) throws Exception {
-        FileUtils.write(new File(path + "/" + fileNames[compilerId]), source, "utf-8");
-    }
-
     private static String process(int compileId, String path) {
         switch (compileId) {
             case 0:
@@ -164,7 +163,7 @@ public class Judge {
         if (exec.getError() != null) {
             solution.setErrorMessage(exec.getError());
             solution.setResult(Results.SystemError);
-             log.error("=====error====" + solution.getSolutionId() + exec.getStdout() + "    :" + exec.getError());
+            log.error("=====error====" + solution.getSolutionId() + exec.getStdout() + "    :" + exec.getError());
         } else {
 //			Stdout out = JSON.parseObject(exec.getStdout(), Stdout.class);
             try {
