@@ -123,7 +123,9 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="emailCheckCode">邮箱验证码:</label>
                     </div>
-                    <input type="number" class="form-control col-9" id="emailCheckCode" v-model="emailCheckCode"
+                    <input type="number"
+                           :class="{'col-9': true,'form-control': true,'is-invalid': !emailCheckJudge,'is-valid': emailCheckJudge}"
+                            id="emailCheckCode" v-model="emailCheckCode"
                            placeholder="">
                     <div class="col-3 md-1">
                         <button id="emailBtn" @click="sendEmail"

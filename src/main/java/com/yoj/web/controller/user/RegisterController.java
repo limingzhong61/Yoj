@@ -40,17 +40,17 @@ public class RegisterController {
         msg.setSuccess(true);
         if (checkCode == null || !checkCode.equals(user.getEmailCheckCode())) {
             msg.setSuccess(false);
-            msg.add("emailCheckCode", "邮箱验证码错误");
+            msg.add("emailCheckJudge", "邮箱验证码错误");
         }
         if (userService.getUserByName(user.getUserName()) != null) {
             msg.setSuccess(false);
-            msg.add("userName", "用户名已存在");
+            msg.add("userNameJudge", "用户名已存在");
         }
         if (!msg.isSuccess()) {
             return msg;
         }
         if (userService.insertUserUseCache(user) == null) {
-            return Msg.fail().add("other", "系统错误");
+            return Msg.fail("系统错误");
         }
         stringRedisTemplate.delete(user.getEmail());
         return Msg.success();
