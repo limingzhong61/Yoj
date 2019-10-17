@@ -7,18 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class PageController {
 //    private final String PREFIX = "";
-
-    /**
-     * problem页面映射
-     *
-     * @param path
-     * @return
-     */
-    @GetMapping("/problem/{path}")
-    public String level2(@PathVariable("path") String path) {
-        return "problem/" + path;
-    }
-
     /**
      * user页面映射
      *
@@ -28,21 +16,5 @@ public class PageController {
     @GetMapping("/user/{path}")
     public String level3(@PathVariable("path") String path) {
         return "user/" + path;
-    }
-
-    /**
-     * user页面映射
-     *
-     * @param path
-     * @return
-     */
-    @GetMapping("/solution/{path}")
-    public String solution(@PathVariable("path") String path) {
-        return "solution/" + path;
-    }
-
-    @GetMapping("/contest/{path}")
-    public String contest(@PathVariable("path") String path) {
-        return "contest/" + path;
     }
 }

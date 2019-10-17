@@ -26,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("userName")
                 .passwordParameter("password")
                 .loginPage("/user/login")
-                .failureUrl("/u/login-error");
+                .failureUrl("/user/login-error");
         http
                 .rememberMe()
                 .rememberMeParameter("remember");
@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutSuccessUrl("/user/login");
         //关闭跨域攻击
-//        http.csrf().disable();
+        http.csrf().disable();
         // 省略其他代码；
     }
 

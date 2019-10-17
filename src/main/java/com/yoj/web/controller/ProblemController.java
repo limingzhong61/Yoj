@@ -3,48 +3,39 @@ package com.yoj.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.nuts.auth.UserUtils;
-import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.User;
+import com.yoj.web.bean.util.Msg;
 import com.yoj.web.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
-@Controller
-@RequestMapping("/p")
+@RestController
+@RequestMapping("/problem")
 public class ProblemController {
 
     @Autowired
     private ProblemService problemService;
+    @Autowired
+    private UserUtils userUtils;
 
-    @RequestMapping("/{pid}")
-    public String getProblem(@PathVariable("pid") Integer pid, Map<String, Object> map, HttpServletRequest request) {
-//        request.getSession().setAttribute("pid", pid);
+    @GetMapping("/{pid}")
+    public Msg getProblem(@PathVariable("pid") Integer pid) {
         Problem problem = problemService.queryById(pid);
-        User user = UserUtils.getUser();
+        Msg msg = Msg.success().add("problem", problem);
+        User user = userUtils.getCurrentUser();
         if (user != null && problem.getUserId() == user.getUserId()) {
-            map.put("alter", true);
+            msg.add("alter", true);
         }
-        map.put("problem", problem);
-        return "problem/problemView";
+        return msg;
     }
 
-    @RequestMapping("/submit/{pid}")
-    public String toSubmitView(@PathVariable("pid") int pid, Map<String, Object> map) {
-        map.put("pid", pid);
-        return "solution/submit";
-    }
-
-    @RequestMapping("/main/{pageNumber}")
-    @ResponseBody
-    public Msg result(@PathVariable("pageNumber") Integer pageNumber, HttpServletRequest request) {
+    @GetMapping("/getProblemSet/{pageNumber}")
+    public Msg getProblemSet(@PathVariable("pageNumber") Integer pageNumber, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
@@ -61,10 +52,9 @@ public class ProblemController {
         return Msg.success().add("pageInfo", page);
     }
 
-    @RequestMapping("/add")
-    @ResponseBody
-    public Msg addProblem(Problem problem) {
-        User user = UserUtils.getUser();
+    @PostMapping("/add")
+    public Msg addProblem(@RequestBody Problem problem) {
+        User user = userUtils.getCurrentUser();
         if (user == null) {
             return Msg.fail("");
         }
@@ -75,22 +65,15 @@ public class ProblemController {
         return Msg.fail();
     }
 
-    @GetMapping("/alter/{pid}")
-    public String toAddProblem(@PathVariable("pid") Integer pid, Model model) {
-        model.addAttribute("problem", problemService.queryById(pid).parseJudgeData());
-        return "problem/addProblem";
-    }
-
     /**
      * @Description:
      * @Param: [pid, model]
      * @return: java.lang.String
      * @Author: lmz
      */
-    @RequestMapping("/alter")
-    @ResponseBody
-    public Msg alterProblem(Problem problem) {
-        User user = UserUtils.getUser();
+    @PostMapping("/alter")
+    public Msg alterProblem(@RequestBody Problem problem) {
+        User user = userUtils.getCurrentUser();
         if (user == null) {
             return Msg.fail("");
         }

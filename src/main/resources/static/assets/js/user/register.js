@@ -181,6 +181,5 @@ var vue = new Vue({
         var headers = {};
         headers[csrfHeader] = csrfToken
         this.headers = headers
-        console.log(this.headers)
     }
 })

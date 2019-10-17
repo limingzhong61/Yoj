@@ -25,14 +25,14 @@ public class Msg {
 	public static Msg success() {
 		Msg msg = new Msg();
 		msg.setSuccess(true);
-		msg.setMsg("处理成功!");
+//		msg.setMsg("处理成功!");
 		return msg;
 	}
 
 	public static Msg fail() {
 		Msg msg = new Msg();
 		msg.setSuccess(false);
-		msg.setMsg("处理失败!");
+//		msg.setMsg("处理失败!");
 		return msg;
 	}
 

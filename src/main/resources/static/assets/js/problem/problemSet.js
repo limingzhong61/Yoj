@@ -13,7 +13,7 @@ var vue = new Vue({
     methods: {
         toPage(index) {
             $.ajax({
-                url: "/p/main/" + index,
+                url: "/p/getProblemSet/" + index,
                 type: "GET",
                 success: function (result) {
                     // console.log(result);

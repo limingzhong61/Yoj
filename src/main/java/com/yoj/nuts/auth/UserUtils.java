@@ -3,9 +3,11 @@ package com.yoj.nuts.auth;
 import com.yoj.web.bean.User;
 import com.yoj.web.bean.util.UserDetailsImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserUtils {
-    public static User getUser(){
+    public User getCurrentUser(){
         UserDetailsImpl userDetails = null;
         User user = null;
         try{
