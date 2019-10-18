@@ -41,7 +41,8 @@ public class MvcConfig implements WebMvcConfigurer {
 		WebMvcConfigurer configurer = new WebMvcConfigurer() {
 			@Override
 			public void addViewControllers(ViewControllerRegistry registry) {
-				registry.addViewController("/").setViewName("/dist/index");
+				registry.addViewController("/").setViewName("index");
+				registry.addViewController("/index").setViewName("index");
 			}
 			@Override
 			public void addInterceptors(InterceptorRegistry registry) {

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2019/9/27
  */
 @RestController
-@RequestMapping("/u/r")
+@RequestMapping("/user/r")
 public class RegisterController {
     @Autowired
     UserService userService;
