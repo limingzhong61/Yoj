@@ -74,8 +74,9 @@ public class ProblemController {
     @PostMapping("/alter")
     public Msg alterProblem(@RequestBody Problem problem) {
         User user = userUtils.getCurrentUser();
-        if (user == null) {
-            return Msg.fail("");
+        //先判断是否是出题人
+        if (user == null || user.getUserId() != problemService.queryById(problem.getProblemId()).getUserId()) {
+            return Msg.fail("你不具有修改此题的权限");
         }
         problem.setUserId(user.getUserId());
         if (problemService.updateByPrimaryKey(problem) != null) {
