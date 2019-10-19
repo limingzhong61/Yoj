@@ -17,6 +17,8 @@ import java.util.Map;
 public class Msg {
 	// 状态
 	private boolean success;
+
+	private int state;
 	// 提示prompt information
 	private String msg;
 	// 用户返回给浏览器的数据

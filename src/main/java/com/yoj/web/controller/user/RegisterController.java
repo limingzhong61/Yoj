@@ -34,7 +34,7 @@ public class RegisterController {
     private String from;
 
     @PostMapping("/register")
-    public Msg register(User user) {
+    public Msg register(@RequestBody User user) {
         String checkCode = stringRedisTemplate.opsForValue().get(user.getEmail());
         Msg msg = new Msg();
         msg.setSuccess(true);

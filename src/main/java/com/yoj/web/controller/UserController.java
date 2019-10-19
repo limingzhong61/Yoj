@@ -2,6 +2,7 @@ package com.yoj.web.controller;
 
 import com.yoj.nuts.auth.UserUtils;
 import com.yoj.web.bean.User;
+import com.yoj.web.bean.util.Msg;
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -30,10 +31,14 @@ public class UserController {
 
     @GetMapping("/info")
     @ResponseBody
-    public User getUserInfo(){
+    public Msg getUserInfo(){
         User user = userUtils.getCurrentUser();
+        if(user == null){
+            return Msg.fail();
+        }
         user.setPassword("");
-        return user;
+       return  Msg.success().add("user",user);
+
     }
 
 

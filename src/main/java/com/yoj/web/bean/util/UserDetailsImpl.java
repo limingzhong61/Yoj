@@ -13,8 +13,6 @@ import java.util.List;
 
 @ToString
 public class UserDetailsImpl implements UserDetails{
-
-    private User user;
     private String username;
     private String password;
     //包含着用户对应的所有Privilege，在使用时调用者给对象注入Privileges
@@ -32,14 +30,11 @@ public class UserDetailsImpl implements UserDetails{
     public UserDetailsImpl(User user) {
         this.username = user.getUserName();
         this.password = user.getPassword();
-        this.user = user;
     }
 
     //用User和List<Privilege>构造
     public UserDetailsImpl(User user,List<Privilege> Privileges) {
-        this.user = user;
         this.username = user.getUserName();
-        System.out.println();
         this.password = user.getPassword();
         this.privilege = Privileges;
     }
@@ -93,7 +88,4 @@ public class UserDetailsImpl implements UserDetails{
         return true;
     }
 
-    public User getUser() {
-        return user;
-    }
 }
