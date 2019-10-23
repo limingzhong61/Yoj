@@ -1,6 +1,6 @@
 package com.yoj;
 
-import com.yoj.web.bean.Solution;
+import com.yoj.web.bean.Problem;
 import com.yoj.web.dao.ProblemMapper;
 import com.yoj.web.dao.SolutionMapper;
 import org.junit.Test;
@@ -19,26 +19,9 @@ public class MybatisMapperTest {
 
     @Autowired
     SolutionMapper solutionMapper;
-
-//    @Test
-//    public void testSelectInsert(){
-//        Problem problem = problemMapper.queryById(1);
-//        System.out.println(problemMapper.insertSelective(problem));
-//        System.out.println("problemId:"+problem.getProblemId());
-//    }
-//
-//    @Test
-//    public void testProblemInsert(){
-//        Problem problem = problemMapper.queryById(1);
-//        System.out.println(problemMapper.insert(problem));
-//        System.out.println("problemId:"+problem.getProblemId());
-//    }
-
     @Test
     public void testSelect(){
-//        Problem problem = problemMapper.queryProblemTitleAndIdById(1);
-//        System.out.println(problem);
-        List<Solution> allByDesc = solutionMapper.getAllWithUserAndProblemName();
-        System.out.println(allByDesc);
+        List<Problem> problemList = problemMapper.getProblemList();
+        System.out.println(problemList);
     }
 }

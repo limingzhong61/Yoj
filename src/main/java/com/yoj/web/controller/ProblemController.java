@@ -7,11 +7,11 @@ import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.User;
 import com.yoj.web.bean.util.Msg;
 import com.yoj.web.service.ProblemService;
+import com.yoj.web.service.SolutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -22,6 +22,8 @@ public class ProblemController {
     private ProblemService problemService;
     @Autowired
     private UserUtils userUtils;
+    @Autowired
+    private SolutionService solutionService;
 
     @GetMapping("/{pid}")
     public Msg getProblem(@PathVariable("pid") Integer pid) {
@@ -36,18 +38,16 @@ public class ProblemController {
 
     @GetMapping("/getProblemSet/{pageNumber}")
     public Msg getProblemSet(@PathVariable("pageNumber") Integer pageNumber, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-
+        User user = userUtils.getCurrentUser();
+        if(user == null){
+            return Msg.fail("need login");
+        }
         PageHelper.startPage(pageNumber, 10);
-        List<Problem> problems = problemService.getAll();
+        List<Problem> problems = problemService.getProblemList();
         PageInfo<Problem> page = new PageInfo<Problem>(problems, 5);
         //多表查询。。。。。
         for (Problem problem : page.getList()) {
-            problem.setAcRate((int) Math.round(problem.getAccepted() * 100.0 / problem.getSubmissions()));
-            if (user != null) {
-                problem.setSolved(problemService.isSolved(problem.getProblemId(), user.getUserId()));
-            }
+            problem.setState(problemService.getUserState(problem.getProblemId(), user.getUserId()));
         }
         return Msg.success().add("pageInfo", page);
     }
@@ -84,4 +84,5 @@ public class ProblemController {
         }
         return Msg.fail();
     }
+
 }

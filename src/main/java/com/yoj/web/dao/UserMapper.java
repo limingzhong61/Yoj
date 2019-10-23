@@ -1,25 +1,19 @@
 package com.yoj.web.dao;
 
 import com.yoj.web.bean.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
 public interface UserMapper {
 
-//    @Select("select count(1) from user where user_name=#{userName} and password=#{password}")
-//    public int queryUserExist(@Param("userName")String userName,@Param("password")String password);
-
     @Insert("insert into user(user_name,password,email) values(#{userName},#{password},#{email})")
     @Options(useGeneratedKeys=true, keyProperty="userId", keyColumn="user_id")
     public int insertUser(User user);
 
     @Select("select * from user where user_name=#{userName} and password=#{password}")
-    public User queryUserExist(User user);
+    public User getUserExist(User user);
 
     @Select("select count(1) from user where user_name=#{userName}")
     public int queryExistByName(String userName);
@@ -32,4 +26,10 @@ public interface UserMapper {
 
     @Select("SELECT * FROM `user` WHERE user_name = #{userName}")
     public User getUserByName(String userName);
+
+    @Select("select * from user where email=#{email}")
+    User getUserByEmail(String email);
+
+    @Update("UPDATE user SET password = #{password} where email = #{email}")
+    int updateUserPasswordByEmail(@Param("password")String password,@Param("email")String email);
 }

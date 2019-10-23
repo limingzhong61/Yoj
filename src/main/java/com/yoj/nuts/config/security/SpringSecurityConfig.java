@@ -8,22 +8,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
-public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    AjaxAuthenticationEntryPoint authenticationEntryPoint;  //  未登陆时返回 JSON 格式的数据给前端（否则为 html）
+    JSONAuthenticationEntryPoint authenticationEntryPoint;  //  未登陆时返回 JSON 格式的数据给前端（否则为 html）
 
     @Autowired
-    AjaxAuthenticationSuccessHandler authenticationSuccessHandler;  // 登录成功返回的 JSON 格式数据给前端（否则为 html）
+    JSONAuthenticationSuccessHandler authenticationSuccessHandler;  // 登录成功返回的 JSON 格式数据给前端（否则为 html）
 
     @Autowired
-    AjaxAuthenticationFailureHandler authenticationFailureHandler;  //  登录失败返回的 JSON 格式数据给前端（否则为 html）
+    JSONAuthenticationFailureHandler authenticationFailureHandler;  //  登录失败返回的 JSON 格式数据给前端（否则为 html）
 
 //    @Autowired
 //    AjaxLogoutSuccessHandler  logoutSuccessHandler;  // 注销成功返回的 JSON 格式数据给前端（否则为 登录时的 html）
 
     @Autowired
-    AjaxAccessDeniedHandler accessDeniedHandler;    // 无权访问返回的 JSON 格式数据给前端（否则为 403 html 页面）
+    JSONAccessDeniedHandler accessDeniedHandler;    // 无权访问返回的 JSON 格式数据给前端（否则为 403 html 页面）
 
     @Autowired
     SelfAuthenticationProvider provider; // 自定义安全认证
@@ -42,7 +42,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
         http.httpBasic().authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .authorizeRequests().antMatchers("/","/css/**","/js/**","/img/**","favicon.ico",
-                "/u/login-error", "/user/r/**", "/index.html")
+                "/u/login-error", "/user/r/**","/user/reset/**", "/index.html")
                 .permitAll()
                 .anyRequest()
                 .authenticated()// 其他 url 需要身份认证
@@ -53,6 +53,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutSuccessUrl("/")
 //                .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll();
 

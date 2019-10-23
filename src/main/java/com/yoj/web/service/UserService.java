@@ -28,6 +28,14 @@ public class UserService implements UserDetailsService {
     private PrivilegeService privilegeService;
     @Autowired
     private StringEncryptor encryptor;
+    @CachePut(key = "#result.userId",unless = "#result == null")
+    public User updateUserPasswordByEmail(User user) {
+        user.setPassword(encryptor.encrypt(user.getPassword()));
+        if(userMapper.updateUserPasswordByEmail(user.getPassword(),user.getEmail()) > 0){
+            return userMapper.getUserByEmail(user.getEmail());
+        }
+        return null;
+    }
 
     /**
      * @Description: 插入用户 返回对象不统一。。。。未使用缓存
@@ -66,7 +74,7 @@ public class UserService implements UserDetailsService {
      */
     @Cacheable
     public User queryUserExist(User user) {
-        return userMapper.queryUserExist(user);
+        return userMapper.getUserExist(user);
     }
     @Cacheable
     public User getUserById(Integer userId) {
@@ -80,6 +88,11 @@ public class UserService implements UserDetailsService {
 //    @Cacheable 不能缓存，插入之后，就已经变了
     public boolean queryExistByEmail(String email){
         return userMapper.queryExistByEmail(email) > 0;
+    }
+
+    @Cacheable(unless = "#result == null")
+    public User getUserByEmail(String email){
+        return userMapper.getUserByEmail(email);
     }
 
 //    @Cacheable

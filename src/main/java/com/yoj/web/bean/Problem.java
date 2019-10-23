@@ -37,18 +37,14 @@ public class Problem{
     //时间限制ms
     private Integer timeLimit;
 
-    private Integer accepted;
-
-    private Integer submissions;
-
     private String judgeData;
 
     //非表格字段
-    // 通过的百分率
-    private Integer acRate;
-    //当前用户是否解决
-    private Boolean solved;
 
+    private Integer accepted;
+
+    private Integer submissions;
+    //当前用户是否提交、解决、
     private Integer state;
 
     private List<JudgeData> data;

@@ -1,9 +1,7 @@
 package com.yoj.web.service;
 
-import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.nuts.judge.util.ProblemFileUtil;
 import com.yoj.web.bean.Problem;
-import com.yoj.web.bean.Solution;
 import com.yoj.web.dao.ProblemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,38 +25,6 @@ public class ProblemService {
     @Autowired
     @Qualifier("localProblemFileUtil")
     private ProblemFileUtil problemFileUtil;
-    /**
-     * 更新problem的提交数和通过数
-     *
-     * @param solution
-     * @return
-     * @author lmz
-     */
-//    @CachePut
-//    public boolean updateSubmit(Solution solution){
-//        if (solution.getResult() == Results.Accepted) {
-//            return problemMapper.updateAccept(solution.getProblemId()) > 0;
-//        } else {
-//            return problemMapper.updateSubmit(solution.getProblemId()) > 0;
-//        }
-//    }
-    @CachePut(key = "#result.problemId")
-    public Problem updateSubmit(Solution solution){
-        Problem problem = problemMapper.queryById(solution.getProblemId());
-        problem.setSubmissions(problem.getSubmissions()+1);
-        if (solution.getResult() == Results.Accepted) {
-            problem.setAccepted(problem.getAccepted()+1);
-            if(problemMapper.updateAccept(solution.getProblemId()) > 0){
-                return problem;
-            }
-            return null;
-        } else {
-            if(problemMapper.updateSubmit(solution.getProblemId()) > 0){
-                return problem;
-            }
-            return null;
-        }
-    }
 
     @Cacheable(value = "problem")
     public Problem queryById(int pid) {
@@ -73,9 +39,21 @@ public class ProblemService {
     public List<Problem> getAll() {
         return problemMapper.getAll();
     }
-    @Cacheable
-    public Boolean isSolved(Integer problemId, Integer userId) {
-        return problemMapper.isSolved(problemId, userId) > 0;
+    /**
+    * @Description: 判断是否用户提交、通过此题
+    * @Param: [problemId, userId]
+    * @return: int 1 accepted, -1 submitted, 0 not submitted
+    * @Author: lmz
+    * @Date: 2019/10/23 
+    */ 
+    public int getUserState(Integer problemId, Integer userId) {
+        if(problemMapper.isSolved(problemId, userId) != null){
+            return 1;
+        }
+        if(problemMapper.isSubmitted(problemId, userId) != null){
+            return -1;
+        }
+        return 0;
     }
 
     @CachePut(key="#result.problemId")
@@ -104,6 +82,17 @@ public class ProblemService {
             return queryById(problem.getProblemId());
         }
         return null;
+    }
+
+    /**
+     * @Description: 放回问题集合
+     * @Param: []
+     * @return: java.util.List<com.yoj.web.bean.Problem>
+     * @Author: lmz
+     * @Date: 2019/10/23
+     */
+    public List<Problem> getProblemList(){
+        return problemMapper.getProblemList();
     }
 
 }

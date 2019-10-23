@@ -1,17 +1,12 @@
 package com.yoj.web.controller.user;
 
-import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.User;
+import com.yoj.web.bean.util.Msg;
 import com.yoj.web.service.UserService;
+import com.yoj.web.util.EmailSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Description: 注册控制层
@@ -23,15 +18,11 @@ import java.util.concurrent.TimeUnit;
 public class RegisterController {
     @Autowired
     UserService userService;
-
     @Autowired
-    JavaMailSenderImpl mailSender;
+    EmailSender emailSender;
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
-
-    @Value("${spring.mail.username}")
-    private String from;
 
     @PostMapping("/register")
     public Msg register(@RequestBody User user) {
@@ -72,21 +63,15 @@ public class RegisterController {
         return Msg.success();
     }
 
-    @RequestMapping("/getEmailCheckCode/{email}")
+    @GetMapping("/getEmailCheckCode/{email}")
     public Msg getCheckCode(@PathVariable("email") String email) {
         if (userService.queryExistByEmail(email)) {
             return Msg.fail("邮箱已被注册");
         }
-        SimpleMailMessage message = new SimpleMailMessage();
-        String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
-        //邮件设置
-        message.setSubject("YOJ注册验证码");
-        message.setText("您的注册验证码为：" + checkCode);
-
-        message.setTo(email);
-        message.setFrom(from);
-        mailSender.send(message);
-        stringRedisTemplate.opsForValue().set(email, checkCode, 60 * 10, TimeUnit.SECONDS);//向redis里存入数据和设置缓存时间
-        return Msg.success().add("checkCode", checkCode);
+        String checkCode = emailSender.sendRegisterEmail(email);
+        if(checkCode == null){
+            return Msg.fail("发送邮件失败，请检查邮箱地址是否正确");
+        }
+        return Msg.success();
     }
 }

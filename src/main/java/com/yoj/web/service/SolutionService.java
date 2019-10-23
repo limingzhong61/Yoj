@@ -1,5 +1,7 @@
 package com.yoj.web.service;
 
+import com.yoj.nuts.auth.UserUtils;
+import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.dao.SolutionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,10 @@ import java.util.List;
 @Service
 public class SolutionService {
 	@Autowired
-	public SolutionMapper solutionMapper;
+	private SolutionMapper solutionMapper;
+
+    @Autowired
+    private UserUtils userUtils;
 
 	/**
 	 * @description: insert solution
@@ -26,7 +31,7 @@ public class SolutionService {
 	 */
 	@CachePut(key = "#result.solutionId")
 	public Solution insertSolution(Solution solution) {
-		if(solutionMapper.insetSolution(solution) > 0){
+		if(solutionMapper.insertSelective(solution) > 0){
 			return solution;
         }
 		return null;
@@ -55,8 +60,8 @@ public class SolutionService {
 	 * @author nicolas
 	 * @date 2019年8月24日
 	 */
-	public List<Solution> getAllWithUserName() {
-		return solutionMapper.getAllWithUserAndProblemName();
+	public List<Solution> getListBySelective(Solution solution) {
+		return solutionMapper.getListBySelective(solution);
 	}
 
     public int countAcceptedByProblemId(Integer pid){
@@ -67,4 +72,27 @@ public class SolutionService {
 	    return solutionMapper.countSubmissionByProblemId(pid);
     }
 
+	/**
+	 * @Description: 根据输入的solution动态查询问题集合
+	 * @Param: [solution]
+	 * @return: java.util.List<com.yoj.web.bean.Solution>
+	 * @Author: lmz
+	 * @Date: 2019/10/22
+	 */
+	public Long countBySelective(Solution solution){
+		return solutionMapper.countBySelective(solution);
+	};
+
+    public Long countAcceptedByUser(){
+        Solution solution = new Solution();
+        solution.setUserName(userUtils.getCurrentUser().getUserName());
+        solution.setResult(Results.Accepted);
+        return solutionMapper.countBySelective(solution);
+    };
+
+    public Long countSubmissionByUser(){
+        Solution solution = new Solution();
+        solution.setUserName(userUtils.getCurrentUser().getUserName());
+        return solutionMapper.countBySelective(solution);
+    };
 }

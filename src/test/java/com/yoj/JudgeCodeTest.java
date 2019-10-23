@@ -22,6 +22,14 @@ public class JudgeCodeTest {
     Judge judge;
 
     @Test
+    public void judgeAll() throws Exception{
+        testJudgeC();
+        testJudgeCPP();
+        testJudgeJava();
+        testJudgePython();
+    }
+
+    @Test
     public void testJudgeC()  throws Exception{
         Solution solution = new Solution();
         solution.setUserId(1);
@@ -100,11 +108,5 @@ public class JudgeCodeTest {
         }
     }
 
-    @Test
-    public void judgeAll() throws Exception{
-        testJudgeC();
-        testJudgeCPP();
-        testJudgeJava();
-        testJudgePython();
-    }
+
 }

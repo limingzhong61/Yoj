@@ -10,22 +10,6 @@ import java.util.List;
 @Mapper
 public interface ProblemMapper {
 
-    /**
-     * 修改提交数,此提交未通过
-     * @param solution
-     * @return
-     * @author lmz
-     */
-    @Update("update problem set submissions=submissions+1 where problem_id = #{pid}")
-    int updateSubmit(Integer pid);
-
-    /**
-     * 修改提交数,此提交通过
-     * @return
-     * @author lmz
-     */
-    @Update("update problem set submissions=submissions+1,accepted = accepted+1 where problem_id = #{pid}")
-    int updateAccept(Integer pid);
 
     @Select("SELECT * FROM problem WHERE problem_id = #{pid}")
     Problem queryById(int pid);
@@ -33,10 +17,13 @@ public interface ProblemMapper {
     @Select("SELECT * FROM problem")
     List<Problem> getAll();
 
-    @Select("SELECT count(1) FROM solution WHERE problem_id = #{pid} and user_id = #{uid} and result = 0")
-    int isSolved(@Param("pid") Integer problemId, @Param("uid") Integer userId);
+    @Select("SELECT solution_id FROM solution WHERE problem_id = #{pid} and user_id = #{uid} and result = 0 LIMIT 1")
+    Integer isSolved(@Param("pid") Integer problemId, @Param("uid") Integer userId);
 
-    int insert(Problem problem);
+    @Select("SELECT solution_id FROM solution WHERE problem_id = #{pid} and user_id = #{uid} LIMIT 1")
+    Integer isSubmitted(@Param("pid") Integer problemId, @Param("uid") Integer userId);
+
+    Integer insert(Problem problem);
     /**
     * @Description: 动态sql插入，并返回自增主键
     * @Param: [problem]
@@ -48,6 +35,12 @@ public interface ProblemMapper {
     int updateByPrimaryKey(Problem problem);
 
     int updateByPrimaryKeySelective(Problem problem);
-    @Select("SELECT problem_id,title FROM problem WHERE problem_id = #{pid}")
-    Problem queryProblemTitleAndIdById(Integer pid);
+    /**
+    * @Description: 放回问题集合
+    * @Param: [] 
+    * @return: java.util.List<com.yoj.web.bean.Problem> 
+    * @Author: lmz
+    * @Date: 2019/10/23 
+    */ 
+    List<Problem> getProblemList();
 }

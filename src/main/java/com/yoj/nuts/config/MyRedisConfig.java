@@ -3,6 +3,7 @@ package com.yoj.nuts.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ import java.time.Duration;
 @Configuration
 public class MyRedisConfig {
 
-//    @Bean
+    //    @Bean
 //    public RedisTemplate<Object, Object> empRedisTemplate(RedisConnectionFactory redisConnectionFactory)
 //            throws UnknownHostException {
 //        RedisTemplate<Object, Object> template = new RedisTemplate<>();
@@ -29,7 +30,8 @@ public class MyRedisConfig {
 //        return template;
 //    }
 
-    private Duration timeToLive = Duration.ZERO;
+    @Value("${spring.cache.redis.time-to-live}")
+    private Duration timeToLive;
 
     public void setTimeToLive(Duration timeToLive) {
         this.timeToLive = timeToLive;
@@ -39,14 +41,13 @@ public class MyRedisConfig {
     public CacheManager cacheManager(RedisConnectionFactory factory) {
         RedisSerializer<String> redisSerializer = new StringRedisSerializer();
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-
         //解决查询缓存转换异常的问题
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
 
-        // 配置序列化（解决乱码的问题）
+//        // 配置序列化（解决乱码的问题）
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(timeToLive)
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))

@@ -6,8 +6,8 @@ import com.yoj.nuts.judge.bean.TestResult;
 import com.yoj.nuts.judge.bean.static_fianl.Languages;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.nuts.judge.util.ExecutorUtil;
-import com.yoj.nuts.judge.util.PropertiesUtil;
 import com.yoj.nuts.judge.util.SSH2Util;
+import com.yoj.nuts.properties.JudgeProperties;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import lombok.Setter;
@@ -29,6 +29,8 @@ public class Judge {
     private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
+    private JudgeProperties judgeProperties;
+    @Autowired
     @Qualifier("remoteExecutor")
 //    @Qualifier("localExecutor")
     private ExecutorUtil executor;
@@ -37,9 +39,9 @@ public class Judge {
         // linux path,tmp directory store temporary files
         //uuid 重复的可能性很低
         String dirPath = UUID.randomUUID().toString();
-        String linuxPath = PropertiesUtil.get("linux.solutionFilePath") + dirPath;
+        String linuxPath = judgeProperties.getLinux().getSolutionFilePath()  + dirPath;
         // windows path,
-        String windowsPath = PropertiesUtil.get("windows.solutionFilePath") + dirPath;
+        String windowsPath = judgeProperties.getWindows().getSolutionFilePath() + dirPath;
         try {
             createSolutionFile(solution, linuxPath, windowsPath);
         } catch (Exception e) {
@@ -70,8 +72,8 @@ public class Judge {
 //		String cmd = "python " + PropertiesUtil.StringValue("judge_script") + " " + process + " " + judge_data + " "
 //				+ path + " " + task.getTimeLimit() + " " + task.getMemoryLimit();
         String path = linuxPath + "/" + fileNames[solution.getLanguage()];
-        String judgeData = PropertiesUtil.get("linux.problemFilePath") + problem.getProblemId();
-        String judgePyPath = PropertiesUtil.get("judgeScriptPath");
+        String judgeData = judgeProperties.getLinux().getProblemFilePath() + problem.getProblemId();
+        String judgePyPath = judgeProperties.getJudgeScriptPath();
         int memoryLimit = problem.getMemoryLimit() * 1024;
         //#服务器内存不够分配。。。。。给大点，和小一点都行????
         if (solution.getLanguage() == Languages.JAVA) {
@@ -88,25 +90,25 @@ public class Judge {
 
     private void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception{
         //create solutionFile();
-        if ("linux".equals(PropertiesUtil.get("platform"))) {
+        if ("linux".equals(judgeProperties.getPlatform())) {
             File file = new File(linuxPath);
             file.mkdirs();
             FileUtils.write(new File(linuxPath + "/" + fileNames[solution.getLanguage()]),
                     solution.getCode(), "utf-8");
         } else {
-            // window 环境
+            // windows 环境
             File file = new File(windowsPath);
             file.mkdirs();
             FileUtils.write(new File(windowsPath + "/" + fileNames[solution.getLanguage()]),
                     solution.getCode(), "utf-8");
-            SSH2Util ssh2Util = new SSH2Util(PropertiesUtil.get("ip"), PropertiesUtil.get("userName"), PropertiesUtil.get("password"), 22);
+            SSH2Util ssh2Util = new SSH2Util(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword(), 22);
             ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
         }
     }
 
     private void deleteSolutionFile(String linuxPath, String windowsPath) {
         executor.execute("rm -rf " + linuxPath);
-        if (!"linux".equals(PropertiesUtil.get("platform"))) {
+        if (!"linux".equals(judgeProperties.getPlatform())) {
             try {
                 FileUtils.deleteDirectory(new File(windowsPath));
             } catch (IOException ee) {

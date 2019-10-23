@@ -194,9 +194,4 @@ public class SSH2Util {
         System.out.println(sb.toString());
         return sb.toString();
     }
-
-    public static void main(String[] args) throws Exception {
-        SSH2Util ssh2Util = new SSH2Util(PropertiesUtil.get("ip"), PropertiesUtil.get("userName"), PropertiesUtil.get("password"), 22);
-//		ssh2Util.putFile("E:\\Desktop", "learn.txt","//tmp//1");
-    }
 }

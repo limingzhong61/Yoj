@@ -17,6 +17,25 @@
         <result column="hint" jdbcType="LONGVARCHAR" property="hint"/>
         <result column="judge_data" jdbcType="LONGVARCHAR" property="judgeData"/>
     </resultMap>
+
+    <resultMap id="ProblemList" type="com.yoj.web.bean.Problem">
+        <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>
+        <association property="submissions" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.countSubmissionsByProblemId"
+                     column="problem_id">
+        </association>
+        <association property="accepted" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.countAcceptedByProblemId"
+                     column="problem_id">
+        </association>
+    </resultMap>
+
+    <select id="getProblemList" parameterType="com.yoj.web.bean.Problem" resultMap="ProblemList">
+      select problem_id,title from problem
+    </select>
+
     <insert id="insert" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
             parameterType="com.yoj.web.bean.Problem">
     insert into problem (user_id, title, time_limit,
@@ -30,7 +49,6 @@
       #{hint,jdbcType=LONGVARCHAR},
       #{judgeData,jdbcType=LONGVARCHAR})
   </insert>
-    <!--取到最后生成的主键-->
     <insert id="insertSelective" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
             parameterType="com.yoj.web.bean.Problem">
         insert into problem
@@ -131,7 +149,6 @@
       judge_data = #{judgeData,jdbcType=LONGVARCHAR}
     where problem_id = #{problemId,jdbcType=INTEGER}
   </update>
-
     <update id="updateByPrimaryKeySelective" parameterType="com.yoj.web.bean.Problem">
         update problem
         <set>

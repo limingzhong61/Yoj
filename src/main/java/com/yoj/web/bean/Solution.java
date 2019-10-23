@@ -13,6 +13,8 @@ public class Solution {
     private Integer problemId;
 
     private Integer userId;
+
+    private String userName;
     //	Languages
     private Integer language;
 
@@ -33,7 +35,7 @@ public class Solution {
 
     private String resultStr;
 
-    private User user;
+//    private User user;
 
     private List<TestResult> testResults;
 

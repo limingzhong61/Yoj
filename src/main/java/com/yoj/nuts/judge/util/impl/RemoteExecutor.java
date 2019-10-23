@@ -4,10 +4,11 @@ import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.util.ExecutorUtil;
-import com.yoj.nuts.judge.util.PropertiesUtil;
+import com.yoj.nuts.properties.JudgeProperties;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,13 +20,12 @@ import java.io.IOException;
 @ToString
 public class RemoteExecutor implements ExecutorUtil {
 
+    @Autowired
+    JudgeProperties judgeProperties;
+
     private static final Logger log = LoggerFactory.getLogger(RemoteExecutor.class);
 
     private static Connection conn;
-
-    public RemoteExecutor() {
-        login(PropertiesUtil.get("ip"), PropertiesUtil.get("userName"), PropertiesUtil.get("password"));
-    }
 
     /**
      * 登录主机
@@ -59,10 +59,11 @@ public class RemoteExecutor implements ExecutorUtil {
     public ExecMessage execute(String cmd) {
         Session session = null;
         try {
-            if (conn != null) {
-                session = conn.openSession();// 打开一个会话
-                session.execCommand(cmd);// 执行命令
+            if (conn == null) {
+                login(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword());
             }
+            session = conn.openSession();// 打开一个会话
+            session.execCommand(cmd);// 执行命令
         } catch (IOException e) {
             log.info("执行命令失败,链接conn:" + conn + ",执行的命令：" + cmd + "  " + e.getMessage());
             return new ExecMessage(e.getMessage(), null);

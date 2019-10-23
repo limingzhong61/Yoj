@@ -7,6 +7,10 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
 
+    <!--<typeAliases>-->
+        <!--<typeAlias alias="Problem" type="com.yoj.web.bean.Problem"/>-->
+        <!--&lt;!&ndash;<package name="com.yoj.web.bean"/>&ndash;&gt;-->
+    <!--</typeAliases>-->
     <!--<environments default="development">-->
     <!--<environment id="development">-->
     <!--<transactionManager type="JDBC"/>-->

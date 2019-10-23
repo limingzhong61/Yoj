@@ -1,8 +1,8 @@
 package com.yoj.web.dao;
 
 import com.yoj.web.bean.Solution;
-import org.apache.ibatis.annotations.*;
-import org.apache.ibatis.mapping.FetchType;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,12 +11,13 @@ import java.util.List;
 @Mapper
 public interface SolutionMapper {
 
-    @Insert("insert into solution" +
-            "(problem_id,user_id,language,code,result,runtime,memory,error_message,submit_time) "
-            + "values(#{problemId},#{userId},#{language},#{code},#{result},#{runtime},#{memory}," +
-            "#{errorMessage},NOW())")
-    @Options(useGeneratedKeys=true, keyProperty="solutionId", keyColumn="solution_id")
-    public int insetSolution(Solution solution);
+//    @Insert("insert into solution" +
+//            "(problem_id,user_id,user_name,language,code,result,runtime,memory,error_message,submit_time) "
+//            + "values(#{problemId},#{userId},#{user_name},#{language},#{code},#{result},#{runtime},#{memory}," +
+//            "#{errorMessage},NOW())")
+//    @Options(useGeneratedKeys = true, keyProperty = "solutionId", keyColumn = "solution_id")
+//    int insetSolution(Solution solution);
+    int insertSelective(Solution solution);
 
     /**
      * order by solution_id descend
@@ -24,29 +25,44 @@ public interface SolutionMapper {
      * @return
      */
     @Select("SELECT * FROM solution ORDER BY solution_id DESC")
-    public List<Solution> getAllByDesc();
-
-    @Select("SELECT * FROM solution ORDER BY solution_id DESC")
-    @Results({
-            @Result(id = true, column = "solution_id", property = "solutionId"),
-            @Result(column = "problem_id", property = "problem", one = @One(select = "com.yoj.web.dao.ProblemMapper.queryProblemTitleAndIdById", fetchType = FetchType.EAGER)),
-            @Result(column = "language", property = "language"),
-            @Result(column = "code", property = "code"),
-            @Result(column = "result", property = "result"),
-            @Result(column = "runtime", property = "runtime"),
-            @Result(column = "memory", property = "memory"),
-            @Result(column = "error_message", property = "errorMessage"),
-            @Result(column = "submit_time", property = "submitTime"),
-            @Result(column = "user_id", property = "user", one = @One(select = "com.yoj.web.dao.UserMapper.getUserById", fetchType = FetchType.EAGER))
-    })
-    public List<Solution> getAllWithUserAndProblemName();
-
-    @Select("select count(1) from solution where problem_id = #{pid} and result  = 0")
-    int countAcceptedByProblemId(Integer pid);
+    List<Solution> getAllByDesc();
 
     @Select("select count(1) from solution where problem_id = #{pid}")
     int countSubmissionByProblemId(Integer pid);
 
-    @Select("select * from solution where problem_id = #{pid}")
+    @Select("select * from solution where solution_id = #{pid}")
     Solution queryById(Integer sid);
+
+    /**
+     * @Description: 根据输入的solution动态查询问题集合
+     * @Param: [solution]
+     * @return: java.util.List<com.yoj.web.bean.Solution>
+     * @Author: lmz
+     * @Date: 2019/10/22
+     */
+    List<Solution> getListBySelective(Solution solution);
+
+    /**
+     * @Description: 根据输入的solution动态查询问题集合
+     * @Param: [solution]
+     * @return: java.util.List<com.yoj.web.bean.Solution>
+     * @Author: lmz
+     * @Date: 2019/10/22
+     */
+    Long countBySelective(Solution solution);
+
+    /**
+     * @Description: 根据pid返回提交数
+     * @Param: [problemId]
+     * @return: java.lang.Integer
+     * @Author: lmz
+     * @Date: 2019/10/23
+     */
+    @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{problemId}")
+    Integer countSubmissionsByProblemId(Integer problemId);
+
+    @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{problemId} and result = 0")
+    int countAcceptedByProblemId(Integer pid);
+
+//    @Select("")
 }
