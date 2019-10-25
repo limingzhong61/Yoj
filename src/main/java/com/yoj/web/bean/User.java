@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ToString
@@ -17,6 +19,12 @@ public class User {
 
     String email;
 
+    Date registerTime;
+
     //非表中字段
     String emailCheckCode;
+
+    Integer accepted;
+    Integer submissions;
+
 }

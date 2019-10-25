@@ -17,12 +17,6 @@ public interface ProblemMapper {
     @Select("SELECT * FROM problem")
     List<Problem> getAll();
 
-    @Select("SELECT solution_id FROM solution WHERE problem_id = #{pid} and user_id = #{uid} and result = 0 LIMIT 1")
-    Integer isSolved(@Param("pid") Integer problemId, @Param("uid") Integer userId);
-
-    @Select("SELECT solution_id FROM solution WHERE problem_id = #{pid} and user_id = #{uid} LIMIT 1")
-    Integer isSubmitted(@Param("pid") Integer problemId, @Param("uid") Integer userId);
-
     Integer insert(Problem problem);
     /**
     * @Description: 动态sql插入，并返回自增主键
@@ -36,11 +30,11 @@ public interface ProblemMapper {
 
     int updateByPrimaryKeySelective(Problem problem);
     /**
-    * @Description: 放回问题集合
-    * @Param: [] 
-    * @return: java.util.List<com.yoj.web.bean.Problem> 
+    * @Description: 根据problem参数返回问题集合
+    * @Param: [problem],注意problem.user_id != null,user_id放回是否解决、提交问题
+     * @return: java.util.List<com.yoj.web.bean.Problem>
     * @Author: lmz
     * @Date: 2019/10/23 
     */ 
-    List<Problem> getProblemList();
+    List<Problem> getProblemList(Problem problem);
 }

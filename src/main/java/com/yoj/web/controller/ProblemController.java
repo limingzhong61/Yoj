@@ -11,7 +11,6 @@ import com.yoj.web.service.SolutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -37,18 +36,15 @@ public class ProblemController {
     }
 
     @GetMapping("/getProblemSet/{pageNumber}")
-    public Msg getProblemSet(@PathVariable("pageNumber") Integer pageNumber, HttpServletRequest request) {
+    public Msg getProblemSet(@PathVariable("pageNumber") Integer pageNumber,Problem problem) {
         User user = userUtils.getCurrentUser();
         if(user == null){
             return Msg.fail("need login");
         }
+        problem.setUserId(user.getUserId());
         PageHelper.startPage(pageNumber, 10);
-        List<Problem> problems = problemService.getProblemList();
+        List<Problem> problems = problemService.getProblemList(problem);
         PageInfo<Problem> page = new PageInfo<Problem>(problems, 5);
-        //多表查询。。。。。
-        for (Problem problem : page.getList()) {
-            problem.setState(problemService.getUserState(problem.getProblemId(), user.getUserId()));
-        }
         return Msg.success().add("pageInfo", page);
     }
 

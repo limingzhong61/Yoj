@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoj.web.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.yoj.web.bean.User">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+    </resultMap>
+
+    <resultMap id="UserList" type="com.yoj.web.bean.User">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="rank" jdbcType="INTEGER" property="rank"/>
+        <association property="accepted" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.countAcceptedByUserId"
+                     column="user_id">
+        </association>
+        <association property="submissions" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.countSubmissionsByUserId"
+                     column="user_id">
+        </association>
+
+    </resultMap>
+
+    <select id="getUserList" parameterType="com.yoj.web.bean.User" resultMap="UserList">
+           SELECT user_id,user_name FROM user ORDER BY rank
+    </select>
+
+</mapper>

@@ -1,8 +1,9 @@
 package com.yoj;
 
-import com.yoj.web.bean.Problem;
+import com.yoj.web.bean.User;
 import com.yoj.web.dao.ProblemMapper;
 import com.yoj.web.dao.SolutionMapper;
+import com.yoj.web.dao.UserMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,14 @@ import java.util.List;
 public class MybatisMapperTest {
     @Autowired
     ProblemMapper problemMapper;
-
     @Autowired
     SolutionMapper solutionMapper;
+    @Autowired
+    UserMapper userMapper;
     @Test
     public void testSelect(){
-        List<Problem> problemList = problemMapper.getProblemList();
-        System.out.println(problemList);
+
+        List<User> userList = userMapper.getUserList(new User());
+        System.out.println(userList);
     }
 }

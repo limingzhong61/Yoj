@@ -39,13 +39,16 @@ public class Problem{
 
     private String judgeData;
 
-    //非表格字段
-
+    //-------------------非表格字段--------------------
     private Integer accepted;
 
     private Integer submissions;
+
+    private Integer userSolved;
+
+    private  Integer userSubmitted;
     //当前用户是否提交、解决、
-    private Integer state;
+//    private Integer state;
 
     private List<JudgeData> data;
     public Problem parseJudgeData() {

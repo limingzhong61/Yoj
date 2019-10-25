@@ -22,19 +22,25 @@
         <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>
-        <association property="submissions" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.countSubmissionsByProblemId"
-                     column="problem_id">
-        </association>
         <association property="accepted" javaType="INTEGER"
                      select="com.yoj.web.dao.SolutionMapper.countAcceptedByProblemId"
                      column="problem_id">
         </association>
+        <association property="submissions" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.countSubmissionsByProblemId"
+                     column="problem_id">
+        </association>
+        <association property="userSolved" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.querySolved"
+                     column="{userId = user_id,problemId = problem_id}">
+        </association>
+        <association property="userSubmitted" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.querySubmitted"
+                     column="{userId = user_id,problemId = problem_id}">
+        </association>
     </resultMap>
 
-    <select id="getProblemList" parameterType="com.yoj.web.bean.Problem" resultMap="ProblemList">
-      select problem_id,title from problem
-    </select>
+
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
             parameterType="com.yoj.web.bean.Problem">
@@ -133,6 +139,17 @@
             </if>
         </trim>
     </insert>
+    <select id="getProblemList" parameterType="com.yoj.web.bean.Problem" resultMap="ProblemList">
+    select problem_id,title,#{userId} as user_id from problem
+    <where>
+        <if test="problemId != null">
+            and problem_id LIKE CONCAT('%',#{problemId},'%')
+        </if>
+        <if test="title != null">
+            and title LIKE  CONCAT('%',#{title},'%')
+        </if>
+    </where>
+</select>
 
     <update id="updateByPrimaryKey" parameterType="com.yoj.web.bean.Problem">
     update problem

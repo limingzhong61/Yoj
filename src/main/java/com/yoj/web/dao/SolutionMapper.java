@@ -6,17 +6,12 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
 public interface SolutionMapper {
 
-//    @Insert("insert into solution" +
-//            "(problem_id,user_id,user_name,language,code,result,runtime,memory,error_message,submit_time) "
-//            + "values(#{problemId},#{userId},#{user_name},#{language},#{code},#{result},#{runtime},#{memory}," +
-//            "#{errorMessage},NOW())")
-//    @Options(useGeneratedKeys = true, keyProperty = "solutionId", keyColumn = "solution_id")
-//    int insetSolution(Solution solution);
     int insertSelective(Solution solution);
 
     /**
@@ -52,17 +47,62 @@ public interface SolutionMapper {
     Long countBySelective(Solution solution);
 
     /**
-     * @Description: 根据pid返回提交数
-     * @Param: [problemId]
+     * @Description: problemMapper.xml中使用
+     * @Param: [map]
      * @return: java.lang.Integer
      * @Author: lmz
-     * @Date: 2019/10/23
+     * @Date: 2019/10/25
      */
     @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{problemId}")
     Integer countSubmissionsByProblemId(Integer problemId);
+    /**
+     * @Description: userMapper.xml中使用
+     * @Param: [map]
+     * @return: java.lang.Integer
+     * @Author: lmz
+     * @Date: 2019/10/25
+     */
+    @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{userId} and result = 0")
+    int countAcceptedByUserId(Integer userId);
 
+
+    /**
+     * @Description: userMapper.xml中使用
+     * @Param: [map]
+     * @return: java.lang.Integer
+     * @Author: lmz
+     * @Date: 2019/10/25
+     */
+    @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{userId}")
+    Integer countSubmissionsByUserId(Integer userId);
+
+
+    /**
+     * @Description: problemMapper.xml中使用
+     * @Param: [map]
+     * @return: java.lang.Integer
+     * @Author: lmz
+     * @Date: 2019/10/25
+     */
     @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{problemId} and result = 0")
     int countAcceptedByProblemId(Integer pid);
 
-//    @Select("")
+    /**
+    * @Description: problemMapper.xml中使用
+    * @Param: [map] 
+    * @return: java.lang.Integer 
+    * @Author: lmz
+    * @Date: 2019/10/25 
+    */ 
+    @Select("SELECT solution_id FROM solution WHERE problem_id = #{problemId} and user_id = #{userId} and result = 0 LIMIT 1")
+    Integer querySolved(Map<String,Object> map);
+    /**
+     * @Description: problemMapper.xml中使用
+     * @Param: [map]
+     * @return: java.lang.Integer
+     * @Author: lmz
+     * @Date: 2019/10/25
+     */
+    @Select("SELECT solution_id FROM solution WHERE problem_id = #{problemId} and user_id = #{userId} LIMIT 1")
+    Integer querySubmitted(Map<String,Object> map);
 }

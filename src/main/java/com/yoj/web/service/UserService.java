@@ -1,7 +1,7 @@
 package com.yoj.web.service;
 
-import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.User;
+import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.util.UserDetailsImpl;
 import com.yoj.web.dao.UserMapper;
 import org.jasypt.encryption.StringEncryptor;
@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Description: insert/update时请对密码进行加密
@@ -104,5 +106,14 @@ public class UserService implements UserDetailsService {
         }
         user.setPassword(encryptor.decrypt(user.getPassword()));
         return new UserDetailsImpl(user, privilegeService.queryByUserId(user.getUserId()));
+    }
+
+    @Cacheable(unless = "#result == null")
+    public User getUseById(Integer userId) {
+        return userMapper.getUserById(userId);
+    }
+
+    public List<User> getUserList(User user) {
+        return userMapper.getUserList(user);
     }
 }

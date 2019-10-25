@@ -39,22 +39,6 @@ public class ProblemService {
     public List<Problem> getAll() {
         return problemMapper.getAll();
     }
-    /**
-    * @Description: 判断是否用户提交、通过此题
-    * @Param: [problemId, userId]
-    * @return: int 1 accepted, -1 submitted, 0 not submitted
-    * @Author: lmz
-    * @Date: 2019/10/23 
-    */ 
-    public int getUserState(Integer problemId, Integer userId) {
-        if(problemMapper.isSolved(problemId, userId) != null){
-            return 1;
-        }
-        if(problemMapper.isSubmitted(problemId, userId) != null){
-            return -1;
-        }
-        return 0;
-    }
 
     @CachePut(key="#result.problemId")
     public Problem insert(Problem problem) {
@@ -85,14 +69,14 @@ public class ProblemService {
     }
 
     /**
-     * @Description: 放回问题集合
-     * @Param: []
+     * @Description: 根据problem参数返回问题集合
+     * @Param: [problem],注意problem.user_id != null,by user_id return 是否解决、提交问题
      * @return: java.util.List<com.yoj.web.bean.Problem>
      * @Author: lmz
      * @Date: 2019/10/23
      */
-    public List<Problem> getProblemList(){
-        return problemMapper.getProblemList();
+    public List<Problem> getProblemList(Problem problem){
+        return problemMapper.getProblemList(problem);
     }
 
 }
