@@ -62,10 +62,9 @@ public class SolutionController {
 		return Msg.success().add("pageInfo", page);
 	}
 
-	@GetMapping("/countAcceptedAndSubmission")
-	public Msg countAcceptedAndSubmission(){
-        Long accepted = solutionService.countAcceptedByUser();
-        Long submission = solutionService.countSubmissionByUser();
-        return Msg.success().add("accepted",accepted).add("submission",submission);
+	@GetMapping("/detail/{solutionId}")
+	public Msg detail(@PathVariable("solutionId") Integer solutionId){
+        Solution solution = solutionService.getById(solutionId);
+        return Msg.success().add("solution",solution);
 	}
 }

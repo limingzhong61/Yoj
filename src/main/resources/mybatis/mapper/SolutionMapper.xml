@@ -103,6 +103,9 @@
             <if test="errorMessage != null">
                 error_message,
             </if>
+            <if test="testResult != null">
+                test_result,
+            </if>
             <!--<if test="submitTime != null">-->
             submit_time,
             <!--</if>-->
@@ -137,6 +140,9 @@
             </if>
             <if test="errorMessage != null">
                 #{errorMessage,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="testResult != null">
+                #{testResult,jdbcType=LONGVARCHAR},
             </if>
             NOW()
         </trim>

@@ -21,7 +21,7 @@
     </resultMap>
 
     <select id="getUserList" parameterType="com.yoj.web.bean.User" resultMap="UserList">
-           SELECT user_id,user_name FROM user ORDER BY rank
+           SELECT user_id,user_name,attempted,solved FROM user ORDER BY solved DESC
     </select>
 
 </mapper>

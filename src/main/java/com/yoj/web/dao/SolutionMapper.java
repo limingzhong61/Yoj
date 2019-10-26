@@ -26,7 +26,7 @@ public interface SolutionMapper {
     int countSubmissionByProblemId(Integer pid);
 
     @Select("select * from solution where solution_id = #{pid}")
-    Solution queryById(Integer sid);
+    Solution getById(Integer sid);
 
     /**
      * @Description: 根据输入的solution动态查询问题集合

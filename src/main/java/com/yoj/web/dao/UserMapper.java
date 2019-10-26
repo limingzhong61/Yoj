@@ -35,6 +35,14 @@ public interface UserMapper {
     @Update("UPDATE user SET password = #{password} where email = #{email}")
     int updateUserPasswordByEmail(@Param("password") String password, @Param("email") String email);
 
+    @Update("UPDATE user SET solved = (SELECT COUNT(DISTINCT problem_id) \n" +
+            "FROM solution WHERE user_id = #{userId} and result = 0) WHERE user_id = #{userId}")
+    int updateSolved(Integer userId);
+
+    @Update("UPDATE user SET attempted = (SELECT COUNT(DISTINCT problem_id) \n" +
+            "FROM solution WHERE user_id = #{userId}) WHERE user_id = #{userId}")
+    int updateAttempted(Integer userId);
+
     /**
     * @Description: by user return userList 
     * @Param: [user]

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +22,7 @@ import java.util.List;
  * @Author: lmz
  * @Date: 2019/9/22
  */
-@CacheConfig(cacheNames="user")
+@CacheConfig(cacheNames = "user")
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
@@ -30,10 +31,11 @@ public class UserService implements UserDetailsService {
     private PrivilegeService privilegeService;
     @Autowired
     private StringEncryptor encryptor;
-    @CachePut(key = "#result.userId",unless = "#result == null")
+
+    @CachePut(key = "#result.userId", unless = "#result == null")
     public User updateUserPasswordByEmail(User user) {
         user.setPassword(encryptor.encrypt(user.getPassword()));
-        if(userMapper.updateUserPasswordByEmail(user.getPassword(),user.getEmail()) > 0){
+        if (userMapper.updateUserPasswordByEmail(user.getPassword(), user.getEmail()) > 0) {
             return userMapper.getUserByEmail(user.getEmail());
         }
         return null;
@@ -57,6 +59,7 @@ public class UserService implements UserDetailsService {
         }
         return Msg.fail();
     }
+
     @CachePut(key = "#result.userId")
     public User insertUserUseCache(User user) {
         user.setPassword(encryptor.encrypt(user.getPassword()));
@@ -78,26 +81,28 @@ public class UserService implements UserDetailsService {
     public User queryUserExist(User user) {
         return userMapper.getUserExist(user);
     }
+
     @Cacheable
     public User getUserById(Integer userId) {
         return userMapper.getUserById(userId);
     }
+
     @Cacheable(unless = "#result == null")
     public User getUserByName(String userName) {
         return userMapper.getUserByName(userName);
     }
 
-//    @Cacheable 不能缓存，插入之后，就已经变了
-    public boolean queryExistByEmail(String email){
+    //    @Cacheable 不能缓存，插入之后，就已经变了
+    public boolean queryExistByEmail(String email) {
         return userMapper.queryExistByEmail(email) > 0;
     }
 
     @Cacheable(unless = "#result == null")
-    public User getUserByEmail(String email){
+    public User getUserByEmail(String email) {
         return userMapper.getUserByEmail(email);
     }
 
-//    @Cacheable
+    //    @Cacheable
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = getUserByName(username);
@@ -115,5 +120,52 @@ public class UserService implements UserDetailsService {
 
     public List<User> getUserList(User user) {
         return userMapper.getUserList(user);
+    }
+
+
+    public int updateSolved(Integer userId) {
+        return userMapper.updateSolved(userId);
+    }
+
+    public int updateAttempted(Integer userId) {
+        return userMapper.updateAttempted(userId);
+    }
+
+    /**
+     * @Description: 更新所有用户的问题状态，solved，attempted
+     * @Param:
+     * @return: void
+     * @Author: lmz
+     * @Date: 2019/10/26
+     */
+    public boolean updateAllUserProblemState() {
+        List<User> userList = this.getUserList(new User());
+        for (User user : userList ) {
+            if(updateSolved(user.getUserId()) != -1){
+                return false;
+            }
+            if(updateAttempted(user.getUserId()) >= 0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+    * @Description: 异步更新user的problem相关状态solved、attempted 
+    * @Param: [userId] 
+    * @return: boolean 
+    * @Author: lmz
+    * @Date: 2019/10/26 
+    */ 
+    @Async
+    public boolean updateProblemState(Integer userId) {
+        if(updateSolved(userId) > 0){
+            return false;
+        }
+        if(updateAttempted(userId) > 0){
+            return false;
+        }
+        return true;
     }
 }

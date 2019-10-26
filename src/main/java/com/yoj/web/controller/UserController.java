@@ -25,13 +25,6 @@ public class UserController {
     @Autowired
     private UserUtils userUtils;
 
-    // Login form with error
-//    @RequestMapping("/login-error")
-//    public String loginError(Model model) {
-//        model.addAttribute("loginError", true);
-//        return "user/login";
-//    }
-
     @GetMapping("/currentInfo")
     public Msg getCurrentUserInfo(){
         User user = userUtils.getCurrentUser();

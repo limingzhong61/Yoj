@@ -1,4 +1,4 @@
-package com.yoj;
+package com.yoj.used;
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.xml.ConfigurationParser;

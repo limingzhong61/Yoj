@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class LocalProblemFileUtil implements ProblemFileUtil {
     @Override
     public void createProblemFile(Problem problem) {
-        //        //必须保证linux的前缀目录存在 "/tmp/testData/"
+        //        //必须保证linux的前缀目录存在 "/tmp/testResult/"
 //        String linuxPath = PropertiesUtil.get("linux.problemFilePath") + problem.getProblemId();
 //        createFile(linuxPath, problem);
     }

@@ -30,6 +30,9 @@ public class Solution {
 
     private Date submitTime;
 
+    private String testResult;
+
+    private List<TestResult> testResults;
     //非表格字段
     private String languageStr;
 
@@ -37,7 +40,6 @@ public class Solution {
 
 //    private User user;
 
-    private List<TestResult> testResults;
 
     private Problem problem;
 }

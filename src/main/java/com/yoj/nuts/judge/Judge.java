@@ -171,7 +171,11 @@ public class Judge {
             try {
                 System.out.println("=====stdout====" + exec.getStdout());
                 String jsonFormat = "[" + exec.getStdout() + "]";
+
                 List<TestResult> outs = JSONArray.parseArray(jsonFormat, TestResult.class);
+                String testResult = JSONArray.toJSON(outs).toString();
+                //必须要保存标准格式的json数据
+                solution.setTestResult(testResult);
                 // log.info("=====stdout====" + out);
                 solution.setRuntime(outs.get(outs.size() - 1).getTimeUsed());
                 solution.setMemory(outs.get(outs.size() - 1).getMemoryUsed());

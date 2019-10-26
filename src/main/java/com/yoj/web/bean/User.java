@@ -21,6 +21,10 @@ public class User {
 
     Date registerTime;
 
+    Integer attempted;
+
+    Integer solved;
+
     //非表中字段
     String emailCheckCode;
 

@@ -27,8 +27,8 @@ public class YojApplicationTests {
 
     @Test
     public void createProblemFile() throws Exception{
-//        String dirPath = "E:/tmp/testData";
-//        Problem problem = problemService.queryById(1);
+//        String dirPath = "E:/tmp/testResult";
+//        Problem problem = problemService.getById(1);
 //        ProblemFileUtil.createProblemFile(problem);
     }
 

@@ -18,7 +18,7 @@ public class RemoteProblemFileUtil implements ProblemFileUtil {
 
     @Override
     public void createProblemFile(Problem problem) {
-        //必须保证linux的前缀目录存在 "/tmp/testData/"
+        //必须保证linux的前缀目录存在 "/tmp/testResult/"
         String linuxPath = judgeProperties.getLinux().getProblemFilePath() + problem.getProblemId();
         //创建problemId的目录来保存文件
         String windowsPath = judgeProperties.getWindows().getProblemFilePath() + problem.getProblemId();

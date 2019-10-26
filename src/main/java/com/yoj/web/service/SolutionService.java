@@ -4,6 +4,7 @@ import com.yoj.nuts.auth.UserUtils;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.dao.SolutionMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -14,9 +15,13 @@ import java.util.List;
 
 @CacheConfig(cacheNames = "solution")
 @Service
+@Slf4j
 public class SolutionService {
 	@Autowired
 	private SolutionMapper solutionMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserUtils userUtils;
@@ -31,15 +36,19 @@ public class SolutionService {
 	 */
 	@CachePut(key = "#result.solutionId")
 	public Solution insertSolution(Solution solution) {
+
 		if(solutionMapper.insertSelective(solution) > 0){
+		    if(!userService.updateProblemState(solution.getUserId())){
+                log.error("update problem state fail");
+            }
 			return solution;
         }
 		return null;
 	}
 
     @Cacheable
-    public Solution queryById(Integer sid){
-	    return solutionMapper.queryById(sid);
+    public Solution getById(Integer sid){
+	    return solutionMapper.getById(sid);
     }
 
 	/**
