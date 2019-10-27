@@ -5,9 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.yoj.nuts.auth.UserUtils;
 import com.yoj.web.bean.User;
 import com.yoj.web.bean.util.Msg;
+import com.yoj.web.service.SolutionService;
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ public class UserController {
     @Autowired
     UserService userService;
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    SolutionService solutionService;
     @Autowired
     private UserUtils userUtils;
 
@@ -42,6 +42,8 @@ public class UserController {
             return Msg.fail();
         }
         user.setPassword("");
+        user.setAccepted(solutionService.countAcceptedByUserId(userId));
+        user.setSubmissions(solutionService.countSubmissionsByUserId(userId));
         return  Msg.success().add("user",user);
     }
 

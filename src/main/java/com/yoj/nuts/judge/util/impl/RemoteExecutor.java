@@ -9,14 +9,13 @@ import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 /**
  * @author lmz 远程连接linux使用
  */
-@Service
+//@Service
 @ToString
 public class RemoteExecutor implements ExecutorUtil {
 

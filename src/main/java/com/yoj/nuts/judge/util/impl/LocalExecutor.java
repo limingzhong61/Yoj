@@ -2,7 +2,6 @@ package com.yoj.nuts.judge.util.impl;
 
 import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.util.ExecutorUtil;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
@@ -10,7 +9,6 @@ import java.io.IOException;
  * @author lmz
  * 	本地系统为linux时使用。
  */
-@Service
 public class LocalExecutor implements ExecutorUtil{
 
   @Override

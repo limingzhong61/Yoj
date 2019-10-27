@@ -5,6 +5,7 @@ import com.yoj.nuts.judge.bean.static_fianl.Languages;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.service.ProblemService;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class JudgeCodeTest {
     Judge judge;
 
     @Test
-    public void judgeAll() throws Exception{
+    public void judgeAll() throws Exception {
         testJudgeC();
         testJudgeCPP();
         testJudgeJava();
@@ -30,7 +31,7 @@ public class JudgeCodeTest {
     }
 
     @Test
-    public void testJudgeC()  throws Exception{
+    public void testJudgeC() throws Exception {
         Solution solution = new Solution();
         solution.setUserId(1);
         solution.setLanguage(Languages.C);
@@ -44,13 +45,11 @@ public class JudgeCodeTest {
                 "    return 0;\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        if(solution.getResult() != Results.Accepted){
-            throw new Exception("judge c error");
-        }
+        Assert.assertEquals("judge c error", solution.getResult(), Results.Accepted);
     }
 
     @Test
-    public void testJudgeCPP()  throws Exception{
+    public void testJudgeCPP() throws Exception {
         Solution solution = new Solution();
         solution.setUserId(1);
         solution.setLanguage(Languages.CPP);
@@ -66,13 +65,13 @@ public class JudgeCodeTest {
                 "    return 0;\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        if(solution.getResult() != Results.Accepted){
+        if (solution.getResult() != Results.Accepted) {
             throw new Exception("judge c++ error");
         }
     }
 
     @Test
-    public void testJudgeJava()  throws Exception{
+    public void testJudgeJava() throws Exception {
         Solution solution = new Solution();
         solution.setUserId(1);
         solution.setLanguage(Languages.JAVA);
@@ -89,21 +88,20 @@ public class JudgeCodeTest {
                 "    }\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        if(solution.getResult() != Results.Accepted){
+        if (solution.getResult() != Results.Accepted) {
             throw new Exception("judge java error");
         }
     }
 
 
-
     @Test
-    public void testJudgePython() throws Exception{
+    public void testJudgePython() throws Exception {
         Solution solution = new Solution();
         solution.setUserId(1);
         solution.setLanguage(Languages.PYTHON);
         solution.setCode("print(sum(map(int, input().split())), end='')");
         judge.judge(solution, problemService.queryById(1));
-        if(solution.getResult() != Results.Accepted){
+        if (solution.getResult() != Results.Accepted) {
             throw new Exception("judge python error");
         }
     }

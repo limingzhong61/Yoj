@@ -1,5 +1,8 @@
 package com.yoj;
 
+import com.yoj.nuts.judge.util.ProblemFileUtil;
+import com.yoj.nuts.judge.util.impl.LocalProblemFileUtil;
+import com.yoj.nuts.judge.util.impl.RemoteProblemFileUtil;
 import com.yoj.nuts.properties.JudgeProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +15,18 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class PropertiesTest {
     @Autowired
     JudgeProperties judgeProperties;
+
+    @Autowired
+    ProblemFileUtil problemFileUtil;
     @Test
-    public void test(){
-        System.out.println(judgeProperties);
+    public void testLocal(){
+        System.out.println(problemFileUtil instanceof LocalProblemFileUtil);
+//        problemFileUtil.createProblemFile(new Problem());
+    }
+
+    @Test
+    public void testRemote(){
+        System.out.println(problemFileUtil instanceof RemoteProblemFileUtil);
+//        problemFileUtil.createProblemFile(new Problem());
     }
 }

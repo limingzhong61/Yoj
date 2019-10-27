@@ -17,11 +17,20 @@
                      select="com.yoj.web.dao.SolutionMapper.countSubmissionsByUserId"
                      column="user_id">
         </association>
-
     </resultMap>
 
     <select id="getUserList" parameterType="com.yoj.web.bean.User" resultMap="UserList">
-           SELECT user_id,user_name,attempted,solved FROM user ORDER BY solved DESC
+           SELECT user_id,user_name,attempted,solved FROM user
+           <where>
+               <if test="userName != null">
+                  AND user_name LIKE CONCAT('%',#{userName},'%')
+               </if>
+           </where>
+           ORDER BY solved DESC
+    </select>
+
+    <select id="getUserInfoById" parameterType="com.yoj.web.bean.User" resultMap="UserList">
+
     </select>
 
 </mapper>

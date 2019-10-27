@@ -28,13 +28,13 @@
                 and solution_id = #{solutionId}
             </if>
             <if test="problemId != null">
-                and problem_id = #{problemId}
+                and problem_id LIKE concat('%',#{problemId},'%')
             </if>
             <if test="userId != null">
                 and user_id = #{userId}
             </if>
             <if test="userName != null">
-                and user_name = #{userName}
+                and user_name LIKE concat('%',#{userName},'%')
             </if>
             <if test="language != null">
                 and language = #{language}

@@ -4,7 +4,6 @@ import com.yoj.nuts.judge.util.ProblemFileUtil;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.dao.ProblemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,7 +22,6 @@ public class ProblemService {
     private ProblemMapper problemMapper;
 
     @Autowired
-    @Qualifier("localProblemFileUtil")
     private ProblemFileUtil problemFileUtil;
 
     @Cacheable(value = "problem")

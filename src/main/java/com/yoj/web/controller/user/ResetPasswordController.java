@@ -32,6 +32,7 @@ public class ResetPasswordController {
         if(checkCode == null){
             return Msg.fail("发送邮件失败，请稍后重试");
         }
+        emailSender.delEmailCheckCode(email);
         return Msg.success();
     }
 

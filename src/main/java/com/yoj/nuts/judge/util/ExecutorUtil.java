@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+//@Component
 public interface ExecutorUtil {
     //默认编码UTF-8
     public static String DEFAULT_CHART = "UTF-8";

@@ -1,15 +1,17 @@
 package com.yoj.web.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
-
+@Slf4j
 @Component
 @CacheConfig(cacheNames = "email")
 public class EmailSender {
@@ -83,5 +85,10 @@ public class EmailSender {
     @Cacheable(unless = "#result == null")
     public String getEmailCheckCode(String email) {
         return null;
+    }
+
+    @CacheEvict
+    public void delEmailCheckCode(String email) {
+        log.info("delete email checkCode");
     }
 }

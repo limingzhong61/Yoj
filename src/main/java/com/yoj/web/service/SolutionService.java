@@ -38,9 +38,7 @@ public class SolutionService {
 	public Solution insertSolution(Solution solution) {
 
 		if(solutionMapper.insertSelective(solution) > 0){
-		    if(!userService.updateProblemState(solution.getUserId())){
-                log.error("update problem state fail");
-            }
+		    userService.updateProblemState(solution.getUserId());
 			return solution;
         }
 		return null;
@@ -104,4 +102,12 @@ public class SolutionService {
         solution.setUserName(userUtils.getCurrentUser().getUserName());
         return solutionMapper.countBySelective(solution);
     };
+
+	public Integer countAcceptedByUserId(Integer userId){
+		return solutionMapper.countAcceptedByUserId(userId);
+	}
+
+	public Integer countSubmissionsByUserId(Integer userId){
+		return solutionMapper.countSubmissionsByUserId(userId);
+	}
 }

@@ -6,33 +6,23 @@ import com.yoj.nuts.judge.bean.TestResult;
 import com.yoj.nuts.judge.bean.static_fianl.Languages;
 import com.yoj.nuts.judge.bean.static_fianl.Results;
 import com.yoj.nuts.judge.util.ExecutorUtil;
-import com.yoj.nuts.judge.util.SSH2Util;
 import com.yoj.nuts.properties.JudgeProperties;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Setter
-@Component
+//@Component
 @Slf4j
-public class Judge {
+public abstract class Judge {
     private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
     private JudgeProperties judgeProperties;
     @Autowired
-    @Qualifier("remoteExecutor")
-//    @Qualifier("localExecutor")
     private ExecutorUtil executor;
 
     public void judge(Solution solution, Problem problem) {
@@ -88,34 +78,9 @@ public class Judge {
         System.out.println(solution);
     }
 
-    private void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception{
-        //create solutionFile();
-        if ("linux".equals(judgeProperties.getPlatform())) {
-            File file = new File(linuxPath);
-            file.mkdirs();
-            FileUtils.write(new File(linuxPath + "/" + fileNames[solution.getLanguage()]),
-                    solution.getCode(), "utf-8");
-        } else {
-            // windows 环境
-            File file = new File(windowsPath);
-            file.mkdirs();
-            FileUtils.write(new File(windowsPath + "/" + fileNames[solution.getLanguage()]),
-                    solution.getCode(), "utf-8");
-            SSH2Util ssh2Util = new SSH2Util(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword(), 22);
-            ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
-        }
-    }
+    public abstract void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception;
 
-    private void deleteSolutionFile(String linuxPath, String windowsPath) {
-        executor.execute("rm -rf " + linuxPath);
-        if (!"linux".equals(judgeProperties.getPlatform())) {
-            try {
-                FileUtils.deleteDirectory(new File(windowsPath));
-            } catch (IOException ee) {
-                ee.printStackTrace();
-            }
-        }
-    }
+    public abstract void deleteSolutionFile(String linuxPath, String windowsPath);
 
     private String compile(int compilerId, String path) {
         /**
@@ -142,7 +107,7 @@ public class Judge {
         return executor.execute(cmd).getError();
     }
 
-    private static String process(int compileId, String path) {
+    private String process(int compileId, String path) {
         switch (compileId) {
             case 0:
                 return path + "/main";
@@ -187,4 +152,6 @@ public class Judge {
             }
         }
     }
+
+
 }

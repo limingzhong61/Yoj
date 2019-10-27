@@ -3,25 +3,30 @@ package com.yoj.web.service;
 import com.yoj.web.bean.User;
 import com.yoj.web.bean.util.Msg;
 import com.yoj.web.bean.util.UserDetailsImpl;
+import com.yoj.web.cache.UserCacheUtil;
 import com.yoj.web.dao.UserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * @Description: insert/update时请对密码进行加密
  * @Author: lmz
  * @Date: 2019/9/22
  */
+@Slf4j
 @CacheConfig(cacheNames = "user")
 @Service
 public class UserService implements UserDetailsService {
@@ -31,6 +36,8 @@ public class UserService implements UserDetailsService {
     private PrivilegeService privilegeService;
     @Autowired
     private StringEncryptor encryptor;
+    @Autowired
+    private UserCacheUtil userCache;
 
     @CachePut(key = "#result.userId", unless = "#result == null")
     public User updateUserPasswordByEmail(User user) {
@@ -92,7 +99,6 @@ public class UserService implements UserDetailsService {
         return userMapper.getUserByName(userName);
     }
 
-    //    @Cacheable 不能缓存，插入之后，就已经变了
     public boolean queryExistByEmail(String email) {
         return userMapper.queryExistByEmail(email) > 0;
     }
@@ -118,16 +124,18 @@ public class UserService implements UserDetailsService {
         return userMapper.getUserById(userId);
     }
 
+
+
     public List<User> getUserList(User user) {
         return userMapper.getUserList(user);
     }
 
 
-    public int updateSolved(Integer userId) {
+    public Integer updateSolved(Integer userId) {
         return userMapper.updateSolved(userId);
     }
 
-    public int updateAttempted(Integer userId) {
+    public Integer updateAttempted(Integer userId) {
         return userMapper.updateAttempted(userId);
     }
 
@@ -159,13 +167,14 @@ public class UserService implements UserDetailsService {
     * @Date: 2019/10/26 
     */ 
     @Async
-    public boolean updateProblemState(Integer userId) {
-        if(updateSolved(userId) > 0){
-            return false;
+    public Future<Boolean> updateProblemState(Integer userId) {
+        if(updateSolved(userId) < 0){
+            return new AsyncResult<Boolean>(false);
         }
-        if(updateAttempted(userId) > 0){
-            return false;
+        if(updateAttempted(userId) < 0){
+            return new AsyncResult<Boolean>(false);
         }
-        return true;
+        userCache.delById(userId);
+        return new AsyncResult<Boolean>(true);
     }
 }

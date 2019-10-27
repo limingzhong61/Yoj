@@ -26,7 +26,8 @@ public class RegisterController {
 
     @PostMapping("/register")
     public Msg register(@RequestBody User user) {
-        String checkCode = stringRedisTemplate.opsForValue().get(user.getEmail());
+
+        String checkCode = emailSender.getEmailCheckCode(user.getEmail());
         Msg msg = new Msg();
         msg.setSuccess(true);
         if (checkCode == null || !checkCode.equals(user.getEmailCheckCode())) {
@@ -43,7 +44,7 @@ public class RegisterController {
         if (userService.insertUserUseCache(user) == null) {
             return Msg.fail("系统错误");
         }
-        stringRedisTemplate.delete(user.getEmail());
+        emailSender.delEmailCheckCode(user.getEmail());
         return Msg.success();
     }
 
@@ -69,7 +70,7 @@ public class RegisterController {
             return Msg.fail("邮箱已被注册");
         }
         String checkCode = emailSender.sendRegisterEmail(email);
-        if(checkCode == null){
+        if (checkCode == null) {
             return Msg.fail("发送邮件失败，请检查邮箱地址是否正确");
         }
         return Msg.success();

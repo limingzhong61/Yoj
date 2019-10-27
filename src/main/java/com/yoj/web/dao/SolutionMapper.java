@@ -46,63 +46,23 @@ public interface SolutionMapper {
      */
     Long countBySelective(Solution solution);
 
-    /**
-     * @Description: problemMapper.xml中使用
-     * @Param: [map]
-     * @return: java.lang.Integer
-     * @Author: lmz
-     * @Date: 2019/10/25
-     */
     @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{problemId}")
     Integer countSubmissionsByProblemId(Integer problemId);
-    /**
-     * @Description: userMapper.xml中使用
-     * @Param: [map]
-     * @return: java.lang.Integer
-     * @Author: lmz
-     * @Date: 2019/10/25
-     */
-    @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{userId} and result = 0")
+
+    @Select("SELECT COUNT(*) AS submission  FROM solution where user_id = #{userId} and result = 0")
     int countAcceptedByUserId(Integer userId);
 
 
-    /**
-     * @Description: userMapper.xml中使用
-     * @Param: [map]
-     * @return: java.lang.Integer
-     * @Author: lmz
-     * @Date: 2019/10/25
-     */
-    @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{userId}")
+    @Select("SELECT COUNT(*) AS submission  FROM solution where user_id = #{userId}")
     Integer countSubmissionsByUserId(Integer userId);
 
 
-    /**
-     * @Description: problemMapper.xml中使用
-     * @Param: [map]
-     * @return: java.lang.Integer
-     * @Author: lmz
-     * @Date: 2019/10/25
-     */
     @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{problemId} and result = 0")
     int countAcceptedByProblemId(Integer pid);
 
-    /**
-    * @Description: problemMapper.xml中使用
-    * @Param: [map] 
-    * @return: java.lang.Integer 
-    * @Author: lmz
-    * @Date: 2019/10/25 
-    */ 
     @Select("SELECT solution_id FROM solution WHERE problem_id = #{problemId} and user_id = #{userId} and result = 0 LIMIT 1")
-    Integer querySolved(Map<String,Object> map);
-    /**
-     * @Description: problemMapper.xml中使用
-     * @Param: [map]
-     * @return: java.lang.Integer
-     * @Author: lmz
-     * @Date: 2019/10/25
-     */
+    Integer querySolved(Map<String, Object> map);
+
     @Select("SELECT solution_id FROM solution WHERE problem_id = #{problemId} and user_id = #{userId} LIMIT 1")
-    Integer querySubmitted(Map<String,Object> map);
+    Integer querySubmitted(Map<String, Object> map);
 }

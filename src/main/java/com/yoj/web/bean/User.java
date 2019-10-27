@@ -19,7 +19,7 @@ public class User {
 
     String email;
 
-    Date registerTime;
+    Date regTime;
 
     Integer attempted;
 
