@@ -27,6 +27,7 @@ public class User {
 
     //非表中字段
     String emailCheckCode;
+    String imageCheckCode;
 
     Integer accepted;
     Integer submissions;

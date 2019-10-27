@@ -26,7 +26,6 @@ public class RegisterController {
 
     @PostMapping("/register")
     public Msg register(@RequestBody User user) {
-
         String checkCode = emailSender.getEmailCheckCode(user.getEmail());
         Msg msg = new Msg();
         msg.setSuccess(true);
@@ -48,7 +47,6 @@ public class RegisterController {
         return Msg.success();
     }
 
-    @GetMapping("/validateUserName/{userName}")
     public Msg validateUserName(@PathVariable("userName") String userName) {
         if (userService.getUserByName(userName) != null) {
             return Msg.fail("用户名已存在");
@@ -56,7 +54,6 @@ public class RegisterController {
         return Msg.success();
     }
 
-    @GetMapping("/validateEmail/{email}")
     public Msg validateEmail(@PathVariable("email") String email) {
         if (userService.queryExistByEmail(email)) {
             return Msg.fail("邮箱已被注册");
@@ -64,7 +61,6 @@ public class RegisterController {
         return Msg.success();
     }
 
-    @GetMapping("/getEmailCheckCode/{email}")
     public Msg getCheckCode(@PathVariable("email") String email) {
         if (userService.queryExistByEmail(email)) {
             return Msg.fail("邮箱已被注册");

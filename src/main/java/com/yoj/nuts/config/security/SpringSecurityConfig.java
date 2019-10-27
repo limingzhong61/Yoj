@@ -1,11 +1,13 @@
 package com.yoj.nuts.config.security;
 
 
+import com.yoj.nuts.filter.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -28,6 +30,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     SelfAuthenticationProvider provider; // 自定义安全认证
 
+    @Autowired
+    ValidateCodeFilter validateCodeFilter;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 加入自定义的安全认证
@@ -41,8 +46,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.httpBasic().authenticationEntryPoint(authenticationEntryPoint)
                 .and()
-                .authorizeRequests().antMatchers("/","/css/**","/js/**","/img/**","favicon.ico",
-                "/u/login-error", "/user/r/**","/user/reset/**", "/index.html")
+                .authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/img/**", "favicon.ico",
+                "/u/login-error", "/user/r/**", "/user/reset/**", "/verify/**", "/index.html")
                 .permitAll()
                 .anyRequest()
                 .authenticated()// 其他 url 需要身份认证
@@ -58,7 +63,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
 
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler); // 无权访问 JSON 格式的数据
-
+        /* 添加验证码过滤器 */
+        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
 
