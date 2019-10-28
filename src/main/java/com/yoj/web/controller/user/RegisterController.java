@@ -2,11 +2,15 @@ package com.yoj.web.controller.user;
 
 import com.yoj.web.bean.User;
 import com.yoj.web.bean.util.Msg;
+import com.yoj.web.cache.EmailCache;
 import com.yoj.web.service.UserService;
 import com.yoj.web.util.EmailSender;
+import com.yoj.web.util.VerifyImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Description: 注册控制层
@@ -20,22 +24,29 @@ public class RegisterController {
     UserService userService;
     @Autowired
     EmailSender emailSender;
-
+    @Autowired
+    EmailCache emailCache;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    VerifyImageUtil verifyImageUtil;
+
     @PostMapping("/register")
-    public Msg register(@RequestBody User user) {
-        String checkCode = emailSender.getEmailCheckCode(user.getEmail());
+    public Msg register(@RequestBody User user, HttpServletRequest httpServletRequest) {
+        if(!verifyImageUtil.verify(httpServletRequest,user.getImageCode())){
+            return Msg.fail().add("imageCode","验证码错误");
+        }
         Msg msg = new Msg();
         msg.setSuccess(true);
-        if (checkCode == null || !checkCode.equals(user.getEmailCheckCode())) {
-            msg.setSuccess(false);
-            msg.add("emailCheckJudge", "邮箱验证码错误");
-        }
         if (userService.getUserByName(user.getUserName()) != null) {
             msg.setSuccess(false);
-            msg.add("userNameJudge", "用户名已存在");
+            msg.add("userName", "用户名已存在");
+        }
+        String checkCode = emailCache.getEmailCheckCode(user.getEmail());
+        if (checkCode == null || !checkCode.equals(user.getEmailCode())) {
+            msg.setSuccess(false);
+            msg.add("emailCode", "邮箱验证码错误");
         }
         if (!msg.isSuccess()) {
             return msg;
@@ -43,24 +54,12 @@ public class RegisterController {
         if (userService.insertUserUseCache(user) == null) {
             return Msg.fail("系统错误");
         }
-        emailSender.delEmailCheckCode(user.getEmail());
+        emailCache.delEmailCheckCode(user.getEmail());
         return Msg.success();
     }
 
-    public Msg validateUserName(@PathVariable("userName") String userName) {
-        if (userService.getUserByName(userName) != null) {
-            return Msg.fail("用户名已存在");
-        }
-        return Msg.success();
-    }
 
-    public Msg validateEmail(@PathVariable("email") String email) {
-        if (userService.queryExistByEmail(email)) {
-            return Msg.fail("邮箱已被注册");
-        }
-        return Msg.success();
-    }
-
+    @GetMapping("/getEmailCheckCode/{email}")
     public Msg getCheckCode(@PathVariable("email") String email) {
         if (userService.queryExistByEmail(email)) {
             return Msg.fail("邮箱已被注册");

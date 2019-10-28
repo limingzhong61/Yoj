@@ -1,16 +1,20 @@
 package com.yoj.web.util;
 
+import com.yoj.web.cache.EmailCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
+/**
+* @Description:  发送邮件时，注意设置缓存
+* @Author: lmz
+* @Date: 2019/10/28
+*/
 @Slf4j
 @Component
 @CacheConfig(cacheNames = "email")
@@ -19,6 +23,8 @@ public class EmailSender {
     @Value("${spring.mail.username}")
     private String from;
 
+    @Autowired
+    EmailCache emailCache;
     @Autowired
     JavaMailSenderImpl mailSender;
 
@@ -29,7 +35,6 @@ public class EmailSender {
      * @Author: lmz
      * @Date: 2019/10/20
      */
-    @Cacheable(unless = "#result == null")
     public String sendResetPasswordEmail(String email) {
         String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
         try{
@@ -40,6 +45,8 @@ public class EmailSender {
             e.printStackTrace();
             return null;
         }
+        //设置缓存
+        emailCache.setEmailCheckCode(email,checkCode);
         return checkCode;
     }
 
@@ -50,8 +57,9 @@ public class EmailSender {
      * @Author: lmz
      * @Date: 2019/10/20
      */
-    @Cacheable(unless = "#result == null")
     public String sendRegisterEmail(String email) {
+        //删除缓存
+//        emailCache.delEmailCheckCode(email);
         String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
         try{
             //发送邮件
@@ -61,6 +69,8 @@ public class EmailSender {
             e.printStackTrace();
             return null;
         }
+        //设置缓存
+        emailCache.setEmailCheckCode(email,checkCode);
         return checkCode;
     }
 
@@ -80,15 +90,5 @@ public class EmailSender {
         message.setFrom(from);
         message.setTo(email);
         mailSender.send(message);
-    }
-
-    @Cacheable(unless = "#result == null")
-    public String getEmailCheckCode(String email) {
-        return null;
-    }
-
-    @CacheEvict
-    public void delEmailCheckCode(String email) {
-        log.info("delete email checkCode");
     }
 }

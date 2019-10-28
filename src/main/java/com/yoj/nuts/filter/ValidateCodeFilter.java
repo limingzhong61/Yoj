@@ -1,7 +1,7 @@
 package com.yoj.nuts.filter;
 
 import com.yoj.nuts.config.security.ValidateImageFailureHandler;
-import com.yoj.web.util.ValidateImageUtil;
+import com.yoj.web.util.VerifyImageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
@@ -21,7 +21,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     @Autowired
     private ValidateImageFailureHandler authenticationFailureHandler;
     @Autowired
-    private ValidateImageUtil validateImageUtil;
+    private VerifyImageUtil validateImageUtil;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getRequestURI().equals("/login")&&request.getMethod().equalsIgnoreCase("post")){
@@ -38,7 +38,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
 
     /* 验证保存在session的验证码和表单提交的验证码是否一致 */
     private void validate(HttpServletRequest request) throws ServletRequestBindingException {
-        if(!validateImageUtil.validate(request)){
+        if(!validateImageUtil.verify(request)){
             throw new VerifyCodeException("验证码不正确！");
         }
         request.getSession().removeAttribute(request.getParameter("tryCode"));

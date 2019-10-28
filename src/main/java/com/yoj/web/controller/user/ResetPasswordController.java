@@ -2,10 +2,14 @@ package com.yoj.web.controller.user;
 
 import com.yoj.web.bean.User;
 import com.yoj.web.bean.util.Msg;
+import com.yoj.web.cache.EmailCache;
 import com.yoj.web.service.UserService;
 import com.yoj.web.util.EmailSender;
+import com.yoj.web.util.VerifyImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Description: 重置密码控制层
@@ -18,9 +22,12 @@ public class ResetPasswordController {
 
     @Autowired
     UserService userService;
-
     @Autowired
     EmailSender emailSender;
+    @Autowired
+    EmailCache emailCache;
+    @Autowired
+    VerifyImageUtil verifyImageUtil;
 
     @GetMapping("/emailCode/{email}")
     public Msg getEmailCode(@PathVariable("email") String email) {
@@ -32,19 +39,22 @@ public class ResetPasswordController {
         if(checkCode == null){
             return Msg.fail("发送邮件失败，请稍后重试");
         }
-        emailSender.delEmailCheckCode(email);
         return Msg.success();
     }
 
     @PostMapping("/password")
-    public Msg resetPassword(@RequestBody User user) {
-        String checkCode = emailSender.getEmailCheckCode(user.getEmail());
-        if (checkCode == null || !checkCode.equals(user.getEmailCheckCode())) {
-          return  Msg.fail("邮箱验证码错误");
+    public Msg resetPassword(@RequestBody User user, HttpServletRequest httpServletRequest) {
+        if(!verifyImageUtil.verify(httpServletRequest,user.getImageCode())){
+            return Msg.fail().add("imageCode","验证码错误");
+        }
+        String checkCode = emailCache.getEmailCheckCode(user.getEmail());
+        if (checkCode == null || !checkCode.equals(user.getEmailCode())) {
+          return  Msg.fail().add("emailCode", "邮箱验证码错误");
         }
         if(userService.updateUserPasswordByEmail(user) == null){
             return Msg.fail("更新失败，请稍后重试");
         }
+        emailCache.delEmailCheckCode(user.getEmail());
         return Msg.success();
     }
 
