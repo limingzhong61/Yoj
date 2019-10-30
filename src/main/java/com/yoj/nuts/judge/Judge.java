@@ -3,8 +3,8 @@ package com.yoj.nuts.judge;
 import com.alibaba.fastjson.JSONArray;
 import com.yoj.nuts.judge.bean.ExecMessage;
 import com.yoj.nuts.judge.bean.TestResult;
-import com.yoj.nuts.judge.bean.static_fianl.Languages;
-import com.yoj.nuts.judge.bean.static_fianl.Results;
+import com.yoj.nuts.judge.bean.Language;
+import com.yoj.nuts.judge.bean.JudgeResult;
 import com.yoj.nuts.judge.util.ExecutorUtil;
 import com.yoj.nuts.properties.JudgeProperties;
 import com.yoj.web.bean.Problem;
@@ -37,7 +37,7 @@ public abstract class Judge {
         } catch (Exception e) {
             e.printStackTrace();
             solution.setErrorMessage("system exception:create file fail");
-            solution.setResult(Results.SystemError);
+            solution.setResult(JudgeResult.SystemError.ordinal());
             log.info("JudgeUtil : create file fail");
             deleteSolutionFile(linuxPath, windowsPath);
             return;
@@ -47,7 +47,7 @@ public abstract class Judge {
         String message = compile(solution.getLanguage(), linuxPath);
 //		if (message != null && task.getCompilerId() != 4) {
         if (message != null) {
-            solution.setResult(Results.CompileError);
+            solution.setResult(JudgeResult.CompileError.ordinal());
             solution.setErrorMessage(message);
             log.warn("JudgeUtil : compile error");
             log.warn("JudgeUtil :  " + message);
@@ -66,7 +66,7 @@ public abstract class Judge {
         String judgePyPath = judgeProperties.getJudgeScriptPath();
         int memoryLimit = problem.getMemoryLimit() * 1024;
         //#服务器内存不够分配。。。。。给大点，和小一点都行????
-        if (solution.getLanguage() == Languages.JAVA) {
+        if (solution.getLanguage() == Language.JAVA.ordinal()) {
             memoryLimit = 2000000;
         }
         String cmd = "python " + judgePyPath + " " + process + " " + judgeData + " "
@@ -107,8 +107,8 @@ public abstract class Judge {
         return executor.execute(cmd).getError();
     }
 
-    private String process(int compileId, String path) {
-        switch (compileId) {
+    private String process(int language, String path) {
+        switch (language) {
             case 0:
                 return path + "/main";
             case 1:
@@ -129,7 +129,7 @@ public abstract class Judge {
         ExecMessage exec = executor.execute(cmd);
         if (exec.getError() != null) {
             solution.setErrorMessage(exec.getError());
-            solution.setResult(Results.SystemError);
+            solution.setResult(JudgeResult.SystemError.ordinal());
             log.error("=====error====" + solution.getSolutionId() + exec.getStdout() + "    :" + exec.getError());
         } else {
 //			Stdout out = JSON.parseObject(exec.getStdout(), Stdout.class);
@@ -147,7 +147,7 @@ public abstract class Judge {
                 solution.setResult(outs.get(outs.size() - 1).getResult());
                 solution.setTestResults(outs);
             } catch (Exception e) {
-                solution.setResult(Results.SystemError);
+                solution.setResult(JudgeResult.SystemError.ordinal());
                 e.printStackTrace();
             }
         }

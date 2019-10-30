@@ -1,4 +1,4 @@
-package com.yoj.web.bean.static_final;
+package com.yoj.web.bean;
 
 public class Privileges {
     public static final String All="all";

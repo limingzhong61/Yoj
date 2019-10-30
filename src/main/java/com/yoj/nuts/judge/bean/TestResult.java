@@ -15,6 +15,6 @@ import lombok.ToString;
 public class TestResult {
 	private Integer timeUsed;
 	private Integer memoryUsed;
-	//Results
+	//JudgeResult
 	private Integer result;
 }

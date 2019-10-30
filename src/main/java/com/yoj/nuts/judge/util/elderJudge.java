@@ -3,8 +3,8 @@
 //import com.alibaba.fastjson.JSONArray;
 //import com.yoj.nuts.judge.bean.ExecMessage;
 //import com.yoj.nuts.judge.bean.TestResult;
-//import com.yoj.nuts.judge.bean.static_fianl.Languages;
-//import com.yoj.nuts.judge.bean.static_fianl.Results;
+//import com.yoj.nuts.judge.bean.Language;
+//import com.yoj.nuts.judge.bean.JudgeResult;
 //import com.yoj.nuts.judge.util.ExecutorUtil;
 //import com.yoj.nuts.judge.util.SSH2Util;
 //import com.yoj.nuts.properties.JudgeProperties;
@@ -42,7 +42,7 @@
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //            solution.setErrorMessage("system exception:create file fail");
-//            solution.setResult(Results.SystemError);
+//            solution.setResult(JudgeResult.SystemError);
 //            log.info("JudgeUtil : create file fail");
 //            deleteSolutionFile(linuxPath, windowsPath);
 //            return;
@@ -52,7 +52,7 @@
 //        String message = compile(solution.getLanguage(), linuxPath);
 ////		if (message != null && task.getCompilerId() != 4) {
 //        if (message != null) {
-//            solution.setResult(Results.CompileError);
+//            solution.setResult(JudgeResult.CompileError);
 //            solution.setErrorMessage(message);
 //            log.warn("JudgeUtil : compile error");
 //            log.warn("JudgeUtil :  " + message);
@@ -71,7 +71,7 @@
 //        String judgePyPath = judgeProperties.getJudgeScriptPath();
 //        int memoryLimit = problem.getMemoryLimit() * 1024;
 //        //#服务器内存不够分配。。。。。给大点，和小一点都行????
-//        if (solution.getLanguage() == Languages.JAVA) {
+//        if (solution.getLanguage() == Language.JAVA) {
 //            memoryLimit = 2000000;
 //        }
 //        String cmd = "python " + judgePyPath + " " + process + " " + judgeData + " "
@@ -159,7 +159,7 @@
 //        ExecMessage exec = executor.execute(cmd);
 //        if (exec.getError() != null) {
 //            solution.setErrorMessage(exec.getError());
-//            solution.setResult(Results.SystemError);
+//            solution.setResult(JudgeResult.SystemError);
 //            log.error("=====error====" + solution.getSolutionId() + exec.getStdout() + "    :" + exec.getError());
 //        } else {
 ////			Stdout out = JSON.parseObject(exec.getStdout(), Stdout.class);
@@ -177,7 +177,7 @@
 //                solution.setResult(outs.get(outs.size() - 1).getResult());
 //                solution.setTestResults(outs);
 //            } catch (Exception e) {
-//                solution.setResult(Results.SystemError);
+//                solution.setResult(JudgeResult.SystemError);
 //                e.printStackTrace();
 //            }
 //        }

@@ -1,4 +1,4 @@
-package com.yoj.web.controller;
+package com.yoj.nuts.config;
 
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;

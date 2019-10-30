@@ -1,7 +1,7 @@
 package com.yoj.web.service;
 
 import com.yoj.nuts.auth.UserUtils;
-import com.yoj.nuts.judge.bean.static_fianl.Results;
+import com.yoj.nuts.judge.bean.JudgeResult;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.dao.SolutionMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,6 @@ public class SolutionService {
 	 */
 	@CachePut(key = "#result.solutionId")
 	public Solution insertSolution(Solution solution) {
-
 		if(solutionMapper.insertSelective(solution) > 0){
 		    userService.updateProblemState(solution.getUserId());
 			return solution;
@@ -93,7 +92,7 @@ public class SolutionService {
     public Long countAcceptedByUser(){
         Solution solution = new Solution();
         solution.setUserName(userUtils.getCurrentUser().getUserName());
-        solution.setResult(Results.Accepted);
+        solution.setResult(JudgeResult.Accepted.ordinal());
         return solutionMapper.countBySelective(solution);
     };
 

@@ -16,7 +16,7 @@
         <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    solution_id, problem_id, user_id,user_name,language, result, runtime, memory, submit_time
+    solution_id, problem_id, user_id,user_name,language, result, runtime, memory, submit_time,share
     </sql>
 
     <select id="getListBySelective" parameterType="com.yoj.web.bean.Solution" resultType="com.yoj.web.bean.Solution">
@@ -106,6 +106,9 @@
             <if test="testResult != null">
                 test_result,
             </if>
+            <if test="share != null">
+                share,
+            </if>
             <!--<if test="submitTime != null">-->
             submit_time,
             <!--</if>-->
@@ -143,6 +146,9 @@
             </if>
             <if test="testResult != null">
                 #{testResult,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="share != null">
+                #{share,jdbcType=TINYINT},
             </if>
             NOW()
         </trim>

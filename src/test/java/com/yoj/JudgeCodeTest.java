@@ -1,8 +1,8 @@
 package com.yoj;
 
 import com.yoj.nuts.judge.Judge;
-import com.yoj.nuts.judge.bean.static_fianl.Languages;
-import com.yoj.nuts.judge.bean.static_fianl.Results;
+import com.yoj.nuts.judge.bean.Language;
+import com.yoj.nuts.judge.bean.JudgeResult;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.service.ProblemService;
 import org.junit.Assert;
@@ -34,7 +34,7 @@ public class JudgeCodeTest {
     public void testJudgeC() throws Exception {
         Solution solution = new Solution();
         solution.setUserId(1);
-        solution.setLanguage(Languages.C);
+        solution.setLanguage(Language.C.ordinal());
         solution.setCode("#include <stdio.h>\n" +
                 " \n" +
                 "int main()\n" +
@@ -45,14 +45,14 @@ public class JudgeCodeTest {
                 "    return 0;\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        Assert.assertEquals("judge c error", solution.getResult(), Results.Accepted);
+        Assert.assertEquals("judge c error", (int)solution.getResult(), JudgeResult.Accepted.ordinal());
     }
 
     @Test
     public void testJudgeCPP() throws Exception {
         Solution solution = new Solution();
         solution.setUserId(1);
-        solution.setLanguage(Languages.CPP);
+        solution.setLanguage(Language.CPP.ordinal());
         solution.setCode("#include <iostream>\n" +
                 " \n" +
                 "using namespace std;\n" +
@@ -65,7 +65,7 @@ public class JudgeCodeTest {
                 "    return 0;\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        if (solution.getResult() != Results.Accepted) {
+        if (solution.getResult() != JudgeResult.Accepted.ordinal()) {
             throw new Exception("judge c++ error");
         }
     }
@@ -74,7 +74,7 @@ public class JudgeCodeTest {
     public void testJudgeJava() throws Exception {
         Solution solution = new Solution();
         solution.setUserId(1);
-        solution.setLanguage(Languages.JAVA);
+        solution.setLanguage(Language.JAVA.ordinal());
         solution.setCode("import java.util.*;\n" +
                 " \n" +
                 "public class Main\n" +
@@ -88,7 +88,7 @@ public class JudgeCodeTest {
                 "    }\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        if (solution.getResult() != Results.Accepted) {
+        if (solution.getResult() != JudgeResult.Accepted.ordinal()) {
             throw new Exception("judge java error");
         }
     }
@@ -98,10 +98,10 @@ public class JudgeCodeTest {
     public void testJudgePython() throws Exception {
         Solution solution = new Solution();
         solution.setUserId(1);
-        solution.setLanguage(Languages.PYTHON);
+        solution.setLanguage(Language.PYTHON.ordinal());
         solution.setCode("print(sum(map(int, input().split())), end='')");
         judge.judge(solution, problemService.queryById(1));
-        if (solution.getResult() != Results.Accepted) {
+        if (solution.getResult() != JudgeResult.Accepted.ordinal()) {
             throw new Exception("judge python error");
         }
     }

@@ -15,11 +15,11 @@ public class Solution {
     private Integer userId;
 
     private String userName;
-    //	Languages
+    //	Language
     private Integer language;
 
     private String code;
-    //	Results
+    //	JudgeResult
     private Integer result;
     //ms
     private Integer runtime;
@@ -32,14 +32,12 @@ public class Solution {
 
     private String testResult;
 
-    private List<TestResult> testResults;
+    private Byte share;
+
     //非表格字段
-    private String languageStr;
-
-    private String resultStr;
-
+    private List<TestResult> testResults;
+//    private String languageStr;
+//    private String resultStr;
 //    private User user;
-
-
-    private Problem problem;
+//    private Problem problem;
 }
