@@ -1,18 +1,19 @@
 package com.yoj.nuts.judge.bean;
 
 public enum JudgeResult {
-    Accepted("Accepted"),
-    PresentationError("Presentation Error"),
-    TimeLimitExceeded("TimeLimit Exceeded"),
-    MemoryLimitExceeded("Memory Limit Exceeded"),
-    WrongAnswer("Wrong Answer"),
-    RuntimeError("Runtime Error"),
-    OutputLimitExceeded("Output Limit Exceeded"),
-    CompileError("Compile Error"),
-    SystemError("System Error");
+    ACCEPTED("ACCEPTED"),
+    PRESENTATION_ERROR("Presentation Error"),
+    TIME_LIMIT_EXCEEDED("TimeLimit Exceeded"),
+    MEMORY_LIMIT_EXCEEDED("Memory Limit Exceeded"),
+    WRONG_ANSWER("Wrong Answer"),
+    RUNTIME_ERROR("Runtime Error"),
+    OUTPUT_LIMIT_EXCEEDED("Output Limit Exceeded"),
+    COMPILE_ERROR("Compile Error"),
+    SYSTEM_ERROR("System Error"),
+    JUDGING("judging");
     private String name;
 
-    JudgeResult(String name){
+    JudgeResult(String name) {
         this.name = name;
     }
 

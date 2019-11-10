@@ -15,7 +15,6 @@ import java.io.IOException;
 /**
  * @author lmz 远程连接linux使用
  */
-//@Service
 @ToString
 public class RemoteExecutor implements ExecutorUtil {
 

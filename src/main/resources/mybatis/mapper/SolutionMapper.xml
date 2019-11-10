@@ -154,4 +154,8 @@
         </trim>
     </insert>
 
+    <update id="updateByPrimaryKey" parameterType="com.yoj.web.bean.Solution">
+      UPDATE solution SET result = #{result},runtime=#{runtime},memory=#{memory},error_message = #{errorMessage},
+      test_result=#{testResult} where solution_id = #{solutionId};
+    </update>
 </mapper>

@@ -7,14 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-//@Component
 public interface ExecutorUtil {
     //默认编码UTF-8
-    public static String DEFAULT_CHART = "UTF-8";
+    String DEFAULT_CHART = "UTF-8";
 
-    public ExecMessage execute(String cmd);
+    ExecMessage execute(String cmd);
 
-    default public String message(InputStream inputStream) {
+    default String message(InputStream inputStream) {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(inputStream, DEFAULT_CHART));

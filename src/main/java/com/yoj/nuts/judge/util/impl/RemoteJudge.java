@@ -7,7 +7,6 @@ import com.yoj.nuts.properties.JudgeProperties;
 import com.yoj.web.bean.Solution;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import java.io.IOException;
  * @Author: lmz
  * @Date: 2019/10/27
  */
-@Component
 public class RemoteJudge extends Judge {
 
     private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};

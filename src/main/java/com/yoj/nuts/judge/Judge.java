@@ -2,20 +2,20 @@ package com.yoj.nuts.judge;
 
 import com.alibaba.fastjson.JSONArray;
 import com.yoj.nuts.judge.bean.ExecMessage;
-import com.yoj.nuts.judge.bean.TestResult;
-import com.yoj.nuts.judge.bean.Language;
 import com.yoj.nuts.judge.bean.JudgeResult;
+import com.yoj.nuts.judge.bean.Language;
+import com.yoj.nuts.judge.bean.TestResult;
 import com.yoj.nuts.judge.util.ExecutorUtil;
 import com.yoj.nuts.properties.JudgeProperties;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
 
-//@Component
 @Slf4j
 public abstract class Judge {
     private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
@@ -37,7 +37,7 @@ public abstract class Judge {
         } catch (Exception e) {
             e.printStackTrace();
             solution.setErrorMessage("system exception:create file fail");
-            solution.setResult(JudgeResult.SystemError.ordinal());
+            solution.setResult(JudgeResult.SYSTEM_ERROR.ordinal());
             log.info("JudgeUtil : create file fail");
             deleteSolutionFile(linuxPath, windowsPath);
             return;
@@ -47,7 +47,7 @@ public abstract class Judge {
         String message = compile(solution.getLanguage(), linuxPath);
 //		if (message != null && task.getCompilerId() != 4) {
         if (message != null) {
-            solution.setResult(JudgeResult.CompileError.ordinal());
+            solution.setResult(JudgeResult.COMPILE_ERROR.ordinal());
             solution.setErrorMessage(message);
             log.warn("JudgeUtil : compile error");
             log.warn("JudgeUtil :  " + message);
@@ -75,7 +75,7 @@ public abstract class Judge {
 //                + linuxPath + " " + 1000 + " " + 20000;
         parseToResult(cmd, solution);
         deleteSolutionFile(linuxPath, windowsPath);
-        System.out.println(solution);
+        log.info(solution.toString());
     }
 
     public abstract void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception;
@@ -129,14 +129,13 @@ public abstract class Judge {
         ExecMessage exec = executor.execute(cmd);
         if (exec.getError() != null) {
             solution.setErrorMessage(exec.getError());
-            solution.setResult(JudgeResult.SystemError.ordinal());
+            solution.setResult(JudgeResult.SYSTEM_ERROR.ordinal());
             log.error("=====error====" + solution.getSolutionId() + exec.getStdout() + "    :" + exec.getError());
         } else {
 //			Stdout out = JSON.parseObject(exec.getStdout(), Stdout.class);
             try {
-                System.out.println("=====stdout====" + exec.getStdout());
+                log.info("=====stdout====" + exec.getStdout());
                 String jsonFormat = "[" + exec.getStdout() + "]";
-
                 List<TestResult> outs = JSONArray.parseArray(jsonFormat, TestResult.class);
                 String testResult = JSONArray.toJSON(outs).toString();
                 //必须要保存标准格式的json数据
@@ -147,7 +146,7 @@ public abstract class Judge {
                 solution.setResult(outs.get(outs.size() - 1).getResult());
                 solution.setTestResults(outs);
             } catch (Exception e) {
-                solution.setResult(JudgeResult.SystemError.ordinal());
+                solution.setResult(JudgeResult.SYSTEM_ERROR.ordinal());
                 e.printStackTrace();
             }
         }

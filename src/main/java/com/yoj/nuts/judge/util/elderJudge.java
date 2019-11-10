@@ -52,7 +52,7 @@
 //        String message = compile(solution.getLanguage(), linuxPath);
 ////		if (message != null && task.getCompilerId() != 4) {
 //        if (message != null) {
-//            solution.setResult(JudgeResult.CompileError);
+//            solution.setResult(JudgeResult.COMPILE_ERROR);
 //            solution.setErrorMessage(message);
 //            log.warn("JudgeUtil : compile error");
 //            log.warn("JudgeUtil :  " + message);

@@ -65,4 +65,6 @@ public interface SolutionMapper {
 
     @Select("SELECT solution_id FROM solution WHERE problem_id = #{problemId} and user_id = #{userId} LIMIT 1")
     Integer querySubmitted(Map<String, Object> map);
+
+    Integer updateByPrimaryKey(Solution solution);
 }

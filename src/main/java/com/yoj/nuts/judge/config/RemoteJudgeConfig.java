@@ -1,8 +1,10 @@
 package com.yoj.nuts.judge.config;
 
+import com.yoj.nuts.judge.Judge;
 import com.yoj.nuts.judge.util.ExecutorUtil;
 import com.yoj.nuts.judge.util.ProblemFileUtil;
 import com.yoj.nuts.judge.util.impl.RemoteExecutor;
+import com.yoj.nuts.judge.util.impl.RemoteJudge;
 import com.yoj.nuts.judge.util.impl.RemoteProblemFileUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,10 @@ public class RemoteJudgeConfig {
     @Bean
     public ExecutorUtil remoteExecutor(){
         return new RemoteExecutor();
+    }
+    @Bean
+    public Judge remoteJudge(){
+        return new RemoteJudge();
     }
 
 }

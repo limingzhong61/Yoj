@@ -1,10 +1,11 @@
 package com.yoj;
 
 import com.yoj.nuts.judge.Judge;
-import com.yoj.nuts.judge.bean.Language;
 import com.yoj.nuts.judge.bean.JudgeResult;
+import com.yoj.nuts.judge.bean.Language;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.service.ProblemService;
+import com.yoj.web.service.SolutionService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,9 @@ public class JudgeCodeTest {
 
     @Autowired
     Judge judge;
+
+    @Autowired
+    SolutionService solutionService;
 
     @Test
     public void judgeAll() throws Exception {
@@ -45,7 +49,7 @@ public class JudgeCodeTest {
                 "    return 0;\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        Assert.assertEquals("judge c error", (int)solution.getResult(), JudgeResult.Accepted.ordinal());
+        Assert.assertEquals("judge c error", (int)solution.getResult(), JudgeResult.ACCEPTED.ordinal());
     }
 
     @Test
@@ -65,7 +69,7 @@ public class JudgeCodeTest {
                 "    return 0;\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        if (solution.getResult() != JudgeResult.Accepted.ordinal()) {
+        if (solution.getResult() != JudgeResult.ACCEPTED.ordinal()) {
             throw new Exception("judge c++ error");
         }
     }
@@ -88,7 +92,7 @@ public class JudgeCodeTest {
                 "    }\n" +
                 "}");
         judge.judge(solution, problemService.queryById(1));
-        if (solution.getResult() != JudgeResult.Accepted.ordinal()) {
+        if (solution.getResult() != JudgeResult.ACCEPTED.ordinal()) {
             throw new Exception("judge java error");
         }
     }
@@ -101,7 +105,7 @@ public class JudgeCodeTest {
         solution.setLanguage(Language.PYTHON.ordinal());
         solution.setCode("print(sum(map(int, input().split())), end='')");
         judge.judge(solution, problemService.queryById(1));
-        if (solution.getResult() != JudgeResult.Accepted.ordinal()) {
+        if (solution.getResult() != JudgeResult.ACCEPTED.ordinal()) {
             throw new Exception("judge python error");
         }
     }

@@ -3,7 +3,6 @@ package com.yoj.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.nuts.auth.UserUtils;
-import com.yoj.nuts.judge.Judge;
 import com.yoj.web.bean.Problem;
 import com.yoj.web.bean.Solution;
 import com.yoj.web.bean.User;
@@ -23,8 +22,7 @@ public class SolutionController {
     public SolutionService solutionService;
     @Autowired
     public ProblemService problemService;
-    @Autowired
-    private Judge Judge;
+
     @Autowired
     public UserService UserService;
     @Autowired
@@ -39,11 +37,10 @@ public class SolutionController {
         solution.setUserId(user.getUserId());
         solution.setUserName(user.getUserName());
         Problem problem = problemService.queryById(solution.getProblemId());
-        Judge.judge(solution, problem);
-        //insert fail
         if (solutionService.insertSolution(solution) == null) {
             return Msg.fail("insert solution fail");
         }
+        solutionService.judgeSolution(solution,problem);
         return Msg.success();
     }
 
