@@ -1,6 +1,6 @@
 package com.yoj.web.dao;
 
-import com.yoj.web.bean.Solution;
+import com.yoj.web.pojo.Solution;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -31,7 +31,7 @@ public interface SolutionMapper {
     /**
      * @Description: 根据输入的solution动态查询问题集合
      * @Param: [solution]
-     * @return: java.util.List<com.yoj.web.bean.Solution>
+     * @return: java.util.List<com.yoj.web.pojo.Solution>
      * @Author: lmz
      * @Date: 2019/10/22
      */
@@ -40,7 +40,7 @@ public interface SolutionMapper {
     /**
      * @Description: 根据输入的solution动态查询问题集合
      * @Param: [solution]
-     * @return: java.util.List<com.yoj.web.bean.Solution>
+     * @return: java.util.List<com.yoj.web.pojo.Solution>
      * @Author: lmz
      * @Date: 2019/10/22
      */

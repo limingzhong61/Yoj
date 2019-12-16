@@ -1,6 +1,6 @@
 package com.yoj.used;
 
-import com.yoj.nuts.properties.JudgeProperties;
+import com.yoj.custom.properties.JudgeProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
 //@Service

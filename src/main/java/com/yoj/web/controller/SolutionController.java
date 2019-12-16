@@ -2,11 +2,11 @@ package com.yoj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.yoj.nuts.auth.UserUtils;
-import com.yoj.web.bean.Problem;
-import com.yoj.web.bean.Solution;
-import com.yoj.web.bean.User;
-import com.yoj.web.bean.util.Msg;
+import com.yoj.web.util.auth.CurrentUserUtil;
+import com.yoj.web.pojo.Problem;
+import com.yoj.web.pojo.Solution;
+import com.yoj.web.pojo.User;
+import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.service.ProblemService;
 import com.yoj.web.service.SolutionService;
 import com.yoj.web.service.UserService;
@@ -26,11 +26,11 @@ public class SolutionController {
     @Autowired
     public UserService UserService;
     @Autowired
-    public UserUtils userUtils;
+    public CurrentUserUtil userUtils;
 
     @PostMapping("/submit")
     public Msg submit(@RequestBody Solution solution) {
-        User user = userUtils.getCurrentUser();
+        User user = userUtils.getUser();
         if (user == null) {
             return Msg.fail("提交代码前请先登录");
         }
@@ -56,7 +56,7 @@ public class SolutionController {
     @GetMapping("/detail/{solutionId}")
     public Msg detail(@PathVariable("solutionId") Integer solutionId) {
         Solution solution = solutionService.getById(solutionId);
-        User user = userUtils.getCurrentUser();
+        User user = userUtils.getUser();
         if (solution.getShare() == 1 || user.getUserId() == solution.getUserId()) {
             return Msg.success().add("solution", solution);
         }

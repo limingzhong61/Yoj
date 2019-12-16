@@ -27,6 +27,7 @@ public class VerifiedImageController {
     public void getImage(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws Exception {
         verifyImageUtil.getImage(httpServletRequest,httpServletResponse);
+
     }
 }
 

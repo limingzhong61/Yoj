@@ -1,9 +1,9 @@
 package com.yoj;
 
-import com.yoj.nuts.judge.util.ProblemFileUtil;
-import com.yoj.nuts.judge.util.impl.LocalProblemFileUtil;
-import com.yoj.nuts.judge.util.impl.RemoteProblemFileUtil;
-import com.yoj.nuts.properties.JudgeProperties;
+import com.yoj.custom.judge.util.ProblemFileUtil;
+import com.yoj.custom.judge.util.impl.LocalProblemFileUtil;
+import com.yoj.custom.judge.util.impl.RemoteProblemFileUtil;
+import com.yoj.custom.properties.JudgeProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

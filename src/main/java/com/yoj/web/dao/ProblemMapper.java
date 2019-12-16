@@ -1,6 +1,6 @@
 package com.yoj.web.dao;
 
-import com.yoj.web.bean.Problem;
+import com.yoj.web.pojo.Problem;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +32,7 @@ public interface ProblemMapper {
     /**
     * @Description: 根据problem参数返回问题集合
     * @Param: [problem],注意problem.user_id != null,user_id放回是否解决、提交问题
-     * @return: java.util.List<com.yoj.web.bean.Problem>
+     * @return: java.util.List<com.yoj.web.pojo.Problem>
     * @Author: lmz
     * @Date: 2019/10/23 
     */ 

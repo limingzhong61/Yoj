@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.yoj.web.dao.SolutionMapper">
-    <resultMap id="BaseResultMap" type="com.yoj.web.bean.Solution">
+    <resultMap id="BaseResultMap" type="com.yoj.web.pojo.Solution">
         <id column="solution_id" jdbcType="INTEGER" property="solutionId"/>
         <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
@@ -19,7 +19,7 @@
     solution_id, problem_id, user_id,user_name,language, result, runtime, memory, submit_time,share
     </sql>
 
-    <select id="getListBySelective" parameterType="com.yoj.web.bean.Solution" resultType="com.yoj.web.bean.Solution">
+    <select id="getListBySelective" parameterType="com.yoj.web.pojo.Solution" resultType="com.yoj.web.pojo.Solution">
         SELECT
         <include refid="Base_Column_List"></include>
         from solution
@@ -45,7 +45,7 @@
         </where>
         order by solution_id desc
     </select>
-    <select id="countBySelective" parameterType="com.yoj.web.bean.Solution" resultType="java.lang.Long">
+    <select id="countBySelective" parameterType="com.yoj.web.pojo.Solution" resultType="java.lang.Long">
         SELECT count(*) from solution
         <where>
             <if test="solutionId != null">
@@ -69,7 +69,7 @@
         </where>
     </select>
 
-    <insert id="insertSelective" parameterType="com.yoj.web.bean.Solution" useGeneratedKeys="true"
+    <insert id="insertSelective" parameterType="com.yoj.web.pojo.Solution" useGeneratedKeys="true"
             keyColumn="solution_id" keyProperty="solutionId">
         insert into solution
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -154,7 +154,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKey" parameterType="com.yoj.web.bean.Solution">
+    <update id="updateByPrimaryKey" parameterType="com.yoj.web.pojo.Solution">
       UPDATE solution SET result = #{result},runtime=#{runtime},memory=#{memory},error_message = #{errorMessage},
       test_result=#{testResult} where solution_id = #{solutionId};
     </update>

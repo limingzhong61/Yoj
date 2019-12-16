@@ -1,6 +1,6 @@
 package com.yoj;
 
-import com.yoj.nuts.judge.util.impl.RemoteExecutor;
+import com.yoj.custom.judge.util.impl.RemoteExecutor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

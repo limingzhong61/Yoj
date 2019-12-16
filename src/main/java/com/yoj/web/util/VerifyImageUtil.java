@@ -19,8 +19,9 @@ public class VerifyImageUtil {
      * 1、验证码工具
      */
     @Autowired
-    DefaultKaptcha defaultKaptcha;
+    private DefaultKaptcha defaultKaptcha;
 
+    private static final String VERIFY_CODE_NAME = "rightCode";
     /**
      * 3、校对验证码
      *
@@ -28,22 +29,32 @@ public class VerifyImageUtil {
      * @return
      */
     public boolean verify(HttpServletRequest httpServletRequest) {
-        String rightCode = (String) httpServletRequest.getSession().getAttribute("rightCode");
         String tryCode = httpServletRequest.getParameter("tryCode");
-        log.info("rightCode:" + rightCode + " ———— tryCode:" + tryCode);
-        if (rightCode == null || tryCode == null) {
-            return false;
-        }
-        return rightCode.equals(tryCode);
+        return verify(httpServletRequest, tryCode);
     }
 
-    public boolean verify(HttpServletRequest httpServletRequest,String tryCode) {
-        String rightCode = (String) httpServletRequest.getSession().getAttribute("rightCode");
-        log.info("rightCode:" + rightCode + " ———— tryCode:" + tryCode);
+    /**
+     * 3、校对验证码
+     *
+     * @param httpServletRequest
+     * @param tryCode
+     * @return
+     */
+    public boolean verify(HttpServletRequest httpServletRequest, String tryCode) {
+        String rightCode = (String) httpServletRequest.getSession().getAttribute(VERIFY_CODE_NAME);
+        log.info(VERIFY_CODE_NAME + rightCode + " ———— tryCode:" + tryCode);
         if (rightCode == null || tryCode == null) {
             return false;
         }
-        return rightCode.equals(tryCode);
+        if (rightCode.equals(tryCode)) {
+            setVerifyCode(httpServletRequest,null);
+            return true;
+        }
+        return false;
+    }
+
+    private void setVerifyCode(HttpServletRequest httpServletRequest, String verifyCode){
+        httpServletRequest.getSession().setAttribute(VERIFY_CODE_NAME, verifyCode);
     }
 
     /**
@@ -60,7 +71,7 @@ public class VerifyImageUtil {
         try {
             // 生产验证码字符串并保存到session中
             String createText = defaultKaptcha.createText();
-            httpServletRequest.getSession().setAttribute("rightCode", createText);
+            this.setVerifyCode(httpServletRequest,createText);
             // 使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);
             ImageIO.write(challenge, "jpg", jpegOutputStream);

@@ -2,9 +2,9 @@ package com.yoj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.yoj.nuts.auth.UserUtils;
-import com.yoj.web.bean.User;
-import com.yoj.web.bean.util.Msg;
+import com.yoj.web.util.auth.CurrentUserUtil;
+import com.yoj.web.pojo.User;
+import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.service.SolutionService;
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +23,11 @@ public class UserController {
     @Autowired
     SolutionService solutionService;
     @Autowired
-    private UserUtils userUtils;
+    private CurrentUserUtil userUtils;
 
     @GetMapping("/currentInfo")
     public Msg getCurrentUserInfo(){
-        User user = userUtils.getCurrentUser();
+        User user = userUtils.getUser();
         if(user == null){
             return Msg.fail();
         }

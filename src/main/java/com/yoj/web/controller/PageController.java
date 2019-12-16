@@ -1,10 +1,6 @@
 package com.yoj.web.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-@Controller
+//@Controller
 public class PageController {
 //    private final String PREFIX = "";
     /**
@@ -13,8 +9,9 @@ public class PageController {
      * @param path
      * @return
      */
-    @GetMapping("/user/{path}")
-    public String level3(@PathVariable("path") String path) {
-        return "user/" + path;
-    }
+//    @GetMapping("/user/{path}")
+//    public String level3(@PathVariable("path") String path) {
+//        return "user/" + path;
+//    }
+//
 }

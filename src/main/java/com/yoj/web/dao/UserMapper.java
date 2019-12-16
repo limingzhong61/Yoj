@@ -1,6 +1,6 @@
 package com.yoj.web.dao;
 
-import com.yoj.web.bean.User;
+import com.yoj.web.pojo.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +10,8 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    @Insert("insert into user(user_name,password,email,reg_time) values(#{userName},#{password},#{email},NOW())")
+    @Insert("insert into user(user_name,nick_name,password,email,reg_time) " +
+            "values(#{userName},#{userName},#{password},#{email},NOW())")
     @Options(useGeneratedKeys = true, keyProperty = "userId", keyColumn = "user_id")
     int insertUser(User user);
 
@@ -46,7 +47,7 @@ public interface UserMapper {
     /**
     * @Description: by user return userList 
     * @Param: [user]
-    * @return: java.util.List<com.yoj.web.bean.User> 
+    * @return: java.util.List<com.yoj.web.pojo.User>
     * @Author: lmz
     * @Date: 2019/10/25 
     */ 

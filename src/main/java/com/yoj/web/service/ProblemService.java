@@ -1,7 +1,7 @@
 package com.yoj.web.service;
 
-import com.yoj.nuts.judge.util.ProblemFileUtil;
-import com.yoj.web.bean.Problem;
+import com.yoj.custom.judge.util.ProblemFileUtil;
+import com.yoj.web.pojo.Problem;
 import com.yoj.web.dao.ProblemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -31,7 +31,7 @@ public class ProblemService {
     /**
     * @Description:  @Cacheable,分页数据未缓存
     * @Param: []
-    * @return: java.util.List<com.yoj.web.bean.Problem>
+    * @return: java.util.List<com.yoj.web.pojo.Problem>
     * @Author: lmz
     */
     public List<Problem> getAll() {
@@ -69,7 +69,7 @@ public class ProblemService {
     /**
      * @Description: 根据problem参数返回问题集合
      * @Param: [problem],注意problem.user_id != null,by user_id return 是否解决、提交问题
-     * @return: java.util.List<com.yoj.web.bean.Problem>
+     * @return: java.util.List<com.yoj.web.pojo.Problem>
      * @Author: lmz
      * @Date: 2019/10/23
      */

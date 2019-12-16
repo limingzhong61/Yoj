@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yoj.web.dao.ProblemMapper">
-    <resultMap id="BaseResultMap" type="com.yoj.web.bean.Problem">
+    <resultMap id="BaseResultMap" type="com.yoj.web.pojo.Problem">
         <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
@@ -18,7 +18,7 @@
         <result column="judge_data" jdbcType="LONGVARCHAR" property="judgeData"/>
     </resultMap>
 
-    <resultMap id="ProblemList" type="com.yoj.web.bean.Problem">
+    <resultMap id="ProblemList" type="com.yoj.web.pojo.Problem">
         <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>
@@ -43,7 +43,7 @@
 
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
-            parameterType="com.yoj.web.bean.Problem">
+            parameterType="com.yoj.web.pojo.Problem">
     insert into problem (user_id, title, time_limit,
       memory_limit, description,
       format_input, format_output, sample_input,sample_output,
@@ -56,7 +56,7 @@
       #{judgeData,jdbcType=LONGVARCHAR})
   </insert>
     <insert id="insertSelective" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
-            parameterType="com.yoj.web.bean.Problem">
+            parameterType="com.yoj.web.pojo.Problem">
         insert into problem
         <trim prefix="(" suffix=")" suffixOverrides=",">
             -- 主键自增
@@ -142,7 +142,7 @@
             </if>
         </trim>
     </insert>
-    <select id="getProblemList" parameterType="com.yoj.web.bean.Problem" resultMap="ProblemList">
+    <select id="getProblemList" parameterType="com.yoj.web.pojo.Problem" resultMap="ProblemList">
     select problem_id,title,#{userId} as user_id from problem
     <where>
         <if test="problemId != null">
@@ -154,7 +154,7 @@
     </where>
 </select>
 
-    <update id="updateByPrimaryKey" parameterType="com.yoj.web.bean.Problem">
+    <update id="updateByPrimaryKey" parameterType="com.yoj.web.pojo.Problem">
     update problem
     set user_id = #{userId,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
@@ -169,7 +169,7 @@
       judge_data = #{judgeData,jdbcType=LONGVARCHAR}
     where problem_id = #{problemId,jdbcType=INTEGER}
   </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.yoj.web.bean.Problem">
+    <update id="updateByPrimaryKeySelective" parameterType="com.yoj.web.pojo.Problem">
         update problem
         <set>
             <if test="userId != null">

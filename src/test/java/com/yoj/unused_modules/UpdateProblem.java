@@ -1,7 +1,7 @@
 package com.yoj.unused_modules;
 
-import com.yoj.nuts.judge.util.ProblemFileUtil;
-import com.yoj.web.bean.Problem;
+import com.yoj.custom.judge.util.ProblemFileUtil;
+import com.yoj.web.pojo.Problem;
 import com.yoj.web.service.ProblemService;
 import com.yoj.web.service.SolutionService;
 import org.junit.Test;

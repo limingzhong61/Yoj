@@ -1,10 +1,10 @@
 package com.yoj.web.service;
 
-import com.yoj.nuts.auth.UserUtils;
-import com.yoj.nuts.judge.Judge;
-import com.yoj.nuts.judge.bean.JudgeResult;
-import com.yoj.web.bean.Problem;
-import com.yoj.web.bean.Solution;
+import com.yoj.web.util.auth.CurrentUserUtil;
+import com.yoj.custom.judge.Judge;
+import com.yoj.custom.judge.bean.JudgeResult;
+import com.yoj.web.pojo.Problem;
+import com.yoj.web.pojo.Solution;
 import com.yoj.web.dao.SolutionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class SolutionService {
     private UserService userService;
 
     @Autowired
-    private UserUtils userUtils;
+    private CurrentUserUtil userUtils;
 
     @Autowired
     private Judge judge;
@@ -89,7 +89,7 @@ public class SolutionService {
     /**
      * @Description: 根据输入的solution动态查询问题集合
      * @Param: [solution]
-     * @return: java.util.List<com.yoj.web.bean.Solution>
+     * @return: java.util.List<com.yoj.web.pojo.Solution>
      * @Author: lmz
      * @Date: 2019/10/22
      */
@@ -97,24 +97,21 @@ public class SolutionService {
         return solutionMapper.countBySelective(solution);
     }
 
-    ;
 
     public Long countAcceptedByUser() {
         Solution solution = new Solution();
-        solution.setUserName(userUtils.getCurrentUser().getUserName());
+        solution.setUserName(userUtils.getUser().getUserName());
         solution.setResult(JudgeResult.ACCEPTED.ordinal());
         return solutionMapper.countBySelective(solution);
     }
 
-    ;
 
     public Long countSubmissionByUser() {
         Solution solution = new Solution();
-        solution.setUserName(userUtils.getCurrentUser().getUserName());
+        solution.setUserName(userUtils.getUser().getUserName());
         return solutionMapper.countBySelective(solution);
     }
 
-    ;
 
     public Integer countAcceptedByUserId(Integer userId) {
         return solutionMapper.countAcceptedByUserId(userId);

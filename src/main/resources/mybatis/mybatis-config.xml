@@ -8,8 +8,8 @@
     </settings>
 
     <!--<typeAliases>-->
-        <!--<typeAlias alias="Problem" type="com.yoj.web.bean.Problem"/>-->
-        <!--&lt;!&ndash;<package name="com.yoj.web.bean"/>&ndash;&gt;-->
+        <!--<typeAlias alias="Problem" type="com.yoj.web.pojo.Problem"/>-->
+        <!--&lt;!&ndash;<package name="com.yoj.web.pojo"/>&ndash;&gt;-->
     <!--</typeAliases>-->
     <!--<environments default="development">-->
     <!--<environment id="development">-->

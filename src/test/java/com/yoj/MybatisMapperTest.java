@@ -1,6 +1,6 @@
 package com.yoj;
 
-import com.yoj.web.bean.User;
+import com.yoj.web.pojo.User;
 import com.yoj.web.dao.ProblemMapper;
 import com.yoj.web.dao.SolutionMapper;
 import com.yoj.web.dao.UserMapper;

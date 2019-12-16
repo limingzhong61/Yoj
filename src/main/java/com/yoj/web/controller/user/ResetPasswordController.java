@@ -1,7 +1,7 @@
 package com.yoj.web.controller.user;
 
-import com.yoj.web.bean.User;
-import com.yoj.web.bean.util.Msg;
+import com.yoj.web.pojo.User;
+import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.cache.EmailCache;
 import com.yoj.web.service.UserService;
 import com.yoj.web.util.EmailSender;

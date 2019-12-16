@@ -1,8 +1,8 @@
 package com.yoj.web.service;
 
-import com.yoj.web.bean.User;
-import com.yoj.web.bean.util.Msg;
-import com.yoj.web.bean.util.UserDetailsImpl;
+import com.yoj.web.pojo.User;
+import com.yoj.web.pojo.util.Msg;
+import com.yoj.web.pojo.util.UserDetailsImpl;
 import com.yoj.web.cache.UserCacheUtil;
 import com.yoj.web.dao.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +32,6 @@ import java.util.concurrent.Future;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private PrivilegeService privilegeService;
     @Autowired
     private StringEncryptor encryptor;
     @Autowired
@@ -116,14 +114,13 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("没有该用户");
         }
         user.setPassword(encryptor.decrypt(user.getPassword()));
-        return new UserDetailsImpl(user, privilegeService.queryByUserId(user.getUserId()));
+        return new UserDetailsImpl(user);
     }
 
     @Cacheable(unless = "#result == null")
     public User getUseById(Integer userId) {
         return userMapper.getUserById(userId);
     }
-
 
 
     public List<User> getUserList(User user) {
@@ -148,11 +145,11 @@ public class UserService implements UserDetailsService {
      */
     public boolean updateAllUserProblemState() {
         List<User> userList = this.getUserList(new User());
-        for (User user : userList ) {
-            if(updateSolved(user.getUserId()) != -1){
+        for (User user : userList) {
+            if (updateSolved(user.getUserId()) != -1) {
                 return false;
             }
-            if(updateAttempted(user.getUserId()) >= 0){
+            if (updateAttempted(user.getUserId()) >= 0) {
                 return false;
             }
         }
@@ -160,18 +157,18 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-    * @Description: 异步更新user的problem相关状态solved、attempted 
-    * @Param: [userId] 
-    * @return: boolean 
-    * @Author: lmz
-    * @Date: 2019/10/26 
-    */ 
+     * @Description: 异步更新user的problem相关状态solved、attempted
+     * @Param: [userId]
+     * @return: boolean
+     * @Author: lmz
+     * @Date: 2019/10/26
+     */
     @Async
     public Future<Boolean> updateProblemState(Integer userId) {
-        if(updateSolved(userId) < 0){
+        if (updateSolved(userId) < 0) {
             return new AsyncResult<Boolean>(false);
         }
-        if(updateAttempted(userId) < 0){
+        if (updateAttempted(userId) < 0) {
             return new AsyncResult<Boolean>(false);
         }
         userCache.delById(userId);
