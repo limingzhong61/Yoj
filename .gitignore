@@ -3,7 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
-###忽略的配置文件###
+###ignore configuration file###
 judge.properties
 application.properties
 application.yml
