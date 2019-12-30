@@ -1,6 +1,6 @@
 package com.yoj.web.util;
 
-import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.yoj.web.util.verification_code.impl.DefaultKaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

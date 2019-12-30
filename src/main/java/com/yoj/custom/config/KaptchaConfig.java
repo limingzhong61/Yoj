@@ -1,8 +1,8 @@
 package com.yoj.custom.config;
 
 
-import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.google.code.kaptcha.util.Config;
+import com.yoj.web.util.verification_code.impl.DefaultKaptcha;
+import com.yoj.web.util.verification_code.util.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +12,15 @@ import java.util.Properties;
 public class KaptchaConfig {
     @Bean
     public DefaultKaptcha getDefaultKaptcha() {
-        com.google.code.kaptcha.impl.DefaultKaptcha defaultKaptcha = new com.google.code.kaptcha.impl.DefaultKaptcha();
+        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         Properties properties = new Properties();
         // 图片边框
         properties.setProperty("kaptcha.border", "yes");
         // 边框颜色
-        properties.setProperty("kaptcha.border.color", "105,179,90");
+//        properties.setProperty("kaptcha.border.color", "105,179,90");
+        properties.setProperty("kaptcha.border.color", "0,123,255");
         // 字体颜色
-        properties.setProperty("kaptcha.textproducer.font.color", "red");
+        properties.setProperty("kaptcha.textproducer.font.color", "black");
         // 图片宽
         properties.setProperty("kaptcha.image.width", "110");
         // 图片高
