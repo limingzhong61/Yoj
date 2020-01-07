@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExecMessage {
+public class ExecuteMessage {
 
 	private String error;
 

@@ -1,15 +1,18 @@
 package com.yoj.custom.judge;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.yoj.custom.judge.bean.ExecMessage;
-import com.yoj.custom.judge.bean.JudgeResult;
-import com.yoj.custom.judge.bean.Language;
+import com.yoj.custom.judge.bean.ExecuteMessage;
+import com.yoj.custom.judge.bean.JudgeSource;
 import com.yoj.custom.judge.bean.TestResult;
+import com.yoj.custom.judge.enums.JudgeResult;
+import com.yoj.custom.judge.enums.Language;
+import com.yoj.custom.judge.threads.JudgeThreadPoolManager;
 import com.yoj.custom.judge.util.ExecutorUtil;
 import com.yoj.custom.properties.JudgeProperties;
-import com.yoj.web.pojo.Problem;
 import com.yoj.web.pojo.Solution;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -17,20 +20,37 @@ import java.util.UUID;
 
 @Slf4j
 public abstract class Judge {
-    private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
+//    private final String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
     private JudgeProperties judgeProperties;
     @Autowired
     private ExecutorUtil executor;
 
-    public void judge(Solution solution, Problem problem) {
+    @Autowired
+    JudgeThreadPoolManager judgeThreadPoolManager;
+
+//    public void judge(){
+//        //模拟的随机数
+//        String orderNo = System.currentTimeMillis() + UUID.randomUUID().toString();
+//        judgeThreadPoolManager.addTask(orderNo);
+//    }
+
+    /**
+     * return update solution by judgeSource
+     * @param judgeSource
+     * @return update solution
+     */
+    public Solution judge(JudgeSource judgeSource) {
         // linux path,tmp directory store temporary files
         //uuid 重复的可能性很低
         String dirPath = UUID.randomUUID().toString();
         String linuxPath = judgeProperties.getLinux().getSolutionFilePath()  + dirPath;
         // windows path,
         String windowsPath = judgeProperties.getWindows().getSolutionFilePath() + dirPath;
+        Solution solution = new Solution();
+        // attribute mapping
+        BeanUtils.copyProperties(judgeSource,solution);
         try {
             createSolutionFile(solution, linuxPath, windowsPath);
         } catch (Exception e) {
@@ -39,19 +59,18 @@ public abstract class Judge {
             solution.setResult(JudgeResult.SYSTEM_ERROR.ordinal());
             log.info("JudgeUtil : create file fail");
             deleteSolutionFile(linuxPath, windowsPath);
-            return;
+            return null;
         }
 
         // compile the source
         String message = compile(solution.getLanguage(), linuxPath);
-//		if (message != null && task.getCompilerId() != 4) {
         if (message != null) {
             solution.setResult(JudgeResult.COMPILE_ERROR.ordinal());
             solution.setErrorMessage(message);
             log.warn("JudgeUtil : compile error");
             log.warn("JudgeUtil :  " + message);
             deleteSolutionFile(linuxPath, windowsPath);
-            return;
+            return null;
         }
         // chmod -R 755 path
         executor.execute("chmod -R 755 " + linuxPath);
@@ -60,21 +79,21 @@ public abstract class Judge {
 //		String judge_data = PropertiesUtil.StringValue("judge_data") + "/" + task.getProblemId();
 //		String cmd = "python " + PropertiesUtil.StringValue("judge_script") + " " + process + " " + judge_data + " "
 //				+ path + " " + task.getTimeLimit() + " " + task.getMemoryLimit();
-        String path = linuxPath + "/" + fileNames[solution.getLanguage()];
-        String judgeData = judgeProperties.getLinux().getProblemFilePath() + problem.getProblemId();
+        String judgeDataPath = judgeProperties.getLinux().getProblemFilePath() + solution.getProblemId();
         String judgePyPath = judgeProperties.getJudgeScriptPath();
-        int memoryLimit = problem.getMemoryLimit() * 1024;
+        int memoryLimit = judgeSource.getMemoryLimit() * 1024;
         //#服务器内存不够分配。。。。。给大点，和小一点都行????
         if (solution.getLanguage() == Language.JAVA.ordinal()) {
             memoryLimit = 2000000;
         }
-        String cmd = "python " + judgePyPath + " " + process + " " + judgeData + " "
-                + linuxPath + " " + problem.getTimeLimit() + " " + memoryLimit;
+        String cmd = "python " + judgePyPath + " " + process + " " + judgeDataPath + " "
+                + linuxPath + " " + judgeSource.getTimeLimit() + " " + memoryLimit;
 //        String cmd = "python " + "/home/nicolas/judge/judge1.py" + " " + process + " " + judge_data + " "
 //                + linuxPath + " " + 1000 + " " + 20000;
         parseToResult(cmd, solution);
         deleteSolutionFile(linuxPath, windowsPath);
         log.info(solution.toString());
+        return solution;
     }
 
     public abstract void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception;
@@ -124,8 +143,8 @@ public abstract class Judge {
         return null;
     }
 
-    private void parseToResult(String cmd, Solution solution) {
-        ExecMessage exec = executor.execute(cmd);
+    private void parseToResult(String cmd,Solution solution) {
+        ExecuteMessage exec = executor.execute(cmd);
         if (exec.getError() != null) {
             solution.setErrorMessage(exec.getError());
             solution.setResult(JudgeResult.SYSTEM_ERROR.ordinal());
@@ -138,12 +157,11 @@ public abstract class Judge {
                 List<TestResult> outs = JSONArray.parseArray(jsonFormat, TestResult.class);
                 String testResult = JSONArray.toJSON(outs).toString();
                 //必须要保存标准格式的json数据
-                solution.setTestResult(testResult);
-                // log.info("=====stdout====" + out);
+                // remove last because it's a information that compares with all test results
+                solution.setTestResult(JSON.toJSON(outs.subList(0,outs.size()-1)).toString());
                 solution.setRuntime(outs.get(outs.size() - 1).getTimeUsed());
                 solution.setMemory(outs.get(outs.size() - 1).getMemoryUsed());
                 solution.setResult(outs.get(outs.size() - 1).getResult());
-                solution.setTestResults(outs);
             } catch (Exception e) {
                 solution.setResult(JudgeResult.SYSTEM_ERROR.ordinal());
                 e.printStackTrace();

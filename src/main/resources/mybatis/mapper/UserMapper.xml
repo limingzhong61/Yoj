@@ -7,8 +7,16 @@
 
     <resultMap id="UserList" type="com.yoj.web.pojo.User">
         <id column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="rank" jdbcType="INTEGER" property="rank"/>
+        <association property="attempted" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.countAttemptedByUserId"
+                     column="user_id">
+        </association>
+        <association property="solved" javaType="INTEGER"
+                     select="com.yoj.web.dao.SolutionMapper.countSolvedByUserId"
+                     column="user_id">
+        </association>
         <association property="accepted" javaType="INTEGER"
                      select="com.yoj.web.dao.SolutionMapper.countAcceptedByUserId"
                      column="user_id">
@@ -20,13 +28,13 @@
     </resultMap>
 
     <select id="getUserList" parameterType="com.yoj.web.pojo.User" resultMap="UserList">
-           SELECT user_id,user_name,nick_name,attempted,solved FROM user
+           SELECT user_id,username,nick_name FROM user
            <where>
-               <if test="userName != null">
-                  AND user_name LIKE CONCAT('%',#{userName},'%')
+               <if test="username != null">
+                  AND username LIKE CONCAT('%',#{username},'%')
                </if>
            </where>
-           ORDER BY solved DESC,attempted DESC
+           ORDER BY score DESC
     </select>
 
     <select id="getUserInfoById" parameterType="com.yoj.web.pojo.User" resultMap="UserList">

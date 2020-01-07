@@ -1,17 +1,14 @@
 package com.yoj.web.service;
 
-import com.yoj.web.util.auth.CurrentUserUtil;
-import com.yoj.custom.judge.Judge;
-import com.yoj.custom.judge.bean.JudgeResult;
-import com.yoj.web.pojo.Problem;
-import com.yoj.web.pojo.Solution;
+import com.yoj.custom.judge.enums.JudgeResult;
 import com.yoj.web.dao.SolutionMapper;
+import com.yoj.web.pojo.Solution;
+import com.yoj.web.util.auth.CurrentUserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,9 +26,6 @@ public class SolutionService {
     @Autowired
     private CurrentUserUtil userUtils;
 
-    @Autowired
-    private Judge judge;
-
     /**
      * @description: insert solution
      * @param: @param solution
@@ -45,7 +39,6 @@ public class SolutionService {
         //judging
         solution.setResult(JudgeResult.JUDGING.ordinal());
         if (solutionMapper.insertSelective(solution) > 0) {
-            userService.updateProblemState(solution.getUserId());
             return solution;
         }
         return null;
@@ -100,7 +93,7 @@ public class SolutionService {
 
     public Long countAcceptedByUser() {
         Solution solution = new Solution();
-        solution.setUserName(userUtils.getUser().getUserName());
+        solution.setUserName(userUtils.getUserDetail().getUsername());
         solution.setResult(JudgeResult.ACCEPTED.ordinal());
         return solutionMapper.countBySelective(solution);
     }
@@ -108,7 +101,7 @@ public class SolutionService {
 
     public Long countSubmissionByUser() {
         Solution solution = new Solution();
-        solution.setUserName(userUtils.getUser().getUserName());
+        solution.setUserName(userUtils.getUserDetail().getUsername());
         return solutionMapper.countBySelective(solution);
     }
 
@@ -121,9 +114,19 @@ public class SolutionService {
         return solutionMapper.countSubmissionsByUserId(userId);
     }
 
-    @Async
-    public void judgeSolution(Solution solution, Problem problem) {
-        judge.judge(solution,problem);
-        solutionMapper.updateByPrimaryKey(solution);
+    public Integer countAttemptedByUserId(Integer userId) {
+        return solutionMapper.countAttemptedByUserId(userId);
+    }
+
+    public Integer countSolvedByUserId(Integer userId) {
+        return solutionMapper.countSolvedByUserId(userId);
+    }
+
+    @CachePut(key = "#result.solutionId",unless ="#result == null")
+    public Solution updateById(Solution updateSolution) {
+        if(solutionMapper.updateById(updateSolution) > 0){
+            return solutionMapper.getById(updateSolution.getSolutionId());
+        }
+        return null;
     }
 }

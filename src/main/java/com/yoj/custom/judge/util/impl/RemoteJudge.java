@@ -28,6 +28,7 @@ public class RemoteJudge extends Judge {
     @Autowired
     private ExecutorUtil executor;
 
+    @Override
     public void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception {
         // windows 环境
         File file = new File(windowsPath);

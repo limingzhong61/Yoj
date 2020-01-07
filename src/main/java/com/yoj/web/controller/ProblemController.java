@@ -3,12 +3,13 @@ package com.yoj.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.web.pojo.Problem;
-import com.yoj.web.pojo.User;
 import com.yoj.web.pojo.satic.RoleName;
 import com.yoj.web.pojo.util.Msg;
+import com.yoj.web.pojo.util.UserDetailsImpl;
 import com.yoj.web.service.ProblemService;
 import com.yoj.web.util.auth.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,8 @@ public class ProblemController {
     public Msg getProblem(@PathVariable("pid") Integer pid) {
         Problem problem = problemService.queryById(pid);
         Msg msg = Msg.success().add("problem", problem);
-        User user = userUtil.getUser();
-        if (user != null && problem.getUserId() == user.getUserId()) {
+        UserDetailsImpl userDetail = userUtil.getUserDetail();
+        if (userDetail != null && problem.getUserId() == userDetail.getUserId()) {
             msg.add("alter", true);
         } else {
             // judge is or not admin
@@ -43,7 +44,7 @@ public class ProblemController {
 
     @GetMapping("/getProblemSet/{pageNumber}")
     public Msg getProblemSet(@PathVariable("pageNumber") Integer pageNumber, Problem problem) {
-        User user = userUtil.getUser();
+        UserDetailsImpl userDetail = userUtil.getUserDetail();
         Msg msg = Msg.success();
         Collection<? extends GrantedAuthority> authorities = userUtil.getAuthorities();
         // 只有管理员才能添加
@@ -51,8 +52,8 @@ public class ProblemController {
             msg.add("add", true);
         }
         //only login can set
-        if (user != null) {
-            problem.setUserId(user.getUserId());
+        if (userDetail != null) {
+            problem.setUserId(userDetail.getUserId());
         }
         PageHelper.startPage(pageNumber, 10);
         List<Problem> problems = problemService.getProblemList(problem);
@@ -61,18 +62,14 @@ public class ProblemController {
     }
 
     @PostMapping("/add")
+    // 只有管理员才能添加
+    @PreAuthorize("hasRole('ADMIN')")
     public Msg addProblem(@RequestBody Problem problem) {
-        User user = userUtil.getUser();
-        if (user == null) {
+        UserDetailsImpl userDetail = userUtil.getUserDetail();
+        if (userDetail == null) {
             return Msg.fail("");
         }
-
-        Collection<? extends GrantedAuthority> authorities = userUtil.getAuthorities();
-        // 只有管理员才能添加
-        if (!authorities.contains(RoleName.ADMIN)) {
-            return Msg.fail("对不起，你没有添加题目的权限");
-        }
-        problem.setUserId(user.getUserId());
+        problem.setUserId(userDetail.getUserId());
         if (problemService.insert(problem) != null) {
             return Msg.success().add("pid", problem.getProblemId());
         }
@@ -80,24 +77,32 @@ public class ProblemController {
     }
 
     /**
-     * @Description:
+     * @Description: alter Problem
      * @Param: [pid, model]
      * @return: java.lang.String
      * @Author: lmz
      */
-    @PostMapping("/alter")
+    @PutMapping("/alter")
+    // 只有管理员才能添加
+    @PreAuthorize("hasRole('ADMIN')")
     public Msg alterProblem(@RequestBody Problem problem) {
-        User user = userUtil.getUser();
+        UserDetailsImpl userDetail = userUtil.getUserDetail();
         Collection<? extends GrantedAuthority> authorities = userUtil.getAuthorities();
-        //先判断是否是出题人
-        if (user == null || !authorities.contains(RoleName.ADMIN)) {
-            return Msg.fail("对不起，你不具有修改此题的权限");
-        }
-        problem.setUserId(user.getUserId());
+        problem.setUserId(userDetail.getUserId());
         if (problemService.updateByPrimaryKey(problem) != null) {
             return Msg.success().add("pid", problem.getProblemId());
         }
         return Msg.fail();
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{pid}")
+    public Msg deleteProblem(@PathVariable("pid")Integer pid) {
+       if(!problemService.deleteProblemById(pid)){
+           return Msg.fail();
+       }
+        return Msg.success();
+    }
+
 
 }

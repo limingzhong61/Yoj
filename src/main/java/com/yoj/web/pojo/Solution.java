@@ -1,10 +1,8 @@
 package com.yoj.web.pojo;
 
-import com.yoj.custom.judge.bean.TestResult;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 public class Solution {
@@ -35,7 +33,6 @@ public class Solution {
     private Byte share;
 
     //非表格字段
-    private List<TestResult> testResults;
 //    private String languageStr;
 //    private String resultStr;
 //    private User user;

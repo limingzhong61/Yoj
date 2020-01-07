@@ -1,12 +1,9 @@
 package com.yoj.web.pojo;
 
-import com.yoj.web.pojo.util.JudgeData;
-import lombok.*;
-
-import java.util.List;
+import lombok.Data;
 
 @Data
-public class Problem{
+public class Problem {
     private Integer problemId;
     //作者
     private Integer userId;
@@ -41,13 +38,7 @@ public class Problem{
 
     private Integer userSolved;
 
-    private  Integer userSubmitted;
+    private Integer userSubmitted;
     //当前用户是否提交、解决、
 //    private Integer state;
-
-    private List<JudgeData> data;
-//    public Problem parseJudgeData() {
-//        data = JSONArray.parseArray(judgeData,JudgeData.class);
-//        return this;
-//    }
 }

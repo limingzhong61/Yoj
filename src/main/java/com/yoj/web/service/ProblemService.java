@@ -77,4 +77,7 @@ public class ProblemService {
         return problemMapper.getProblemList(problem);
     }
 
+    public boolean deleteProblemById(Integer pid) {
+       return problemMapper.deleteProblemById(pid) > 0;
+    }
 }

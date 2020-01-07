@@ -18,7 +18,7 @@ import java.util.Map;
 public class Msg {
 	// 状态
 	private boolean success;
-	// sate code
+	// state code, not equals 0 and 200 means server internal error
 	private int state;
 	// 提示prompt information
 	private String msg;

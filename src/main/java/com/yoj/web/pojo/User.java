@@ -14,7 +14,7 @@ public class User {
     // 用户名最长，20个字节
     @Length(min = 1, max = 20, message = "用户名长度错误")
     @Pattern(regexp = "\\w+", message = "用户名只能包含字母、数字、下划线")
-    private String userName;
+    private String username;
 
     // 昵称最长，20个字节
     @Length(min = 1, max = 20, message = "昵称长度错误")
@@ -31,10 +31,8 @@ public class User {
     private String email;
 
     private Date regTime;
-
-    private Integer attempted;
-
-    private Integer solved;
+    // 获取积分，
+    private Integer score;
 
     //user roles,can be multiple
     private String role;
@@ -42,8 +40,12 @@ public class User {
     //非表中字段
     private String emailCode;
     private String imageCode;
-
+    // problem
+    private Integer attempted;
+    private Integer solved;
+    // count solution
     private Integer accepted;
     private Integer submissions;
-
+    // spring security remember-me
+    private boolean rememberMe;
 }

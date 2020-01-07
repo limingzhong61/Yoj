@@ -1,6 +1,6 @@
 package com.yoj.custom.judge.util.impl;
 
-import com.yoj.custom.judge.bean.ExecMessage;
+import com.yoj.custom.judge.bean.ExecuteMessage;
 import com.yoj.custom.judge.util.ExecutorUtil;
 
 import java.io.IOException;
@@ -12,16 +12,16 @@ import java.io.IOException;
 public class LocalExecutor implements ExecutorUtil{
 
   @Override
-  public  ExecMessage execute(String cmd) {
+  public ExecuteMessage execute(String cmd) {
     Runtime runtime = Runtime.getRuntime();
     Process exec = null;
     try {
       exec = runtime.exec(cmd);
     } catch (IOException e) {
       e.printStackTrace();
-      return new ExecMessage(e.getMessage(), null);
+      return new ExecuteMessage(e.getMessage(), null);
     }
-    ExecMessage res = new ExecMessage();
+    ExecuteMessage res = new ExecuteMessage();
     res.setError(message(exec.getErrorStream()));
     res.setStdout(message(exec.getInputStream()));
     return res;

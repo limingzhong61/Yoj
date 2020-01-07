@@ -3,6 +3,7 @@ package com.yoj.web.dao;
 import com.yoj.web.pojo.Solution;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -46,19 +47,22 @@ public interface SolutionMapper {
      */
     Long countBySelective(Solution solution);
 
+
+    @Select("SELECT COUNT(*) FROM solution where user_id = #{userId} and result = 0")
+    int countAcceptedByUserId(Integer userId);
+    @Select("SELECT COUNT(*) FROM solution where user_id = #{userId}")
+    Integer countSubmissionsByUserId(Integer userId);
+    // use by userMapper getUserList
+    @Select("SELECT COUNT(DISTINCT problem_id) FROM solution where user_id = #{userId}")
+    int countAttemptedByUserId(Integer userId);
+    @Select("SELECT COUNT(DISTINCT problem_id) FROM solution where user_id = #{userId}  and result = 0")
+    Integer countSolvedByUserId(Integer userId);
+
     @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{problemId}")
     Integer countSubmissionsByProblemId(Integer problemId);
-
-    @Select("SELECT COUNT(*) AS submission  FROM solution where user_id = #{userId} and result = 0")
-    int countAcceptedByUserId(Integer userId);
-
-
-    @Select("SELECT COUNT(*) AS submission  FROM solution where user_id = #{userId}")
-    Integer countSubmissionsByUserId(Integer userId);
-
-
-    @Select("SELECT COUNT(*) AS submission  FROM solution where problem_id = #{problemId} and result = 0")
+    @Select("SELECT COUNT(*) FROM solution where problem_id = #{problemId} and result = 0")
     int countAcceptedByProblemId(Integer pid);
+
 
     @Select("SELECT solution_id FROM solution WHERE problem_id = #{problemId} and user_id = #{userId} and result = 0 LIMIT 1")
     Integer querySolved(Map<String, Object> map);
@@ -67,4 +71,7 @@ public interface SolutionMapper {
     Integer querySubmitted(Map<String, Object> map);
 
     Integer updateByPrimaryKey(Solution solution);
+    @Update("UPDATE solution set result = #{result},runtime = #{runtime},memory = #{memory},error_message = #{errorMessage}," +
+            "test_result = #{testResult} where solution_id = #{solutionId}")
+    Integer updateById(Solution updateSolution);
 }

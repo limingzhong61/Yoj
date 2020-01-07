@@ -37,4 +37,15 @@ public interface ProblemMapper {
     * @Date: 2019/10/23 
     */ 
     List<Problem> getProblemList(Problem problem);
+
+    /**
+    * @Description: delete problem and solution that has problem's pid
+    * @Param: [pid]
+    * @return: java.lang.Integer
+    * @Author: lmz
+    * @Date: 2019/12/31
+    */
+    @Delete("DELETE problem,solution FROM problem LEFT JOIN solution \n" +
+            "ON problem.problem_id=solution.problem_id WHERE problem.problem_id= #{pid}")
+    Integer deleteProblemById(Integer pid);
 }

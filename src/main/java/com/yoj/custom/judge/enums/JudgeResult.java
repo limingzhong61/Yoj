@@ -1,4 +1,4 @@
-package com.yoj.custom.judge.bean;
+package com.yoj.custom.judge.enums;
 
 public enum JudgeResult {
     ACCEPTED("ACCEPTED"),

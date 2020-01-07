@@ -1,7 +1,7 @@
 //package com.yoj.custom.judge;
 //
 //import com.alibaba.fastjson.JSONArray;
-//import com.yoj.custom.judge.pojo.ExecMessage;
+//import com.yoj.custom.judge.pojo.ExecuteMessage;
 //import com.yoj.custom.judge.pojo.TestResult;
 //import com.yoj.custom.judge.pojo.Language;
 //import com.yoj.custom.judge.pojo.JudgeResult;
@@ -156,7 +156,7 @@
 //    }
 //
 //    private void parseToResult(String cmd, Solution solution) {
-//        ExecMessage exec = executor.execute(cmd);
+//        ExecuteMessage exec = executor.execute(cmd);
 //        if (exec.getError() != null) {
 //            solution.setErrorMessage(exec.getError());
 //            solution.setResult(JudgeResult.SystemError);

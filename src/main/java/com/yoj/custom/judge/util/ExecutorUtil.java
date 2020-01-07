@@ -1,6 +1,6 @@
 package com.yoj.custom.judge.util;
 
-import com.yoj.custom.judge.bean.ExecMessage;
+import com.yoj.custom.judge.bean.ExecuteMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +11,7 @@ public interface ExecutorUtil {
     //默认编码UTF-8
     String DEFAULT_CHART = "UTF-8";
 
-    ExecMessage execute(String cmd);
+    ExecuteMessage execute(String cmd);
 
     default String message(InputStream inputStream) {
         BufferedReader reader = null;

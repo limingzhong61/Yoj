@@ -2,7 +2,7 @@ package com.yoj.custom.judge.util.impl;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
-import com.yoj.custom.judge.bean.ExecMessage;
+import com.yoj.custom.judge.bean.ExecuteMessage;
 import com.yoj.custom.judge.util.ExecutorUtil;
 import com.yoj.custom.properties.JudgeProperties;
 import lombok.ToString;
@@ -54,7 +54,7 @@ public class RemoteExecutor implements ExecutorUtil {
      *
      */
     @Override
-    public ExecMessage execute(String cmd) {
+    public ExecuteMessage execute(String cmd) {
         Session session = null;
         try {
             if (conn == null) {
@@ -64,9 +64,9 @@ public class RemoteExecutor implements ExecutorUtil {
             session.execCommand(cmd);// 执行命令
         } catch (IOException e) {
             log.info("执行命令失败,链接conn:" + conn + ",执行的命令：" + cmd + "  " + e.getMessage());
-            return new ExecMessage(e.getMessage(), null);
+            return new ExecuteMessage(e.getMessage(), null);
         }
-        ExecMessage result = new ExecMessage();
+        ExecuteMessage result = new ExecuteMessage();
         try {
             result.setError(message(session.getStderr()));
             result.setStdout(message(session.getStdout()));

@@ -1,25 +1,22 @@
 package com.yoj.web.service;
 
+import com.yoj.web.cache.UserCacheUtil;
+import com.yoj.web.dao.UserMapper;
 import com.yoj.web.pojo.User;
 import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.pojo.util.UserDetailsImpl;
-import com.yoj.web.cache.UserCacheUtil;
-import com.yoj.web.dao.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.Future;
 
 /**
  * @Description: insert/update时请对密码进行加密
@@ -55,7 +52,7 @@ public class UserService implements UserDetailsService {
      */
 //    @CachePut(key = "#result.userId")
     public Msg insertUser(User user) {
-        if (userMapper.queryExistByName(user.getUserName()) > 0) {
+        if (userMapper.queryExistByName(user.getUsername()) > 0) {
             return Msg.fail("用户名已存在");
         }
         user.setPassword(encryptor.encrypt(user.getPassword()));
@@ -93,8 +90,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Cacheable(unless = "#result == null")
-    public User getUserByName(String userName) {
-        return userMapper.getUserByName(userName);
+    public User getUserByName(String username) {
+        return userMapper.getUserByName(username);
     }
 
     public boolean queryExistByEmail(String email) {
@@ -127,51 +124,9 @@ public class UserService implements UserDetailsService {
         return userMapper.getUserList(user);
     }
 
-
-    public Integer updateSolved(Integer userId) {
-        return userMapper.updateSolved(userId);
-    }
-
-    public Integer updateAttempted(Integer userId) {
-        return userMapper.updateAttempted(userId);
-    }
-
-    /**
-     * @Description: 更新所有用户的问题状态，solved，attempted
-     * @Param:
-     * @return: void
-     * @Author: lmz
-     * @Date: 2019/10/26
-     */
-    public boolean updateAllUserProblemState() {
-        List<User> userList = this.getUserList(new User());
-        for (User user : userList) {
-            if (updateSolved(user.getUserId()) != -1) {
-                return false;
-            }
-            if (updateAttempted(user.getUserId()) >= 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @Description: 异步更新user的problem相关状态solved、attempted
-     * @Param: [userId]
-     * @return: boolean
-     * @Author: lmz
-     * @Date: 2019/10/26
-     */
-    @Async
-    public Future<Boolean> updateProblemState(Integer userId) {
-        if (updateSolved(userId) < 0) {
-            return new AsyncResult<Boolean>(false);
-        }
-        if (updateAttempted(userId) < 0) {
-            return new AsyncResult<Boolean>(false);
-        }
-        userCache.delById(userId);
-        return new AsyncResult<Boolean>(true);
+    @CachePut(key = "#result.userId", unless = "#result == null")
+    public User updateUserInfoById(User user) {
+        userMapper.updateUserInfoById(user);
+        return userMapper.getUserById(user.getUserId());
     }
 }

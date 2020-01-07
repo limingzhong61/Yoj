@@ -55,7 +55,7 @@ public class RegisterController {
             }
             return msg;
         }
-        if (userService.getUserByName(user.getUserName()) != null) {
+        if (userService.getUserByName(user.getUsername() )!= null) {
             msg.setSuccess(false);
             msg.add("userName", "用户名已存在");
         }
