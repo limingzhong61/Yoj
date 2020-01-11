@@ -51,7 +51,7 @@ public class JudgeCodeTest {
 //                "    printf(\"%d\", a+b);\n" +
 //                "    return 0;\n" +
 //                "}");
-//        judge.judge(solution, problemService.queryById(1));
+//        judge.judge(solution, problemService.getViewInfoById(1));
 //        Assert.assertEquals("judge c error", (int)solution.getResult(), JudgeResult.ACCEPTED.ordinal());
 //    }
 //
@@ -71,7 +71,7 @@ public class JudgeCodeTest {
 //                "    cout << a + b;\n" +
 //                "    return 0;\n" +
 //                "}");
-//        judge.judge(solution, problemService.queryById(1));
+//        judge.judge(solution, problemService.getViewInfoById(1));
 //        if (solution.getResult() != JudgeResult.ACCEPTED.ordinal()) {
 //            throw new Exception("judge c++ error");
 //        }
@@ -94,7 +94,7 @@ public class JudgeCodeTest {
 //                "        System.out.print(a + b);\n" +
 //                "    }\n" +
 //                "}");
-//        judge.judge(solution, problemService.queryById(1));
+//        judge.judge(solution, problemService.getViewInfoById(1));
 //        if (solution.getResult() != JudgeResult.ACCEPTED.ordinal()) {
 //            throw new Exception("judge java error");
 //        }
@@ -107,7 +107,7 @@ public class JudgeCodeTest {
 //        solution.setUserId(1);
 //        solution.setLanguage(Language.PYTHON.ordinal());
 //        solution.setCode("print(sum(map(int, input().split())), end='')");
-//        judge.judge(solution, problemService.queryById(1));
+//        judge.judge(solution, problemService.getViewInfoById(1));
 //        if (solution.getResult() != JudgeResult.ACCEPTED.ordinal()) {
 //            throw new Exception("judge python error");
 //        }

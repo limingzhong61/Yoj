@@ -6,8 +6,7 @@ import com.yoj.custom.judge.bean.ExecuteMessage;
 import com.yoj.custom.judge.util.ExecutorUtil;
 import com.yoj.custom.properties.JudgeProperties;
 import lombok.ToString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -16,13 +15,12 @@ import java.io.IOException;
  * @author lmz 远程连接linux使用
  */
 @ToString
+@Slf4j
 public class RemoteExecutor implements ExecutorUtil {
 
     @Autowired
     JudgeProperties judgeProperties;
-
-    private static final Logger log = LoggerFactory.getLogger(RemoteExecutor.class);
-
+//    private static final Logger log = LoggerFactory.getLogger(RemoteExecutor.class);
     private static Connection conn;
 
     /**
@@ -57,9 +55,10 @@ public class RemoteExecutor implements ExecutorUtil {
     public ExecuteMessage execute(String cmd) {
         Session session = null;
         try {
-            if (conn == null) {
-                login(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword());
-            }
+            // can not find closed connection
+//            if (conn == null) {
+               conn = login(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword());
+//            }
             session = conn.openSession();// 打开一个会话
             session.execCommand(cmd);// 执行命令
         } catch (IOException e) {

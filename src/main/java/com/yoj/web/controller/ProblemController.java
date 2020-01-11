@@ -26,8 +26,8 @@ public class ProblemController {
     private CurrentUserUtil userUtil;
 
     @GetMapping("/{pid}")
-    public Msg getProblem(@PathVariable("pid") Integer pid) {
-        Problem problem = problemService.queryById(pid);
+    public Msg getViewProblem(@PathVariable("pid") Integer pid) {
+        Problem problem = problemService.getViewInfoById(pid);
         Msg msg = Msg.success().add("problem", problem);
         UserDetailsImpl userDetail = userUtil.getUserDetail();
         if (userDetail != null && problem.getUserId() == userDetail.getUserId()) {
@@ -42,15 +42,11 @@ public class ProblemController {
         return msg;
     }
 
+
     @GetMapping("/getProblemSet/{pageNumber}")
     public Msg getProblemSet(@PathVariable("pageNumber") Integer pageNumber, Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
         Msg msg = Msg.success();
-        Collection<? extends GrantedAuthority> authorities = userUtil.getAuthorities();
-        // 只有管理员才能添加
-        if (authorities.contains(RoleName.ADMIN)) {
-            msg.add("add", true);
-        }
         //only login can set
         if (userDetail != null) {
             problem.setUserId(userDetail.getUserId());

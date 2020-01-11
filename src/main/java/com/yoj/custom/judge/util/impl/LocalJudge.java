@@ -18,7 +18,6 @@ import java.io.File;
 * @Date: 2019/10/27
 */
 public class LocalJudge extends Judge{
-    private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
     private JudgeProperties judgeProperties;
@@ -30,7 +29,7 @@ public class LocalJudge extends Judge{
     public void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception {
         File file = new File(linuxPath);
         file.mkdirs();
-        FileUtils.write(new File(linuxPath + "/" + fileNames[solution.getLanguage()]),
+        FileUtils.write(new File(linuxPath + "/" + this.fileNames[solution.getLanguage()]),
                 solution.getCode(), "utf-8");
     }
 

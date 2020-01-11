@@ -1,15 +1,10 @@
 package com.yoj.web.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Setter
-@Getter
-@ToString
+@Data
 public class ContestProblem {
     private Integer problemId;
     private Integer contestId;
-    private Integer cAccepted;
-    private Integer cSubmit;
+    private Integer score;
 }

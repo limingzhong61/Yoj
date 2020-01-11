@@ -26,7 +26,6 @@ public class UserController {
 
     @GetMapping("/currentInfo")
     public Msg getCurrentUserInfo() {
-//        int i = 1 / 0; //test exception
         UserDetailsImpl userDetails = currentUserUtil.getUserDetail();
         if (userDetails == null) {
             return Msg.fail();

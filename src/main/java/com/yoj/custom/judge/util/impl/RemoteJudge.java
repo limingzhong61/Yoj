@@ -20,7 +20,7 @@ import java.io.IOException;
  */
 public class RemoteJudge extends Judge {
 
-    private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
+//    private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
     private JudgeProperties judgeProperties;
@@ -34,7 +34,7 @@ public class RemoteJudge extends Judge {
         File file = new File(windowsPath);
         file.mkdirs();
 
-        FileUtils.write(new File(windowsPath + "/" + fileNames[solution.getLanguage()]),
+        FileUtils.write(new File(windowsPath + "/" + this.fileNames[solution.getLanguage()]),
                 solution.getCode(), "utf-8");
         SSH2Util ssh2Util = new SSH2Util(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword(), 22);
         ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);

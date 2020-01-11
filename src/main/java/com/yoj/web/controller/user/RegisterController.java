@@ -77,9 +77,6 @@ public class RegisterController {
 
     @GetMapping("/getEmailCheckCode/{email}")
     public Msg getCheckCode(@PathVariable(value = "email") String email) {
-        if(true){
-            throw new  RuntimeException("test in register request path");
-        }
 //        int i = 1 / 0;
         if (userService.queryExistByEmail(email)) {
             return Msg.fail("邮箱已被注册");

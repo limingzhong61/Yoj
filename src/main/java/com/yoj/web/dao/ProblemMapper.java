@@ -12,7 +12,11 @@ public interface ProblemMapper {
 
 
     @Select("SELECT * FROM problem WHERE problem_id = #{pid}")
-    Problem queryById(int pid);
+    Problem getAllById(int pid);
+
+    @Select("SELECT problem_id,user_id,title,tag,description,format_input,format_output," +
+            "sample_input,sample_output,hint FROM problem WHERE problem_id = #{pid}")
+    Problem getProblemViewById(int pid);
 
     @Select("SELECT * FROM problem")
     List<Problem> getAll();

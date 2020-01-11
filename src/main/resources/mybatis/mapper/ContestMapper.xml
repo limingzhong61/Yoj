@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoj.web.dao.ContestMapper">
+    <!--<resultMap id="BaseResultMap" type="com.yoj.web.pojo.Problem">-->
+    <!--<id column="contest_id" jdbcType="INTEGER" property="contestId"/>-->
+    <!--<result column="user_id" jdbcType="INTEGER" property="userId"/>-->
+    <!--<result column="title" jdbcType="VARCHAR" property="title"/>-->
+    <!--</resultMap>-->
+
+
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="contest_id" keyProperty="contestId"
+            parameterType="com.yoj.web.pojo.Contest">
+    INSERT into contest(user_id,title,start_time,end_time,description)
+    VALUES(#{userId},#{title},#{startTime},#{endTime},#{description})
+  </insert>
+    <select id="getList" parameterType="com.yoj.web.pojo.Contest" resultType="com.yoj.web.pojo.Contest">
+        select contest_id,user_id,title,start_time,end_time from contest
+        <!--<where>-->
+            <!--<if test="problemId != null">-->
+                <!--and problem_id LIKE CONCAT('%',#{problemId},'%')-->
+            <!--</if>-->
+            <!--<if test="title != null">-->
+                <!--and title LIKE CONCAT('%',#{title},'%')-->
+            <!--</if>-->
+        <!--</where>-->
+        order by contest_id desc
+    </select>
+</mapper>

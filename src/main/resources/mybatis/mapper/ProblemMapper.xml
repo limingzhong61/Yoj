@@ -5,6 +5,7 @@
         <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
         <result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>
         <result column="memory_limit" jdbcType="INTEGER" property="memoryLimit"/>
         <result column="accepted" jdbcType="INTEGER" property="accepted"/>
@@ -21,6 +22,7 @@
     <resultMap id="ProblemList" type="com.yoj.web.pojo.Problem">
         <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
         <result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>
         <association property="accepted" javaType="INTEGER"
                      select="com.yoj.web.dao.SolutionMapper.countAcceptedByProblemId"
@@ -143,16 +145,16 @@
         </trim>
     </insert>
     <select id="getProblemList" parameterType="com.yoj.web.pojo.Problem" resultMap="ProblemList">
-    select problem_id,title,#{userId} as user_id from problem
-    <where>
-        <if test="problemId != null">
-            and problem_id LIKE CONCAT('%',#{problemId},'%')
-        </if>
-        <if test="title != null">
-            and title LIKE  CONCAT('%',#{title},'%')
-        </if>
-    </where>
-</select>
+        select problem_id,title,tag,#{userId} as user_id from problem
+        <where>
+            <if test="problemId != null">
+                and problem_id LIKE CONCAT('%',#{problemId},'%')
+            </if>
+            <if test="title != null">
+                and title LIKE CONCAT('%',#{title},'%')
+            </if>
+        </where>
+    </select>
 
     <update id="updateByPrimaryKey" parameterType="com.yoj.web.pojo.Problem">
     update problem

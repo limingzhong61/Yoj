@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Slf4j
 public abstract class Judge {
-//    private final String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
+    protected final String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
 
     @Autowired
     private JudgeProperties judgeProperties;
@@ -59,7 +59,7 @@ public abstract class Judge {
             solution.setResult(JudgeResult.SYSTEM_ERROR.ordinal());
             log.info("JudgeUtil : create file fail");
             deleteSolutionFile(linuxPath, windowsPath);
-            return null;
+            return solution;
         }
 
         // compile the source
@@ -70,7 +70,7 @@ public abstract class Judge {
             log.warn("JudgeUtil : compile error");
             log.warn("JudgeUtil :  " + message);
             deleteSolutionFile(linuxPath, windowsPath);
-            return null;
+            return solution;
         }
         // chmod -R 755 path
         executor.execute("chmod -R 755 " + linuxPath);

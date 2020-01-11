@@ -11,15 +11,15 @@ import java.util.List;
 public interface UserMapper {
 
     @Insert("insert into user(username,nick_name,password,email,reg_time) " +
-            "values(#{userName},#{userName},#{password},#{email},NOW())")
+            "values(#{username},#{username},#{password},#{email},NOW())")
     @Options(useGeneratedKeys = true, keyProperty = "userId", keyColumn = "user_id")
     int insertUser(User user);
 
-    @Select("select * from user where username=#{userName} and password=#{password}")
+    @Select("select * from user where username=#{username} and password=#{password}")
     User getUserExist(User user);
 
-    @Select("select count(1) from user where username=#{userName} LIMIT 1")
-    int queryExistByName(String userName);
+    @Select("select count(1) from user where username=#{username} LIMIT 1")
+    int queryExistByName(String username);
 
     @Select("select count(1) from user where email=#{email}  LIMIT 1")
     int queryExistByEmail(String email);
@@ -28,7 +28,7 @@ public interface UserMapper {
     User getUserById(Integer userId);
 
     @Select("SELECT * FROM `user` WHERE username = #{username}  LIMIT 1")
-    User getUserByName(String userName);
+    User getUserByName(String username);
 
     @Select("select * from user where email=#{email}  LIMIT 1")
     User getUserByEmail(String email);

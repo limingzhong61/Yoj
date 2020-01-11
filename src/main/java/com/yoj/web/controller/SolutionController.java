@@ -15,7 +15,6 @@ import com.yoj.web.service.UserService;
 import com.yoj.web.util.auth.CurrentUserUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +46,7 @@ public class SolutionController {
 //    public Msg testThreadPool(@RequestBody  Solution solution) {
 //        solution.setUserId(1);
 //        JudgeSource judgeSource = new JudgeSource();
-//        Problem problem = problemService.queryById(solution.getProblemId());
+//        Problem problem = problemService.getViewInfoById(solution.getProblemId());
 //        BeanUtils.copyProperties(solution,judgeSource);
 //        judgeSource.setMemoryLimit(problem.getMemoryLimit());
 //        judgeSource.setTimeLimit(problem.getTimeLimit());
@@ -70,9 +69,8 @@ public class SolutionController {
         solution.setUserId(userDetail.getUserId());
         solution.setUserName(userDetail.getUsername());
 
-        solution.setUserId(1);
         JudgeSource judgeSource = new JudgeSource();
-        Problem problem = problemService.queryById(solution.getProblemId());
+        Problem problem = problemService.getViewInfoById(solution.getProblemId());
         BeanUtils.copyProperties(solution,judgeSource);
         judgeSource.setMemoryLimit(problem.getMemoryLimit());
         judgeSource.setTimeLimit(problem.getTimeLimit());

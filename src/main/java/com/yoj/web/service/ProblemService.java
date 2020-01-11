@@ -25,8 +25,8 @@ public class ProblemService {
     private ProblemFileUtil problemFileUtil;
 
     @Cacheable(value = "problem")
-    public Problem queryById(int pid) {
-        return problemMapper.queryById(pid);
+    public Problem getViewInfoById(int pid) {
+        return problemMapper.getProblemViewById(pid);
     }
     /**
     * @Description:  @Cacheable,分页数据未缓存
@@ -36,6 +36,10 @@ public class ProblemService {
     */
     public List<Problem> getAll() {
         return problemMapper.getAll();
+    }
+
+    public Problem getAllById(int pid){
+        return problemMapper.getAllById(pid);
     }
 
     @CachePut(key="#result.problemId")
@@ -61,7 +65,7 @@ public class ProblemService {
     public Problem updateByPrimaryKeySelective(Problem problem) {
         boolean flag = problemMapper.updateByPrimaryKeySelective(problem) > 0;
         if(flag){
-            return queryById(problem.getProblemId());
+            return getViewInfoById(problem.getProblemId());
         }
         return null;
     }
