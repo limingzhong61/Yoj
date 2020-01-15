@@ -5,13 +5,13 @@ import com.github.pagehelper.PageInfo;
 import com.yoj.custom.judge.Judge;
 import com.yoj.custom.judge.bean.JudgeSource;
 import com.yoj.custom.judge.threads.JudgeThreadPoolManager;
+import com.yoj.web.pojo.Contest;
 import com.yoj.web.pojo.Problem;
 import com.yoj.web.pojo.Solution;
 import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.pojo.util.UserDetailsImpl;
-import com.yoj.web.service.ProblemService;
-import com.yoj.web.service.SolutionService;
-import com.yoj.web.service.UserService;
+import com.yoj.web.service.*;
+import com.yoj.web.util.ContestUtil;
 import com.yoj.web.util.auth.CurrentUserUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +24,25 @@ import java.util.List;
 @RequestMapping("/solution")
 public class SolutionController {
     @Autowired
-    public SolutionService solutionService;
+    private SolutionService solutionService;
     @Autowired
-    public ProblemService problemService;
-
+    private ProblemService problemService;
     @Autowired
-    public UserService UserService;
+    private CurrentUserUtil userUtils;
     @Autowired
-    public CurrentUserUtil userUtils;
+    private JudgeThreadPoolManager threadPoolManager;
     @Autowired
-    public JudgeThreadPoolManager threadPoolManager;
+    private ContestService contestService;
+    @Autowired
+    private ContestProblemService contestProblemService;
+    @Autowired
+    private ContestUtil contestUtil;
     @Autowired
     private Judge judge;
 
     /**
      * test thread pool with out authority，don't delete it.
+     *
      * @param solution
      * @return
      */
@@ -58,7 +62,6 @@ public class SolutionController {
 //        threadPoolManager.addTask(judgeSource);
 //        return Msg.success();
 //    }
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/submit")
     public Msg submit(@RequestBody Solution solution) {
@@ -66,19 +69,32 @@ public class SolutionController {
         if (userDetail == null) {
             return Msg.fail("提交代码前请先登录");
         }
+        Integer contestId = solution.getContestId();
+        //have contest ?
+        if (contestId != null) {
+            Contest contest = contestService.getFromContestProblem(contestId, solution.getProblemId());
+            // judge this problem whether in this contest
+            if (contest == null) {
+                return Msg.fail("本次比赛没有此题");
+            }
+            // isn't contesting
+            if (!contestUtil.isStarted(contest)) {
+                return Msg.fail("比赛尚未开始");
+            } else if (contestUtil.isEnd(contest)) {
+                return Msg.fail("比赛已经结束");
+            }
+        }
         solution.setUserId(userDetail.getUserId());
-        solution.setUserName(userDetail.getUsername());
-
-        JudgeSource judgeSource = new JudgeSource();
-        Problem problem = problemService.getViewInfoById(solution.getProblemId());
-        BeanUtils.copyProperties(solution,judgeSource);
-        judgeSource.setMemoryLimit(problem.getMemoryLimit());
-        judgeSource.setTimeLimit(problem.getTimeLimit());
         Solution insertSolution = solutionService.insertSolution(solution);
         if (insertSolution == null) {
             return Msg.fail("insert solution fail");
         }
+        JudgeSource judgeSource = new JudgeSource();
+        BeanUtils.copyProperties(solution, judgeSource);
         judgeSource.setSolutionId(insertSolution.getSolutionId());
+        Problem problem = problemService.getViewInfoById(solution.getProblemId());
+        judgeSource.setMemoryLimit(problem.getMemoryLimit());
+        judgeSource.setTimeLimit(problem.getTimeLimit());
         threadPoolManager.addTask(judgeSource);
         return Msg.success();
     }

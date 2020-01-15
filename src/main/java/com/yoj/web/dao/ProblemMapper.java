@@ -15,7 +15,7 @@ public interface ProblemMapper {
     Problem getAllById(int pid);
 
     @Select("SELECT problem_id,user_id,title,tag,description,format_input,format_output," +
-            "sample_input,sample_output,hint FROM problem WHERE problem_id = #{pid}")
+            "sample_input,sample_output,hint,time_limit,memory_limit FROM problem WHERE problem_id = #{pid}")
     Problem getProblemViewById(int pid);
 
     @Select("SELECT * FROM problem")
@@ -52,4 +52,10 @@ public interface ProblemMapper {
     @Delete("DELETE problem,solution FROM problem LEFT JOIN solution \n" +
             "ON problem.problem_id=solution.problem_id WHERE problem.problem_id= #{pid}")
     Integer deleteProblemById(Integer pid);
+
+    @Select("SELECT problem_id FROM problem WHERE problem_id = #{problemId} LIMIT 1")
+    Integer queryById(Integer problemId);
+
+    @Select("SELECT MAX(problem_id) FROM problem")
+    Integer getMaxProblemId();
 }

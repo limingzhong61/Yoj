@@ -1,18 +1,22 @@
 package com.yoj.web.pojo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+//@Builder
 @Data
+@NoArgsConstructor
 public class Solution {
     private Integer solutionId;
 
     private Integer problemId;
+    // have a contest id when contest
+    private Integer contestId;
 
     private Integer userId;
 
-    private String userName;
     //	Language
     private Integer language;
 
@@ -33,8 +37,9 @@ public class Solution {
     private Byte share;
 
     //非表格字段
-//    private String languageStr;
-//    private String resultStr;
+    // a score of contest problem
+    private Integer score;
+    private String nickName;
 //    private User user;
 //    private Problem problem;
 }

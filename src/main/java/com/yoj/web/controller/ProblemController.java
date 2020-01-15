@@ -3,17 +3,15 @@ package com.yoj.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.web.pojo.Problem;
-import com.yoj.web.pojo.satic.RoleName;
 import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.pojo.util.UserDetailsImpl;
 import com.yoj.web.service.ProblemService;
+import com.yoj.web.util.ProblemUtil;
 import com.yoj.web.util.auth.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -24,24 +22,15 @@ public class ProblemController {
     private ProblemService problemService;
     @Autowired
     private CurrentUserUtil userUtil;
+    @Autowired
+    private ProblemUtil problemUtil;
 
     @GetMapping("/{pid}")
     public Msg getViewProblem(@PathVariable("pid") Integer pid) {
         Problem problem = problemService.getViewInfoById(pid);
         Msg msg = Msg.success().add("problem", problem);
-        UserDetailsImpl userDetail = userUtil.getUserDetail();
-        if (userDetail != null && problem.getUserId() == userDetail.getUserId()) {
-            msg.add("alter", true);
-        } else {
-            // judge is or not admin
-            Collection<? extends GrantedAuthority> authorities = userUtil.getAuthorities();
-            if (authorities.contains(RoleName.ADMIN)) {
-                msg.add("alter", true);
-            }
-        }
         return msg;
     }
-
 
     @GetMapping("/getProblemSet/{pageNumber}")
     public Msg getProblemSet(@PathVariable("pageNumber") Integer pageNumber, Problem problem) {
@@ -62,6 +51,7 @@ public class ProblemController {
     @PreAuthorize("hasRole('ADMIN')")
     public Msg addProblem(@RequestBody Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
+        problemUtil.changeDataToJSON(problem);
         if (userDetail == null) {
             return Msg.fail("");
         }
@@ -83,8 +73,8 @@ public class ProblemController {
     @PreAuthorize("hasRole('ADMIN')")
     public Msg alterProblem(@RequestBody Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
-        Collection<? extends GrantedAuthority> authorities = userUtil.getAuthorities();
         problem.setUserId(userDetail.getUserId());
+        problemUtil.changeDataToJSON(problem);
         if (problemService.updateByPrimaryKey(problem) != null) {
             return Msg.success().add("pid", problem.getProblemId());
         }
@@ -93,10 +83,10 @@ public class ProblemController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{pid}")
-    public Msg deleteProblem(@PathVariable("pid")Integer pid) {
-       if(!problemService.deleteProblemById(pid)){
-           return Msg.fail();
-       }
+    public Msg deleteProblem(@PathVariable("pid") Integer pid) {
+        if (!problemService.deleteProblemById(pid)) {
+            return Msg.fail();
+        }
         return Msg.success();
     }
 

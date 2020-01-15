@@ -20,6 +20,10 @@ public class Contest {
 
     // one contest has lots of problem
     private List<ContestProblem> contestProblemList;
+
+    // not in table column
+    private Integer totalProblem;
+    private Integer status;
     //    private String private;
 //    private String password;
 //    private String defunct;

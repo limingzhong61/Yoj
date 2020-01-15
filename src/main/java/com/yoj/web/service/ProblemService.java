@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Description: create和update时需要在服务器上创建目录
+ * @Description: create和update时 need update mapping files
  * @Author: lmz
  */
 @CacheConfig(cacheNames = "problem")
@@ -28,22 +28,33 @@ public class ProblemService {
     public Problem getViewInfoById(int pid) {
         return problemMapper.getProblemViewById(pid);
     }
+
     /**
-    * @Description:  @Cacheable,分页数据未缓存
-    * @Param: []
-    * @return: java.util.List<com.yoj.web.pojo.Problem>
-    * @Author: lmz
-    */
+     * @Description: @Cacheable,分页数据未缓存
+     * @Param: []
+     * @return: java.util.List<com.yoj.web.pojo.Problem>
+     * @Author: lmz
+     */
     public List<Problem> getAll() {
         return problemMapper.getAll();
     }
 
-    public Problem getAllById(int pid){
+    public Problem getAllById(int pid) {
         return problemMapper.getAllById(pid);
     }
 
-    @CachePut(key="#result.problemId")
+    /**
+     * Insert problem with max problemId + 1 ensure problem id is  serial
+     * There are just only a few  user have add problem authority
+     * Not have big chance to meet same pid at the same time
+     *
+     * @param problem
+     * @return
+     */
+    @CachePut(key = "#result.problemId")
     public Problem insert(Problem problem) {
+        Integer maxProblemId = problemMapper.getMaxProblemId();
+        problem.setProblemId(maxProblemId + 1);
         boolean flag = problemMapper.insert(problem) > 0;
         if (flag) {
             problemFileUtil.createProblemFile(problem);
@@ -51,20 +62,22 @@ public class ProblemService {
         }
         return null;
     }
+
     @CachePut(key = "#problem.problemId")
     public Problem updateByPrimaryKey(Problem problem) {
         boolean flag = problemMapper.updateByPrimaryKey(problem) > 0;
         if (flag) {
             problemFileUtil.createProblemFile(problem);
-        }else{
+        } else {
             problem = null;
         }
         return problem;
     }
+
     @CachePut(key = "#problem.problemId")
     public Problem updateByPrimaryKeySelective(Problem problem) {
         boolean flag = problemMapper.updateByPrimaryKeySelective(problem) > 0;
-        if(flag){
+        if (flag) {
             return getViewInfoById(problem.getProblemId());
         }
         return null;
@@ -72,16 +85,20 @@ public class ProblemService {
 
     /**
      * @Description: 根据problem参数返回问题集合
-     * @Param: [problem],注意problem.user_id != null,by user_id return 是否解决、提交问题
+     * @Param: [problem], 注意problem.user_id != null,by user_id return 是否解决、提交问题
      * @return: java.util.List<com.yoj.web.pojo.Problem>
      * @Author: lmz
      * @Date: 2019/10/23
      */
-    public List<Problem> getProblemList(Problem problem){
+    public List<Problem> getProblemList(Problem problem) {
         return problemMapper.getProblemList(problem);
     }
 
     public boolean deleteProblemById(Integer pid) {
-       return problemMapper.deleteProblemById(pid) > 0;
+        return problemMapper.deleteProblemById(pid) > 0;
+    }
+
+    public boolean queryById(Integer problemId) {
+        return problemMapper.queryById(problemId) != null;
     }
 }

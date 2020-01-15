@@ -2,6 +2,7 @@ package com.yoj.web.dao;
 
 import com.yoj.web.pojo.Solution;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
@@ -74,4 +75,10 @@ public interface SolutionMapper {
     @Update("UPDATE solution set result = #{result},runtime = #{runtime},memory = #{memory},error_message = #{errorMessage}," +
             "test_result = #{testResult} where solution_id = #{solutionId}")
     Integer updateById(Solution updateSolution);
+
+    @Select("SELECT solution_id,problem_id,result,submit_time FROM solution where contest_id =#{contestId}" +
+            " and user_id = #{userId}")
+    List<Solution> getUserContestRecord(@Param("contestId") Integer contestId,@Param("userId") Integer userId);
+
+    List<Solution> getByContestId(Integer contestId);
 }

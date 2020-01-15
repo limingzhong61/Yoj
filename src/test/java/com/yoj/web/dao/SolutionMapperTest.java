@@ -1,20 +1,23 @@
-package com.yoj;
+package com.yoj.web.dao;
 
-import com.yoj.web.cache.UserCacheUtil;
+import com.yoj.web.pojo.Solution;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RedisTest {
+public class SolutionMapperTest {
     @Autowired
-    private UserCacheUtil userCache;
+    private SolutionMapper solutionMapper;
+
     @Test
-    public void test(){
-        userCache.delById(27);
+    public void getByContestId() {
+        List<Solution> solutions = solutionMapper.getByContestId(new Integer(19));
+        System.out.println(solutions);
     }
 
 }

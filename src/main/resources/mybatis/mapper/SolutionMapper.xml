@@ -2,27 +2,41 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.yoj.web.dao.SolutionMapper">
-    <resultMap id="BaseResultMap" type="com.yoj.web.pojo.Solution">
+    <resultMap id="contestSolution" type="com.yoj.web.pojo.Solution">
+    <id column="solution_id" jdbcType="INTEGER" property="solutionId"/>
+    <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="contest_id" jdbcType="INTEGER" property="contestId"/>
+    <result column="runtime" jdbcType="INTEGER" property="runtime"/>
+    <association property="score" javaType="INTEGER"
+                 select="com.yoj.web.dao.ContestProblemMapper.getScore"
+                 column="{contestId = contest_id,problemId = problem_id}">
+    </association>
+    <association property="nickName" javaType="String"
+                 select="com.yoj.web.dao.UserMapper.getNickNameById"
+                 column="user_id">
+    </association>
+</resultMap>
+    <resultMap id="solutionList" type="com.yoj.web.pojo.Solution">
         <id column="solution_id" jdbcType="INTEGER" property="solutionId"/>
         <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
-        <result column="language" jdbcType="SMALLINT" property="language"/>
-        <result column="result" jdbcType="SMALLINT" property="result"/>
         <result column="runtime" jdbcType="INTEGER" property="runtime"/>
-        <result column="memory" jdbcType="INTEGER" property="memory"/>
-        <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime"/>
+        <association property="nickName" javaType="String"
+                     column="user_id">
+        </association>
     </resultMap>
+
     <sql id="Base_Column_List">
-    solution_id, problem_id, user_id,user_name,language, result, runtime, memory, submit_time,share
+    solution_id, problem_id,user.user_id,nick_name,language, result, runtime, memory, submit_time,share
     </sql>
 
-    <select id="getListBySelective" parameterType="com.yoj.web.pojo.Solution" resultType="com.yoj.web.pojo.Solution">
+    <select id="getListBySelective" parameterType="com.yoj.web.pojo.Solution"
+            resultType="com.yoj.web.pojo.Solution">
         SELECT
         <include refid="Base_Column_List"></include>
-        from solution
+        from solution,user
         <where>
             <if test="solutionId != null">
                 and solution_id = #{solutionId}
@@ -31,10 +45,10 @@
                 and problem_id LIKE concat('%',#{problemId},'%')
             </if>
             <if test="userId != null">
-                and user_id = #{userId}
+                and user.user_id = #{userId}
             </if>
-            <if test="userName != null">
-                and user_name LIKE concat('%',#{userName},'%')
+            <if test="nickName != null">
+                and nick_name LIKE concat('%',#{nickName},'%')
             </if>
             <if test="language != null">
                 and language = #{language}
@@ -42,6 +56,7 @@
             <if test="result != null">
                 and result = #{result}
             </if>
+            and user.user_id = solution.user_id
         </where>
         order by solution_id desc
     </select>
@@ -82,8 +97,8 @@
             <if test="userId != null">
                 user_id,
             </if>
-            <if test="userName != null">
-                user_name,
+            <if test="contestId != null">
+                contest_id,
             </if>
             <if test="language != null">
                 language,
@@ -123,8 +138,8 @@
             <if test="userId != null">
                 #{userId,jdbcType=INTEGER},
             </if>
-            <if test="userName != null">
-                #{userName,jdbcType=VARCHAR},
+            <if test="contestId != null">
+                #{contestId,jdbcType=INTEGER},
             </if>
             <if test="language != null">
                 #{language,jdbcType=SMALLINT},
@@ -158,4 +173,20 @@
       UPDATE solution SET result = #{result},runtime=#{runtime},memory=#{memory},error_message = #{errorMessage},
       test_result=#{testResult} where solution_id = #{solutionId};
     </update>
+
+    <select id="getByContestId" parameterType="java.lang.Integer"  resultMap="contestSolution">
+        SELECT solution_id,problem_id,user_id,MIN(runtime) as runtime,contest_id FROM solution
+        WHERE contest_id = #{contestId} AND result = 0 GROUP BY problem_id,user_id
+    </select>
 </mapper>
+        <!--<resultMap id="BaseResultMap" type="com.yoj.web.pojo.Solution">-->
+        <!--<id column="solution_id" jdbcType="INTEGER" property="solutionId"/>-->
+        <!--<result column="problem_id" jdbcType="INTEGER" property="problemId"/>-->
+        <!--<result column="user_id" jdbcType="INTEGER" property="userId"/>-->
+        <!--<result column="user_name" jdbcType="VARCHAR" property="userName"/>-->
+        <!--<result column="language" jdbcType="SMALLINT" property="language"/>-->
+        <!--<result column="result" jdbcType="SMALLINT" property="result"/>-->
+        <!--<result column="runtime" jdbcType="INTEGER" property="runtime"/>-->
+        <!--<result column="memory" jdbcType="INTEGER" property="memory"/>-->
+        <!--<result column="submit_time" jdbcType="TIMESTAMP" property="submitTime"/>-->
+        <!--</resultMap>-->

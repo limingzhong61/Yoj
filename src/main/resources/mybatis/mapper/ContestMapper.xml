@@ -6,7 +6,16 @@
     <!--<result column="user_id" jdbcType="INTEGER" property="userId"/>-->
     <!--<result column="title" jdbcType="VARCHAR" property="title"/>-->
     <!--</resultMap>-->
-
+    <resultMap id="ResultList" type="com.yoj.web.pojo.Contest">
+        <id column="contest_id" jdbcType="INTEGER" property="contestId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="start_time" jdbcType="DATETIMEOFFSET" property="startTime"/>
+        <result column="end_time" jdbcType="DATETIMEOFFSET" property="endTime"/>
+        <association property="totalProblem" javaType="INTEGER"
+                     select="com.yoj.web.dao.ContestProblemMapper.getTotalProblemByContestId"
+                     column="contest_id">
+        </association>
+    </resultMap>
 
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="contest_id" keyProperty="contestId"
@@ -14,7 +23,7 @@
     INSERT into contest(user_id,title,start_time,end_time,description)
     VALUES(#{userId},#{title},#{startTime},#{endTime},#{description})
   </insert>
-    <select id="getList" parameterType="com.yoj.web.pojo.Contest" resultType="com.yoj.web.pojo.Contest">
+    <select id="getList" parameterType="com.yoj.web.pojo.Contest" resultMap="ResultList">
         select contest_id,user_id,title,start_time,end_time from contest
         <!--<where>-->
             <!--<if test="problemId != null">-->

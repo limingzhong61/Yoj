@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yoj.web.dao.ProblemMapper">
-    <resultMap id="BaseResultMap" type="com.yoj.web.pojo.Problem">
-        <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
-        <result column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="title" jdbcType="VARCHAR" property="title"/>
-        <result column="tag" jdbcType="VARCHAR" property="tag"/>
-        <result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>
-        <result column="memory_limit" jdbcType="INTEGER" property="memoryLimit"/>
-        <result column="accepted" jdbcType="INTEGER" property="accepted"/>
-        <result column="submissions" jdbcType="INTEGER" property="submissions"/>
-        <result column="description" jdbcType="LONGVARCHAR" property="description"/>
-        <result column="format_input" jdbcType="LONGVARCHAR" property="formatInput"/>
-        <result column="format_output" jdbcType="LONGVARCHAR" property="formatOutput"/>
-        <result column="sample_input" jdbcType="LONGVARCHAR" property="sampleInput"/>
-        <result column="sample_output" jdbcType="LONGVARCHAR" property="sampleOutput"/>
-        <result column="hint" jdbcType="LONGVARCHAR" property="hint"/>
-        <result column="judge_data" jdbcType="LONGVARCHAR" property="judgeData"/>
-    </resultMap>
+    <!--<resultMap id="BaseResultMap" type="com.yoj.web.pojo.Problem">-->
+        <!--<id column="problem_id" jdbcType="INTEGER" property="problemId"/>-->
+        <!--<result column="user_id" jdbcType="INTEGER" property="userId"/>-->
+        <!--<result column="title" jdbcType="VARCHAR" property="title"/>-->
+        <!--<result column="tag" jdbcType="VARCHAR" property="tag"/>-->
+        <!--<result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>-->
+        <!--<result column="memory_limit" jdbcType="INTEGER" property="memoryLimit"/>-->
+        <!--<result column="accepted" jdbcType="INTEGER" property="accepted"/>-->
+        <!--<result column="submissions" jdbcType="INTEGER" property="submissions"/>-->
+        <!--<result column="description" jdbcType="LONGVARCHAR" property="description"/>-->
+        <!--<result column="format_input" jdbcType="LONGVARCHAR" property="formatInput"/>-->
+        <!--<result column="format_output" jdbcType="LONGVARCHAR" property="formatOutput"/>-->
+        <!--<result column="sample_input" jdbcType="LONGVARCHAR" property="sampleInput"/>-->
+        <!--<result column="sample_output" jdbcType="LONGVARCHAR" property="sampleOutput"/>-->
+        <!--<result column="hint" jdbcType="LONGVARCHAR" property="hint"/>-->
+        <!--<result column="judge_data" jdbcType="LONGVARCHAR" property="judgeData"/>-->
+    <!--</resultMap>-->
 
     <resultMap id="ProblemList" type="com.yoj.web.pojo.Problem">
         <id column="problem_id" jdbcType="INTEGER" property="problemId"/>

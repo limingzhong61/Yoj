@@ -48,4 +48,6 @@ public class User {
     private Integer submissions;
     // spring security remember-me
     private boolean rememberMe;
+    //contest problem
+    private Integer totalRunTime;
 }

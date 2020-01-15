@@ -48,4 +48,7 @@ public interface UserMapper {
     @Update("UPDATE user set username = #{username}, nick_name = #{nickName},intro = #{intro} where user_id = #{userId}")
     Integer updateUserInfoById(User user);
 
+    // used by solutionMapper
+    @Select("SELECT nick_name FROM user WHERE user_id = #{userId}")
+    String getNickNameById(Integer userId);
 }

@@ -41,4 +41,13 @@ public class ContestService {
     public Boolean updateById(Contest contest) {
         return contestMapper.updateById(contest) > 0;
     }
+
+    /**
+     *  get from two table
+     * @param contestId
+     * @return
+     */
+    public Contest getFromContestProblem(Integer contestId,Integer problemId) {
+        return contestMapper.getFromContestProblem(contestId,problemId);
+    }
 }

@@ -3,6 +3,7 @@ package com.yoj.web.service;
 import com.yoj.custom.judge.enums.JudgeResult;
 import com.yoj.web.dao.SolutionMapper;
 import com.yoj.web.pojo.Solution;
+import com.yoj.web.pojo.User;
 import com.yoj.web.util.auth.CurrentUserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @CacheConfig(cacheNames = "solution")
@@ -93,7 +96,6 @@ public class SolutionService {
 
     public Long countAcceptedByUser() {
         Solution solution = new Solution();
-        solution.setUserName(userUtils.getUserDetail().getUsername());
         solution.setResult(JudgeResult.ACCEPTED.ordinal());
         return solutionMapper.countBySelective(solution);
     }
@@ -101,7 +103,6 @@ public class SolutionService {
 
     public Long countSubmissionByUser() {
         Solution solution = new Solution();
-        solution.setUserName(userUtils.getUserDetail().getUsername());
         return solutionMapper.countBySelective(solution);
     }
 
@@ -122,11 +123,49 @@ public class SolutionService {
         return solutionMapper.countSolvedByUserId(userId);
     }
 
-    @CachePut(key = "#result.solutionId",unless ="#result == null")
+    @CachePut(key = "#result.solutionId", unless = "#result == null")
     public Solution updateById(Solution updateSolution) {
-        if(solutionMapper.updateById(updateSolution) > 0){
+        if (solutionMapper.updateById(updateSolution) > 0) {
             return solutionMapper.getById(updateSolution.getSolutionId());
         }
         return null;
+    }
+
+
+    public List<Solution> getUserContestRecord(Integer contestId, Integer userId) {
+        return solutionMapper.getUserContestRecord(contestId, userId);
+    }
+
+    public List<User> getContestRankByContestId(Integer contestId) {
+        // get contest-solution
+        List<Solution> solutions = solutionMapper.getByContestId(contestId);
+        HashMap<Integer, User> map = new HashMap<>();
+
+        for (Solution solution : solutions) {
+            if (!map.containsKey(solution.getUserId())) {
+                User user = new User();
+                user.setUserId(solution.getUserId());
+                user.setNickName(solution.getNickName());
+                user.setScore(solution.getScore());
+                user.setTotalRunTime(solution.getRuntime());
+                map.put(solution.getUserId(), user);
+            } else {
+                User user = map.get(solution.getUserId());
+                user.setScore(user.getScore() + solution.getScore());
+                user.setTotalRunTime(user.getTotalRunTime() + solution.getRuntime());
+                map.put(solution.getUserId(), user);
+            }
+        }
+        List<User> users = new ArrayList(map.values());
+        users.sort((User a, User b) -> {
+            if (a.getScore() != b.getScore()) {
+                // bigger at front
+                return b.getScore() - a.getScore();
+            } else {
+                // shorter at front
+                return a.getTotalRunTime() - b.getTotalRunTime();
+            }
+        });
+        return users;
     }
 }
