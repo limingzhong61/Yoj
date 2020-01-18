@@ -35,10 +35,7 @@ public class ResetPasswordController {
         if (user == null) {
             return Msg.fail("该邮箱没有被注册");
         }
-        String checkCode = emailSender.sendResetPasswordEmail(email);
-        if(checkCode == null){
-            return Msg.fail("发送邮件失败，请稍后重试");
-        }
+        emailSender.sendResetPasswordEmail(email);
         return Msg.success();
     }
 

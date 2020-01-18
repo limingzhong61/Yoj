@@ -70,6 +70,8 @@ public class UserService implements UserDetailsService {
     public User insertUserUseCache(User user) {
         user.setPassword(encryptor.encrypt(user.getPassword()));
         if (userMapper.insertUser(user) > 0) {
+            //cache no have nick name
+            user.setNickName(user.getUsername());
             return user;
         }
         return null;

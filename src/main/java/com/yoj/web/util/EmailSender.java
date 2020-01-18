@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -29,12 +30,13 @@ public class EmailSender {
     JavaMailSenderImpl mailSender;
 
     /**
-     * @Description: 发送注册邮件和验证码
+     * @Description: 发送注册邮件和验证码,send email is take long time so add async
      * @Param: [email]
      * @return: java.lang.String null:发送邮件失败
      * @Author: lmz
      * @Date: 2019/10/20
      */
+    @Async
     public String sendResetPasswordEmail(String email) {
         String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
         try{
@@ -57,6 +59,7 @@ public class EmailSender {
      * @Author: lmz
      * @Date: 2019/10/20
      */
+    @Async
     public String sendRegisterEmail(String email) {
         //删除缓存
 //        emailCache.delEmailCheckCode(email);

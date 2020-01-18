@@ -1,6 +1,7 @@
 package com.yoj.web.controller.user;
 
 import com.yoj.web.pojo.User;
+import com.yoj.web.pojo.satic.RoleName;
 import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.cache.EmailCache;
 import com.yoj.web.service.UserService;
@@ -67,6 +68,8 @@ public class RegisterController {
         if (!msg.isSuccess()) {
             return msg;
         }
+        //
+        user.setRole(RoleName.USER.toString());
         if (userService.insertUserUseCache(user) == null) {
             return Msg.fail("系统错误");
         }
@@ -81,10 +84,7 @@ public class RegisterController {
         if (userService.queryExistByEmail(email)) {
             return Msg.fail("邮箱已被注册");
         }
-        String checkCode = emailSender.sendRegisterEmail(email);
-        if (checkCode == null) {
-            return Msg.fail("发送邮件失败，请检查邮箱地址是否正确");
-        }
+        emailSender.sendRegisterEmail(email);
         return Msg.success();
     }
 }
