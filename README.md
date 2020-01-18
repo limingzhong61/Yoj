@@ -11,6 +11,5 @@ online judge
 
 **后端：spring boot+ mybatis + spring security+redis**
 
-**模板引擎:thymeleaf**
 
 

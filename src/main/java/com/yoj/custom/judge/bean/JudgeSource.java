@@ -8,6 +8,8 @@ import lombok.Data;
  */
 public class JudgeSource {
     private Integer solutionId;
+    // to update score
+    private Integer userId;
     private String code;
     private Integer problemId;
     private Integer language;

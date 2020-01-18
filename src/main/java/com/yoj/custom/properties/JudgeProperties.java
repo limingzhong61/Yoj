@@ -23,9 +23,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @ToString
 public class JudgeProperties {
-    //运行平台:linux/windows
-    private String platform;
-
     private Linux linux;
 //保存题目的路径，必须存在，path必须有‘/’结尾,不能保存在/tmp目录下，重启会被删除文件
     private String judgeScriptPath;

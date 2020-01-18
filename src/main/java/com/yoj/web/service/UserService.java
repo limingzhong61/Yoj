@@ -1,6 +1,7 @@
 package com.yoj.web.service;
 
 import com.yoj.web.cache.UserCacheUtil;
+import com.yoj.web.dao.SolutionMapper;
 import com.yoj.web.dao.UserMapper;
 import com.yoj.web.pojo.User;
 import com.yoj.web.pojo.util.Msg;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,6 +35,8 @@ public class UserService implements UserDetailsService {
     private StringEncryptor encryptor;
     @Autowired
     private UserCacheUtil userCache;
+    @Autowired
+    private SolutionMapper solutionMapper;
 
     @CachePut(key = "#result.userId", unless = "#result == null")
     public User updateUserPasswordByEmail(User user) {
@@ -128,5 +132,15 @@ public class UserService implements UserDetailsService {
     public User updateUserInfoById(User user) {
         userMapper.updateUserInfoById(user);
         return userMapper.getUserById(user.getUserId());
+    }
+
+    /**
+     * the strategy of update score is 10 multiple counts whose user soled problems
+     * @param userId
+     */
+    @Async
+    public void updateScoreById(Integer userId) {
+        Integer solvedProblem = solutionMapper.countSolvedByUserId(userId);
+        userMapper.updateScoreById(solvedProblem*10,userId);
     }
 }

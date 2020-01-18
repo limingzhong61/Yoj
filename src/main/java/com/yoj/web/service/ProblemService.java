@@ -24,7 +24,7 @@ public class ProblemService {
     @Autowired
     private ProblemFileUtil problemFileUtil;
 
-    @Cacheable(value = "problem")
+    @Cacheable(key = "#pid",unless = "#result == null")
     public Problem getViewInfoById(int pid) {
         return problemMapper.getProblemViewById(pid);
     }
@@ -45,8 +45,9 @@ public class ProblemService {
 
     /**
      * Insert problem with max problemId + 1 ensure problem id is  serial
-     * There are just only a few  user have add problem authority
-     * Not have big chance to meet same pid at the same time
+     * There are just only a few  users have add problem authority
+     * Not have big chance to meet same pid at the same time,
+     * and also have primary key validate
      *
      * @param problem
      * @return

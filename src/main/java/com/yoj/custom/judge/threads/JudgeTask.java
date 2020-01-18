@@ -2,8 +2,10 @@ package com.yoj.custom.judge.threads;
 
 import com.yoj.custom.judge.Judge;
 import com.yoj.custom.judge.bean.JudgeSource;
+import com.yoj.custom.judge.enums.JudgeResult;
 import com.yoj.web.pojo.Solution;
 import com.yoj.web.service.SolutionService;
+import com.yoj.web.service.UserService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +25,8 @@ public class JudgeTask implements Runnable {
     private Judge judge;
     @Autowired
     private SolutionService solutionService;
+    @Autowired
+    private UserService userService;
 
     private JudgeSource judgeSource;
 
@@ -40,6 +44,10 @@ public class JudgeTask implements Runnable {
             log.error("update error at judgeTask");
         }else{
             log.info("update successfully at judgeTask");
+        }
+        // correct solution to update user score.
+        if(solution.getResult() == JudgeResult.ACCEPTED.ordinal()){
+            userService.updateScoreById(solution.getUserId());
         }
     }
 }
