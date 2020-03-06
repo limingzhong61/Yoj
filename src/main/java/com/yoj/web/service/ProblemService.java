@@ -1,8 +1,10 @@
 package com.yoj.web.service;
 
+import com.yoj.custom.judge.bean.JudgeCase;
 import com.yoj.custom.judge.util.ProblemFileUtil;
 import com.yoj.web.pojo.Problem;
 import com.yoj.web.dao.ProblemMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -17,6 +19,7 @@ import java.util.List;
  */
 @CacheConfig(cacheNames = "problem")
 @Service
+@Slf4j
 public class ProblemService {
     @Autowired
     private ProblemMapper problemMapper;
@@ -24,7 +27,7 @@ public class ProblemService {
     @Autowired
     private ProblemFileUtil problemFileUtil;
 
-    @Cacheable(key = "#pid",unless = "#result == null")
+    @Cacheable(key = "#pid", unless = "#result == null")
     public Problem getViewInfoById(int pid) {
         return problemMapper.getProblemViewById(pid);
     }
@@ -40,7 +43,13 @@ public class ProblemService {
     }
 
     public Problem getAllById(int pid) {
-        return problemMapper.getAllById(pid);
+        Problem problem = problemMapper.getAllById(pid);
+        List<JudgeCase> judgeData = problemFileUtil.getJudgeData(problem.getProblemId());
+        if (judgeData == null) {
+            return null;
+        }
+        problem.setJudgeData(judgeData);
+        return problem;
     }
 
     /**
@@ -52,25 +61,30 @@ public class ProblemService {
      * @param problem
      * @return
      */
-    @CachePut(key = "#result.problemId")
+    @CachePut(key = "#result.problemId", unless = "#result == null")
     public Problem insert(Problem problem) {
         Integer maxProblemId = problemMapper.getMaxProblemId();
         problem.setProblemId(maxProblemId + 1);
         boolean flag = problemMapper.insert(problem) > 0;
-        if (flag) {
-            problemFileUtil.createProblemFile(problem);
-            return problem;
+        if (!flag) {
+            return null;
         }
-        return null;
+        // 创建文件失败
+        if (!problemFileUtil.createProblemFile(problem)) {
+            problemMapper.deleteProblemById(problem.getProblemId());
+            log.info("create file fail");
+            return null;
+        }
+        return problem;
     }
 
-    @CachePut(key = "#problem.problemId")
+    @CachePut(key = "#problem.problemId", unless = "#result == null")
     public Problem updateByPrimaryKey(Problem problem) {
-        boolean flag = problemMapper.updateByPrimaryKey(problem) > 0;
-        if (flag) {
-            problemFileUtil.createProblemFile(problem);
-        } else {
-            problem = null;
+        if (problemMapper.updateByPrimaryKey(problem) != 1) {
+            return null;
+        }
+        if (!problemFileUtil.createProblemFile(problem)) {
+            return null;
         }
         return problem;
     }
@@ -102,4 +116,5 @@ public class ProblemService {
     public boolean queryById(Integer problemId) {
         return problemMapper.queryById(problemId) != null;
     }
+
 }

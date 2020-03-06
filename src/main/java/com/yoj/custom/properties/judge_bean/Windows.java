@@ -17,4 +17,10 @@ public class Windows {
     private String problemFilePath;
     //solution暂存路径
     private String solutionFilePath;
+
+    private String ip;
+
+    private String userName;
+
+    private String password;
 }

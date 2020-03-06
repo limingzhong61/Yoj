@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yoj.web.dao.ProblemMapper">
-    <!--<resultMap id="BaseResultMap" type="com.yoj.web.pojo.Problem">-->
-        <!--<id column="problem_id" jdbcType="INTEGER" property="problemId"/>-->
-        <!--<result column="user_id" jdbcType="INTEGER" property="userId"/>-->
-        <!--<result column="title" jdbcType="VARCHAR" property="title"/>-->
-        <!--<result column="tag" jdbcType="VARCHAR" property="tag"/>-->
-        <!--<result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>-->
-        <!--<result column="memory_limit" jdbcType="INTEGER" property="memoryLimit"/>-->
-        <!--<result column="accepted" jdbcType="INTEGER" property="accepted"/>-->
-        <!--<result column="submissions" jdbcType="INTEGER" property="submissions"/>-->
-        <!--<result column="description" jdbcType="LONGVARCHAR" property="description"/>-->
-        <!--<result column="format_input" jdbcType="LONGVARCHAR" property="formatInput"/>-->
-        <!--<result column="format_output" jdbcType="LONGVARCHAR" property="formatOutput"/>-->
-        <!--<result column="sample_input" jdbcType="LONGVARCHAR" property="sampleInput"/>-->
-        <!--<result column="sample_output" jdbcType="LONGVARCHAR" property="sampleOutput"/>-->
-        <!--<result column="hint" jdbcType="LONGVARCHAR" property="hint"/>-->
-        <!--<result column="judge_data" jdbcType="LONGVARCHAR" property="judgeData"/>-->
-    <!--</resultMap>-->
-
     <resultMap id="ProblemList" type="com.yoj.web.pojo.Problem">
         <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
@@ -43,19 +25,17 @@
     </resultMap>
 
 
-
     <insert id="insert" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
             parameterType="com.yoj.web.pojo.Problem">
-    insert into problem (user_id, title, time_limit,
+    insert into problem (problem_id,user_id, title, time_limit,
       memory_limit, description,
       format_input, format_output, sample_input,sample_output,
-       hint, judge_data)
-    values (#{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{timeLimit,jdbcType=INTEGER},
+       hint)
+    values (#{problemId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{timeLimit,jdbcType=INTEGER},
       #{memoryLimit,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR},
       #{formatInput,jdbcType=LONGVARCHAR}, #{formatOutput,jdbcType=LONGVARCHAR},
       #{sampleInput,jdbcType=LONGVARCHAR}, #{sampleOutput,jdbcType=LONGVARCHAR},
-      #{hint,jdbcType=LONGVARCHAR},
-      #{judgeData,jdbcType=LONGVARCHAR})
+      #{hint,jdbcType=LONGVARCHAR})
   </insert>
     <insert id="insertSelective" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
             parameterType="com.yoj.web.pojo.Problem">
@@ -98,9 +78,6 @@
             <if test="hint != null">
                 hint,
             </if>
-            <if test="judgeData != null">
-                judge_data,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="problemId != null">
@@ -139,9 +116,6 @@
             <if test="hint != null">
                 #{hint,jdbcType=LONGVARCHAR},
             </if>
-            <if test="judgeData != null">
-                #{judgeData,jdbcType=LONGVARCHAR},
-            </if>
         </trim>
     </insert>
     <select id="getProblemList" parameterType="com.yoj.web.pojo.Problem" resultMap="ProblemList">
@@ -167,8 +141,7 @@
       format_output = #{formatOutput,jdbcType=LONGVARCHAR},
       sample_input = #{sampleInput,jdbcType=LONGVARCHAR},
       sample_output = #{sampleOutput,jdbcType=LONGVARCHAR},
-      hint = #{hint,jdbcType=LONGVARCHAR},
-      judge_data = #{judgeData,jdbcType=LONGVARCHAR}
+      hint = #{hint,jdbcType=LONGVARCHAR}
     where problem_id = #{problemId,jdbcType=INTEGER}
   </update>
     <update id="updateByPrimaryKeySelective" parameterType="com.yoj.web.pojo.Problem">
@@ -212,9 +185,6 @@
             </if>
             <if test="hint != null">
                 hint = #{hint,jdbcType=LONGVARCHAR},
-            </if>
-            <if test="judgeData != null">
-                judge_data = #{judgeData,jdbcType=LONGVARCHAR},
             </if>
         </set>
         where problem_id = #{problemId,jdbcType=INTEGER}

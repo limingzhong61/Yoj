@@ -2,47 +2,42 @@ package com.yoj.custom.judge.util;
 
 
 import com.jcraft.jsch.*;
+import com.yoj.custom.properties.JudgeProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.annotation.PostConstruct;
+import java.io.*;
 
 /**
  * java远程上传文件
  *
  * @author lenovo
  */
+@Slf4j
 public class SSH2Util {
 
-    private String host;
-
-    private String user;
-
-    private String password;
-
-    private int port;
+    @Autowired
+    JudgeProperties judgeProperties;
 
     private Session session;
 
-    /**
-     * 创建一个连接
-     *
-     * @param host     地址
-     * @param user     用户名
-     * @param password 密码
-     * @param port     ssh2端口
-     */
-    public SSH2Util(String host, String user, String password, int port) {
-        this.host = host;
-        this.user = user;
-        this.password = password;
-        this.port = port;
-    }
+    @PostConstruct
+    private void initialSession() {
+        String host = judgeProperties.getWindows().getIp();
 
-    private void initialSession() throws Exception {
+        String user = judgeProperties.getWindows().getUserName();
+
+        String password = judgeProperties.getWindows().getPassword();
+
+        int port = 22;
         if (session == null) {
             JSch jsch = new JSch();
-            session = jsch.getSession(user, host, port);
+            try {
+                session = jsch.getSession(user, host, port);
+            } catch (JSchException e) {
+                e.printStackTrace();
+            }
             session.setUserInfo(new UserInfo() {
 
                 public String getPassphrase() {
@@ -70,7 +65,11 @@ public class SSH2Util {
 
             });
             session.setPassword(password);
-            session.connect();
+            try {
+                session.connect();
+            } catch (JSchException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -93,44 +92,58 @@ public class SSH2Util {
      * @param localFile  本地文件名，若为空或是“*”，表示目录下全部文件
      * @param remotePath 远程路径，若为空，表示当前路径，若服务器上无此目录，则会自动创建
      *                   注意：只能创建最后一级目录
-     * @throws Exception
+     * @return is or not create file success
      */
-    public void putFile(String localPath, String localFile, String remotePath)
-            throws Exception {
+    public boolean putFile(String localPath, String localFile, String remotePath) {
         this.initialSession();
-        Channel channelSftp = session.openChannel("sftp");
-        channelSftp.connect();
-        ChannelSftp c = (ChannelSftp) channelSftp;
-        String remoteFile = null;
-        if (remotePath != null && remotePath.trim().length() > 0) {
-            c.mkdir(remotePath);
-            remoteFile = remotePath + "/.";
-        } else {
-            remoteFile = ".";
-        }
-        String file = null;
-        if (localFile == null || localFile.trim().length() == 0) {
-            file = "*";
-        } else {
-            file = localFile;
-        }
-        if (localPath != null && localPath.trim().length() > 0) {
-            if (localPath.endsWith("/")) {
-                file = localPath + file;
-            } else {
-                file = localPath + "/" + file;
-            }
-        }
-        c.put(file, remoteFile);
+        Channel channelSftp = null;
+        try {
+            channelSftp = session.openChannel("sftp");
+            channelSftp.connect();
 
-        channelSftp.disconnect();
+            ChannelSftp c = (ChannelSftp) channelSftp;
+            String remoteFile = null;
+            if (remotePath != null && remotePath.trim().length() > 0) {
+                // 先删掉再创建
+                try {
+                    this.runCommand("rm -r " + remotePath);
+                } catch (Exception e) {
+                    log.info("can't remove dir,because doesn't exist");
+                }
+                this.runCommand("mkdir " + remotePath);
+//                c.mkdir(remotePath);
+                remoteFile = remotePath + "/.";
+            } else {
+                remoteFile = ".";
+            }
+            String file = null;
+            if (localFile == null || localFile.trim().length() == 0) {
+                file = "*";
+            } else {
+                file = localFile;
+            }
+            if (localPath != null && localPath.trim().length() > 0) {
+                if (localPath.endsWith("/")) {
+                    file = localPath + file;
+                } else {
+                    file = localPath + "/" + file;
+                }
+            }
+            c.put(file, remoteFile);
+
+            channelSftp.disconnect();
+
+        } catch (JSchException | SftpException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     // command 命令
-    public String runCommand(String command) throws Exception {
+    public String runCommand(String command) {
         // CommonUtil.printLogging("[" + command + "] begin", host, user);
-
-        this.initialSession();
+        StringBuffer sb = null;
         InputStream in = null;
         InputStream err = null;
         BufferedReader inReader = null;
@@ -138,60 +151,68 @@ public class SSH2Util {
         int time = 0;
         String s = null;
         boolean run = false;
-        StringBuffer sb = new StringBuffer();
+        try {
 
-        Channel channel = session.openChannel("exec");
-        ((ChannelExec) channel).setCommand(command);
-        channel.setInputStream(null);
-        ((ChannelExec) channel).setErrStream(null);
-        err = ((ChannelExec) channel).getErrStream();
-        in = channel.getInputStream();
-        channel.connect();
-        inReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        errReader = new BufferedReader(new InputStreamReader(err, "UTF-8"));
+            sb = new StringBuffer();
+            Channel channel = session.openChannel("exec");
+            ((ChannelExec) channel).setCommand(command);
+            channel.setInputStream(null);
+            ((ChannelExec) channel).setErrStream(null);
+            err = ((ChannelExec) channel).getErrStream();
+            in = channel.getInputStream();
+            channel.connect();
+            inReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            errReader = new BufferedReader(new InputStreamReader(err, "UTF-8"));
 
-        while (true) {
-            s = errReader.readLine();
-            if (s != null) {
-                sb.append("error:" + s).append("\n");
-            } else {
-                run = true;
-                break;
+            while (true) {
+                s = errReader.readLine();
+                if (s != null) {
+                    sb.append("error:" + s).append("\n");
+                } else {
+                    run = true;
+                    break;
+                }
             }
+            while (true) {
+                s = inReader.readLine();
+                if (s != null) {
+                    sb.append("info:" + s).append("\n");
+                } else {
+                    run = true;
+                    break;
+                }
+            }
+
+            while (true) {
+                if (channel.isClosed() || run) {
+                    // CommonUtil.printLogging("[" + command + "] finish: " +
+                    // channel.getExitStatus(), host, user);
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception ee) {
+                }
+                if (time > 180) {
+                    // CommonUtil.printLogging("[" + command + "] finish2: " +
+                    // channel.getExitStatus(), host, user);
+                    break;
+                }
+                time++;
+            }
+
+            inReader.close();
+            errReader.close();
+            channel.disconnect();
+            //don't close session, because it always is used;
+//            session.disconnect();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSchException e) {
+            e.printStackTrace();
         }
-        while (true) {
-            s = inReader.readLine();
-            if (s != null) {
-                sb.append("info:" + s).append("\n");
-            } else {
-                run = true;
-                break;
-            }
-        }
-
-        while (true) {
-            if (channel.isClosed() || run) {
-                // CommonUtil.printLogging("[" + command + "] finish: " +
-                // channel.getExitStatus(), host, user);
-                break;
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (Exception ee) {
-            }
-            if (time > 180) {
-                // CommonUtil.printLogging("[" + command + "] finish2: " +
-                // channel.getExitStatus(), host, user);
-                break;
-            }
-            time++;
-        }
-
-        inReader.close();
-        errReader.close();
-        channel.disconnect();
-        session.disconnect();
-        System.out.println(sb.toString());
         return sb.toString();
     }
 }

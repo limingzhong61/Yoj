@@ -1,5 +1,6 @@
 package com.yoj;
 
+import com.yoj.custom.judge.util.ExecutorUtil;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,10 +12,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class YojApplicationTests {
     @Autowired
-    private StringEncryptor encryptor;
+    private ExecutorUtil executorUtil;
 
     @Test
     public void test(){
+        System.out.println(executorUtil);
     }
 
 }

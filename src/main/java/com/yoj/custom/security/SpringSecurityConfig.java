@@ -4,7 +4,6 @@ package com.yoj.custom.security;
 import com.alibaba.fastjson.JSON;
 import com.yoj.custom.enums.ExceptionEnum;
 import com.yoj.custom.filter.LoginValidateFilter;
-import com.yoj.web.pojo.satic.RoleName;
 import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     response.getWriter().write(JSON.toJSONString(Msg.fail(ExceptionEnum.NEED_LOGIN)));
                 })
                 .and()
-                .authorizeRequests().antMatchers("/problem/add", "problem/alter").hasRole(RoleName.ADMIN.toString())// 其他 url 需要身份认证
+                .authorizeRequests()
                 .antMatchers("/solution/submit", "/solution/detail").authenticated()
                 .anyRequest().permitAll();
 

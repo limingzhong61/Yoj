@@ -1,5 +1,6 @@
 package com.yoj.web.pojo;
 
+import com.yoj.custom.judge.bean.JudgeCase;
 import lombok.Data;
 
 import java.util.List;
@@ -30,8 +31,6 @@ public class Problem {
     private Integer memoryLimit;
     //时间限制ms
     private Integer timeLimit;
-    // json data
-    private String judgeData;
 
     //-------------------非表格字段--------------------
     private Integer accepted;
@@ -44,7 +43,7 @@ public class Problem {
     // score of contest problem
     private Integer score;
     // after parse judgeData
-    private List<List<String>> data;
+    private List<JudgeCase> judgeData;
     //当前用户是否提交、解决、
 //    private Integer state;
 }

@@ -6,7 +6,6 @@ import com.yoj.web.pojo.Problem;
 import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.pojo.util.UserDetailsImpl;
 import com.yoj.web.service.ProblemService;
-import com.yoj.web.util.ProblemUtil;
 import com.yoj.web.util.auth.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,8 +21,6 @@ public class ProblemController {
     private ProblemService problemService;
     @Autowired
     private CurrentUserUtil userUtil;
-    @Autowired
-    private ProblemUtil problemUtil;
 
     @GetMapping("/{pid}")
     public Msg getViewProblem(@PathVariable("pid") Integer pid) {
@@ -51,7 +48,6 @@ public class ProblemController {
     @PreAuthorize("hasRole('ADMIN')")
     public Msg addProblem(@RequestBody Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
-        problemUtil.changeDataToJSON(problem);
         if (userDetail == null) {
             return Msg.fail("");
         }
@@ -74,7 +70,6 @@ public class ProblemController {
     public Msg alterProblem(@RequestBody Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
         problem.setUserId(userDetail.getUserId());
-        problemUtil.changeDataToJSON(problem);
         if (problemService.updateByPrimaryKey(problem) != null) {
             return Msg.success().add("pid", problem.getProblemId());
         }

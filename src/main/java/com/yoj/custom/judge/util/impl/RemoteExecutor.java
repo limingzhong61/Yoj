@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 
 /**
@@ -20,7 +21,7 @@ public class RemoteExecutor implements ExecutorUtil {
 
     @Autowired
     JudgeProperties judgeProperties;
-//    private static final Logger log = LoggerFactory.getLogger(RemoteExecutor.class);
+    //    private static final Logger log = LoggerFactory.getLogger(RemoteExecutor.class);
     private static Connection conn;
 
     /**
@@ -28,24 +29,24 @@ public class RemoteExecutor implements ExecutorUtil {
      *
      * @return 登录成功返回true，否则返回false
      */
-    public static Connection login(String ip, String userName, String userPwd) {
-        boolean flg = false;
-        Connection conn = null;
+    @PostConstruct
+    public void login() {
+        String ip = judgeProperties.getWindows().getIp();
+        String userName = judgeProperties.getWindows().getUserName();
+        String userPwd = judgeProperties.getWindows().getPassword();
+        this.conn = null;
         try {
             conn = new Connection(ip);
             conn.connect();// 连接
-            flg = conn.authenticateWithPassword(userName, userPwd);// 认证
-
+            boolean flg = conn.authenticateWithPassword(userName, userPwd);// 认证
             if (flg) {
                 RemoteExecutor.conn = conn;
                 log.info("=========登录成功=========" + conn);
-                return conn;
             }
         } catch (IOException e) {
             log.error("=========登录失败=========" + e.getMessage());
             e.printStackTrace();
         }
-        return conn;
     }
 
     /**
@@ -56,9 +57,6 @@ public class RemoteExecutor implements ExecutorUtil {
         Session session = null;
         try {
             // can not find closed connection
-//            if (conn == null) {
-               conn = login(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword());
-//            }
             session = conn.openSession();// 打开一个会话
             session.execCommand(cmd);// 执行命令
         } catch (IOException e) {

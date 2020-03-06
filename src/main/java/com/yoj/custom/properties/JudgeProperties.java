@@ -26,12 +26,5 @@ public class JudgeProperties {
     private Linux linux;
 //保存题目的路径，必须存在，path必须有‘/’结尾,不能保存在/tmp目录下，重启会被删除文件
     private String judgeScriptPath;
-
-    private String ip;
-
-    private String userName;
-
-    private String password;
-
     private Windows windows;
 }

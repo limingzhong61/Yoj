@@ -109,6 +109,7 @@ public class SolutionController {
     }
 
     @GetMapping("/detail/{solutionId}")
+    @PreAuthorize("isAuthenticated()")
     public Msg detail(@PathVariable("solutionId") Integer solutionId) {
         Solution solution = solutionService.getById(solutionId);
         UserDetailsImpl userDetail = userUtils.getUserDetail();

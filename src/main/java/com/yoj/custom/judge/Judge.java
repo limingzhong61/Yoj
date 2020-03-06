@@ -30,12 +30,6 @@ public abstract class Judge {
     @Autowired
     JudgeThreadPoolManager judgeThreadPoolManager;
 
-//    public void judge(){
-//        //模拟的随机数
-//        String orderNo = System.currentTimeMillis() + UUID.randomUUID().toString();
-//        judgeThreadPoolManager.addTask(orderNo);
-//    }
-
     /**
      * return update solution by judgeSource
      * @param judgeSource

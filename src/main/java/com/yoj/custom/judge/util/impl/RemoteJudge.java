@@ -3,7 +3,6 @@ package com.yoj.custom.judge.util.impl;
 import com.yoj.custom.judge.Judge;
 import com.yoj.custom.judge.util.ExecutorUtil;
 import com.yoj.custom.judge.util.SSH2Util;
-import com.yoj.custom.properties.JudgeProperties;
 import com.yoj.web.pojo.Solution;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +19,11 @@ import java.io.IOException;
  */
 public class RemoteJudge extends Judge {
 
-//    private String[] fileNames = {"main.c", "main.cpp", "Main.java", "main.py"};
-
-    @Autowired
-    private JudgeProperties judgeProperties;
-
     @Autowired
     private ExecutorUtil executor;
+
+    @Autowired
+    private SSH2Util ssh2Util;
 
     @Override
     public void createSolutionFile(Solution solution, String linuxPath, String windowsPath) throws Exception {
@@ -36,7 +33,7 @@ public class RemoteJudge extends Judge {
 
         FileUtils.write(new File(windowsPath + "/" + this.fileNames[solution.getLanguage()]),
                 solution.getCode(), "utf-8");
-        SSH2Util ssh2Util = new SSH2Util(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword(), 22);
+//        SSH2Util ssh2Util = new SSH2Util(judgeProperties.getIp(), judgeProperties.getUserName(), judgeProperties.getPassword(), 22);
         ssh2Util.putFile(windowsPath, fileNames[solution.getLanguage()], linuxPath);
 
     }

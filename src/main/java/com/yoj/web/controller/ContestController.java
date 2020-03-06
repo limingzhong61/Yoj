@@ -43,6 +43,11 @@ public class ContestController {
         return Msg.success().add("pageInfo", page);
     }
 
+    /**
+     * request too many information... can optimize
+     * @param cid
+     * @return
+     */
     @GetMapping("/view/{cid}")
     public Msg getContestView(@PathVariable("cid") Integer cid) {
         Contest contest = contestService.getById(cid);
