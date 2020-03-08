@@ -7,6 +7,7 @@ import com.yoj.custom.filter.LoginValidateFilter;
 import com.yoj.web.pojo.util.Msg;
 import com.yoj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    //    @Autowired
     LoginValidateFilter validateCodeFilter;
 
     @Autowired
@@ -38,14 +39,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .passwordEncoder(bCryptPasswordEncoder());
     }
 
+    @ConditionalOnProperty(prefix = "yoj", name = "validate", havingValue = "true")
+    @Bean
+    public LoginValidateFilter loginValidateFilter() {
+        return this.validateCodeFilter = new LoginValidateFilter();
+    }
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //关闭跨域攻击
         http.csrf().disable();
-
-//        http.exceptionHandling().authenticationEntryPoint(myAuthenticationEntryPoint).accessDeniedHandler(myAccessDeniedHandler);
-
-
         http.httpBasic()//  未登陆时返回 JSON 格式的数据给前端（否则为 html）
                 .authenticationEntryPoint((HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) -> {
                     response.getWriter().write(JSON.toJSONString(Msg.fail(ExceptionEnum.NEED_LOGIN)));
@@ -93,11 +97,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             response.getWriter().write(JSON.toJSONString(Msg.fail(ExceptionEnum.NOT_ACCESS)));
         }); // 无权访问 JSON 格式的数据
         /* 添加验证码过滤器 */
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class);
+        if (validateCodeFilter != null) {
+            http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class);
+
+        }
     }
 
 
-    // don't have useful
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix

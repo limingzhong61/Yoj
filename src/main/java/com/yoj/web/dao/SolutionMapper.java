@@ -1,10 +1,7 @@
 package com.yoj.web.dao;
 
 import com.yoj.web.pojo.Solution;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -81,4 +78,11 @@ public interface SolutionMapper {
     List<Solution> getUserContestRecord(@Param("contestId") Integer contestId,@Param("userId") Integer userId);
 
     List<Solution> getByContestId(Integer contestId);
+
+    @Delete("DELETE FROM  solution  WHERE problem_id= #{pid}")
+    Integer deleteByProblemId(Integer pid);
+
+    @Update("UPDATE solution SET result = 10,runtime = NULL,memory = NULL,error_message = NULL," +
+            "test_result = NULL WHERE problem_id =  #{problemId}")
+    Integer updateByProblemId(Integer problemId);
 }

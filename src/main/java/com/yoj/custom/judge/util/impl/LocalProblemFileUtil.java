@@ -38,7 +38,7 @@ public class LocalProblemFileUtil implements ProblemFileUtil {
      * @return
      */
     private String getLinuxPath(Integer problemId) {
-        return judgeProperties.getWindows().getProblemFilePath() + problemId;
+        return judgeProperties.getWindows().getProblemFilePath() + "\\" + problemId;
     }
 
     @Override

@@ -49,8 +49,7 @@ public interface ProblemMapper {
     * @Author: lmz
     * @Date: 2019/12/31
     */
-    @Delete("DELETE problem,solution FROM problem LEFT JOIN solution \n" +
-            "ON problem.problem_id=solution.problem_id WHERE problem.problem_id= #{pid}")
+    @Delete("DELETE FROM problem WHERE problem_id = #{pid}")
     Integer deleteProblemById(Integer pid);
 
     @Select("SELECT problem_id FROM problem WHERE problem_id = #{problemId} LIMIT 1")

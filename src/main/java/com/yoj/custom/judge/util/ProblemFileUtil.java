@@ -59,7 +59,6 @@ public interface ProblemFileUtil {
         File dir = new File(dirPath);
         // dir doesn't exist or isn't directory
         if (!dir.exists() || !dir.isDirectory()) {
-            System.out.println("null");
             return false;
         }
         File[] files = dir.listFiles();
@@ -109,20 +108,17 @@ public interface ProblemFileUtil {
         File dir = new File(path);
         // dir doesn't exist or isn't directory
         if (!dir.exists() || !dir.isDirectory()) {
-            System.out.println("null");
             return null;
         }
         File[] files = dir.listFiles();
         JudgeCase[] judgeData = new JudgeCase[files.length / 2];
         for (File file : files) {
             String fileName = file.getName();
-            System.out.println(fileName);
             Pattern p = Pattern.compile("\\d+");
             Matcher m = p.matcher(fileName);
             int caseId = 0;
             if (m.find()) {
                 String s = m.group();
-                System.out.println(s);
                 // caseId begin with 1
                 caseId = Integer.valueOf(s) - 1;
             } else {

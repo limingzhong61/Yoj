@@ -2,14 +2,17 @@ package com.yoj.web.service;
 
 import com.yoj.custom.judge.bean.JudgeCase;
 import com.yoj.custom.judge.util.ProblemFileUtil;
+import com.yoj.web.dao.SolutionMapper;
 import com.yoj.web.pojo.Problem;
 import com.yoj.web.dao.ProblemMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,7 +26,8 @@ import java.util.List;
 public class ProblemService {
     @Autowired
     private ProblemMapper problemMapper;
-
+    @Autowired
+    private SolutionMapper solutionMapper;
     @Autowired
     private ProblemFileUtil problemFileUtil;
 
@@ -83,6 +87,7 @@ public class ProblemService {
         if (problemMapper.updateByPrimaryKey(problem) != 1) {
             return null;
         }
+        solutionMapper.updateByProblemId(problem.getProblemId());
         if (!problemFileUtil.createProblemFile(problem)) {
             return null;
         }
@@ -109,8 +114,14 @@ public class ProblemService {
         return problemMapper.getProblemList(problem);
     }
 
+    @Transactional
+    @CacheEvict(key = "#pid")
     public boolean deleteProblemById(Integer pid) {
-        return problemMapper.deleteProblemById(pid) > 0;
+        if (problemMapper.deleteProblemById(pid) != 1) {
+            return false;
+        }
+        solutionMapper.deleteByProblemId(pid);
+        return true;
     }
 
     public boolean queryById(Integer problemId) {

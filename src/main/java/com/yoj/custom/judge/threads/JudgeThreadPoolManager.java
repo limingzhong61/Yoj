@@ -48,7 +48,7 @@ public class JudgeThreadPoolManager implements BeanFactoryAware {
     final RejectedExecutionHandler handler = (Runnable r, ThreadPoolExecutor executor) -> {
         //判题任务加入到缓冲队列
         judgeQueue.offer(((JudgeTask) r).getJudgeSource());
-        System.out.println("系统任务太忙了,把此判题任务交给(调度线程池)逐一处理，判题任务号：" + ((JudgeTask) r).getJudgeSource());
+//        System.out.println("系统任务太忙了,把此判题任务交给(调度线程池)逐一处理，判题任务号：" + ((JudgeTask) r).getJudgeSource());
     };
 
 
@@ -69,7 +69,7 @@ public class JudgeThreadPoolManager implements BeanFactoryAware {
      * 将任务加入判题任务线程池
      */
     public void addTask(JudgeSource judgeSource) {
-        log.info("此判题任务准备添加到线程池，判题任务号：" + judgeSource);
+        log.info("此判题任务准备添加到线程池，判题任务号：" + judgeSource.getSolutionId());
         // get prototype-scoped instance for ioc
         threadPool.execute(getNewJudgeTask(judgeSource));
     }
@@ -109,7 +109,7 @@ public class JudgeThreadPoolManager implements BeanFactoryAware {
      */
     public void shutdown() {
         //true表示如果定时任务在执行，立即中止，false则等待任务结束后再停止
-        System.out.println("终止判题任务线程池+调度线程池：" + scheduledFuture.cancel(false));
+//        System.out.println("终止判题任务线程池+调度线程池：" + scheduledFuture.cancel(false));
         scheduler.shutdown();
         threadPool.shutdown();
     }

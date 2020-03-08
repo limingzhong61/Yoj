@@ -52,18 +52,18 @@ public class RemoteProblemFileUtil implements ProblemFileUtil {
      * @return
      */
     private String getWindowsPath(Integer problemId) {
-        return judgeProperties.getWindows().getProblemFilePath() + problemId;
+        return judgeProperties.getWindows().getProblemFilePath() + "\\" + problemId;
     }
 
     /**
      * 根据pid返回相应的文件夹
-     * 必须保证linux的前缀目录存在 "/tmp/testResult/"
+     * 必须保证linux的前缀目录存在 "/tmp/testResult"
      *
      * @param problemId
      * @return
      */
     private String getLinuxPath(Integer problemId) {
-        return judgeProperties.getWindows().getProblemFilePath() + problemId;
+        return judgeProperties.getLinux().getProblemFilePath() + "\\" + problemId;
     }
 
 

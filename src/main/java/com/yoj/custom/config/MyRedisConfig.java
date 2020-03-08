@@ -20,22 +20,8 @@ import java.time.Duration;
 @Configuration
 public class MyRedisConfig {
 
-    //    @Bean
-//    public RedisTemplate<Object, Object> empRedisTemplate(RedisConnectionFactory redisConnectionFactory)
-//            throws UnknownHostException {
-//        RedisTemplate<Object, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(redisConnectionFactory);
-//        Jackson2JsonRedisSerializer<Employee> serializer = new Jackson2JsonRedisSerializer<Employee>(Employee.class);
-//        template.setDefaultSerializer(serializer);
-//        return template;
-//    }
-
     @Value("${spring.cache.redis.time-to-live}")
     private Duration timeToLive;
-
-    public void setTimeToLive(Duration timeToLive) {
-        this.timeToLive = timeToLive;
-    }
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {

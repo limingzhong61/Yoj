@@ -1,11 +1,15 @@
 package com.yoj.web.service;
 
+import com.yoj.custom.judge.bean.JudgeSource;
 import com.yoj.custom.judge.enums.JudgeResult;
+import com.yoj.custom.judge.threads.JudgeThreadPoolManager;
 import com.yoj.web.dao.SolutionMapper;
+import com.yoj.web.pojo.Problem;
 import com.yoj.web.pojo.Solution;
 import com.yoj.web.pojo.User;
-import com.yoj.web.util.auth.CurrentUserUtil;
+import com.yoj.web.pojo.util.Msg;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -24,10 +28,10 @@ public class SolutionService {
     private SolutionMapper solutionMapper;
 
     @Autowired
-    private UserService userService;
+    private JudgeThreadPoolManager threadPoolManager;
 
     @Autowired
-    private CurrentUserUtil userUtils;
+    private  ProblemService problemService;
 
     /**
      * @description: insert solution
@@ -47,7 +51,7 @@ public class SolutionService {
         return null;
     }
 
-    @Cacheable
+    @Cacheable(unless = "#result == null")
     public Solution getById(Integer sid) {
         return solutionMapper.getById(sid);
     }
@@ -167,5 +171,16 @@ public class SolutionService {
             }
         });
         return users;
+    }
+
+    public Msg submit(Solution solution) {
+        JudgeSource judgeSource = new JudgeSource();
+        BeanUtils.copyProperties(solution, judgeSource);
+        judgeSource.setSolutionId(solution.getSolutionId());
+        Problem problem = problemService.getViewInfoById(solution.getProblemId());
+        judgeSource.setMemoryLimit(problem.getMemoryLimit());
+        judgeSource.setTimeLimit(problem.getTimeLimit());
+        threadPoolManager.addTask(judgeSource);
+        return Msg.success();
     }
 }

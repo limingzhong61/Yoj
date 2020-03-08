@@ -95,7 +95,7 @@ public class SSH2Util {
      * @return is or not create file success
      */
     public boolean putFile(String localPath, String localFile, String remotePath) {
-        this.initialSession();
+//        this.initialSession();
         Channel channelSftp = null;
         try {
             channelSftp = session.openChannel("sftp");

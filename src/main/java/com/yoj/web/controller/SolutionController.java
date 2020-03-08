@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.custom.judge.Judge;
 import com.yoj.custom.judge.bean.JudgeSource;
+import com.yoj.custom.judge.enums.JudgeResult;
 import com.yoj.custom.judge.threads.JudgeThreadPoolManager;
 import com.yoj.web.pojo.Contest;
 import com.yoj.web.pojo.Problem;
@@ -26,11 +27,8 @@ public class SolutionController {
     @Autowired
     private SolutionService solutionService;
     @Autowired
-    private ProblemService problemService;
-    @Autowired
     private CurrentUserUtil userUtils;
-    @Autowired
-    private JudgeThreadPoolManager threadPoolManager;
+
     @Autowired
     private ContestService contestService;
     @Autowired
@@ -89,14 +87,17 @@ public class SolutionController {
         if (insertSolution == null) {
             return Msg.fail("insert solution fail");
         }
-        JudgeSource judgeSource = new JudgeSource();
-        BeanUtils.copyProperties(solution, judgeSource);
-        judgeSource.setSolutionId(insertSolution.getSolutionId());
-        Problem problem = problemService.getViewInfoById(solution.getProblemId());
-        judgeSource.setMemoryLimit(problem.getMemoryLimit());
-        judgeSource.setTimeLimit(problem.getTimeLimit());
-        threadPoolManager.addTask(judgeSource);
-        return Msg.success();
+        return solutionService.submit(solution);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/reSubmit/{sid}")
+    public Msg reSubmit(@PathVariable("sid") Integer sid) {
+        Solution solution = solutionService.getById(sid);
+        if(solution.getResult() != JudgeResult.WAIT_REJUDGE.ordinal()){
+            return Msg.fail("Solution doesn't need rejudge");
+        }
+        return solutionService.submit(solution);
     }
 
     @GetMapping("/set/{pageNumber}")
