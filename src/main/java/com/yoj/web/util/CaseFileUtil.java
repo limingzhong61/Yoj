@@ -41,7 +41,6 @@ public class CaseFileUtil {
     private ResponseEntity<byte[]> buildResponseEntity(File file) {
         byte[] body = null;
         try {
-
             body = FileUtils.readFileToByteArray(file);
         } catch (IOException e) {
             e.printStackTrace();

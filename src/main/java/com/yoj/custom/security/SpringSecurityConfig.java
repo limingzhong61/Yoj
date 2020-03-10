@@ -65,6 +65,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
                             Msg msg = Msg.success();
                             msg.setState(200);
+                            response.setCharacterEncoding("utf-8");
                             response.getWriter().write(JSON.toJSONString(msg));
 //                            SecurityContextHolder.getContext().setAuthentication(authentication);
                         }
@@ -103,10 +104,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
-
+    /**
+     * Remove the ROLE_ prefix
+     * @return
+     */
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
-        return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
+        return new GrantedAuthorityDefaults("");
     }
 
 }
