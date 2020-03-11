@@ -22,6 +22,9 @@ application.yml
 *.iws
 *.iml
 *.ipr
+# mvn related file
+mvnw
+mvnw.cmd
 *.mvn
 
 ### NetBeans ###
