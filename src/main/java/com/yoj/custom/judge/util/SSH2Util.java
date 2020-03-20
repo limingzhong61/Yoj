@@ -19,8 +19,12 @@ public class SSH2Util {
 
     @Autowired
     JudgeProperties judgeProperties;
+    @Autowired
+    ExecutorUtil executorUtil;
 
     private Session session;
+
+
 
     @PostConstruct
     private void initialSession() {
@@ -78,7 +82,7 @@ public class SSH2Util {
      *
      * @throws Exception
      */
-    public void close() throws Exception {
+    public void close(){
         if (session != null && session.isConnected()) {
             session.disconnect();
             session = null;
@@ -95,23 +99,21 @@ public class SSH2Util {
      * @return is or not create file success
      */
     public boolean putFile(String localPath, String localFile, String remotePath) {
-//        this.initialSession();
+        this.initialSession();
         Channel channelSftp = null;
         try {
             channelSftp = session.openChannel("sftp");
             channelSftp.connect();
-
             ChannelSftp c = (ChannelSftp) channelSftp;
             String remoteFile = null;
             if (remotePath != null && remotePath.trim().length() > 0) {
                 // 先删掉再创建
-                try {
-                    this.runCommand("rm -r " + remotePath);
-                } catch (Exception e) {
-                    log.info("can't remove dir,because doesn't exist");
-                }
-                this.runCommand("mkdir " + remotePath);
-//                c.mkdir(remotePath);
+//                try {
+//                    executorUtil.execute("rm -r " + remotePath);
+//                } catch (Exception e) {
+//                    log.info("can't remove dir,because doesn't exist");
+//                }
+                c.mkdir(remotePath);
                 remoteFile = remotePath + "/.";
             } else {
                 remoteFile = ".";
@@ -130,89 +132,12 @@ public class SSH2Util {
                 }
             }
             c.put(file, remoteFile);
-
             channelSftp.disconnect();
-
+            this.close();
         } catch (JSchException | SftpException e) {
             e.printStackTrace();
             return false;
         }
         return true;
-    }
-
-    // command 命令
-    public String runCommand(String command) {
-        // CommonUtil.printLogging("[" + command + "] begin", host, user);
-        StringBuffer sb = null;
-        InputStream in = null;
-        InputStream err = null;
-        BufferedReader inReader = null;
-        BufferedReader errReader = null;
-        int time = 0;
-        String s = null;
-        boolean run = false;
-        try {
-
-            sb = new StringBuffer();
-            Channel channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand(command);
-            channel.setInputStream(null);
-            ((ChannelExec) channel).setErrStream(null);
-            err = ((ChannelExec) channel).getErrStream();
-            in = channel.getInputStream();
-            channel.connect();
-            inReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            errReader = new BufferedReader(new InputStreamReader(err, "UTF-8"));
-
-            while (true) {
-                s = errReader.readLine();
-                if (s != null) {
-                    sb.append("error:" + s).append("\n");
-                } else {
-                    run = true;
-                    break;
-                }
-            }
-            while (true) {
-                s = inReader.readLine();
-                if (s != null) {
-                    sb.append("info:" + s).append("\n");
-                } else {
-                    run = true;
-                    break;
-                }
-            }
-
-            while (true) {
-                if (channel.isClosed() || run) {
-                    // CommonUtil.printLogging("[" + command + "] finish: " +
-                    // channel.getExitStatus(), host, user);
-                    break;
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (Exception ee) {
-                }
-                if (time > 180) {
-                    // CommonUtil.printLogging("[" + command + "] finish2: " +
-                    // channel.getExitStatus(), host, user);
-                    break;
-                }
-                time++;
-            }
-
-            inReader.close();
-            errReader.close();
-            channel.disconnect();
-            //don't close session, because it always is used;
-//            session.disconnect();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSchException e) {
-            e.printStackTrace();
-        }
-        return sb.toString();
     }
 }
