@@ -97,10 +97,12 @@ public abstract class Judge {
         String cmd = "";
         switch (compilerId) {
             case 0:
-                cmd = "gcc " + path + "/main.c -o " + path + "/main";
+//                cmd = "gcc " + path + "/main.c -o " + path + "/main";
+                cmd = "gcc " + path + "/main.c -O2 -Wl,--stack=268435456 -DONLINE_JUDGE -o " + path + "/main";
                 break;
             case 1:
-                cmd = "g++ " + path + "/main.cpp -o " + path + "/main";
+//                cmd = "g++ " + path + "/main.cpp -o " + path + "/main";
+                cmd = "g++ " + path + "/main.cpp  -fno-asm -Wall -lm --static -std=c++11 -DONLINE_JUDGE -o " + path + "/main";
                 break;
             case 2:
                 cmd = "javac " + path + "/Main.java";
