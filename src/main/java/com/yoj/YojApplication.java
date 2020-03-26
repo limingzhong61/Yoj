@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableScheduling
 @EnableCaching //close cache because it's not needed for now.
-@MapperScan(value = "com.yoj.web.dao")
+@MapperScan(value = "com.yoj.mapper")
 @SpringBootApplication
 public class YojApplication {
 

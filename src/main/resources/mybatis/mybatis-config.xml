@@ -8,8 +8,8 @@
     </settings>
 
     <!--<typeAliases>-->
-        <!--<typeAlias alias="Problem" type="com.yoj.web.pojo.Problem"/>-->
-        <!--&lt;!&ndash;<package name="com.yoj.web.pojo"/>&ndash;&gt;-->
+        <!--<typeAlias alias="Problem" type="com.yoj.model.entity.Problem"/>-->
+        <!--&lt;!&ndash;<package name="com.yoj.model.pojo"/>&ndash;&gt;-->
     <!--</typeAliases>-->
     <!--<environments default="development">-->
     <!--<environment id="development">-->
@@ -23,6 +23,6 @@
     <!--</environment>-->
     <!--</environments>-->
     <!--<mappers>-->
-    <!--<dao resource="org/mybatis/example/BlogMapper.xml"/>-->
+    <!--<mapper resource="org/mybatis/example/BlogMapper.xml"/>-->
     <!--</mappers>-->
 </configuration>

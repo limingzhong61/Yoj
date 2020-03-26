@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yoj.web.dao.ProblemMapper">
-    <resultMap id="ProblemList" type="com.yoj.web.pojo.Problem">
+<mapper namespace="com.yoj.mapper.ProblemMapper">
+    <resultMap id="ProblemList" type="com.yoj.model.entity.Problem">
         <id column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="tag" jdbcType="VARCHAR" property="tag"/>
         <result column="time_limit" jdbcType="INTEGER" property="timeLimit"/>
         <association property="accepted" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.countAcceptedByProblemId"
+                     select="com.yoj.mapper.SolutionMapper.countAcceptedByProblemId"
                      column="problem_id">
         </association>
         <association property="submissions" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.countSubmissionsByProblemId"
+                     select="com.yoj.mapper.SolutionMapper.countSubmissionsByProblemId"
                      column="problem_id">
         </association>
         <association property="userSolved" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.querySolved"
+                     select="com.yoj.mapper.SolutionMapper.querySolved"
                      column="{userId = user_id,problemId = problem_id}">
         </association>
         <association property="userSubmitted" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.querySubmitted"
+                     select="com.yoj.mapper.SolutionMapper.querySubmitted"
                      column="{userId = user_id,problemId = problem_id}">
         </association>
     </resultMap>
 
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
-            parameterType="com.yoj.web.pojo.Problem">
+            parameterType="com.yoj.model.entity.Problem">
     insert into problem (problem_id,user_id, title, time_limit,
       memory_limit, description,
       format_input, format_output, sample_input,sample_output,
@@ -38,7 +38,7 @@
       #{hint,jdbcType=LONGVARCHAR})
   </insert>
     <insert id="insertSelective" useGeneratedKeys="true" keyColumn="problem_id" keyProperty="problemId"
-            parameterType="com.yoj.web.pojo.Problem">
+            parameterType="com.yoj.model.entity.Problem">
         insert into problem
         <trim prefix="(" suffix=")" suffixOverrides=",">
             -- 主键自增
@@ -118,7 +118,7 @@
             </if>
         </trim>
     </insert>
-    <select id="getProblemList" parameterType="com.yoj.web.pojo.Problem" resultMap="ProblemList">
+    <select id="getProblemList" parameterType="com.yoj.model.entity.Problem" resultMap="ProblemList">
         select problem_id,title,tag,#{userId} as user_id from problem
         <where>
             <if test="problemId != null">
@@ -130,7 +130,7 @@
         </where>
     </select>
 
-    <update id="updateByPrimaryKey" parameterType="com.yoj.web.pojo.Problem">
+    <update id="updateByPrimaryKey" parameterType="com.yoj.model.entity.Problem">
     update problem
     set user_id = #{userId,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
@@ -144,7 +144,7 @@
       hint = #{hint,jdbcType=LONGVARCHAR}
     where problem_id = #{problemId,jdbcType=INTEGER}
   </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.yoj.web.pojo.Problem">
+    <update id="updateByPrimaryKeySelective" parameterType="com.yoj.model.entity.Problem">
         update problem
         <set>
             <if test="userId != null">

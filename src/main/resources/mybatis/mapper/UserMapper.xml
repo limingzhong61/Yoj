@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yoj.web.dao.UserMapper">
-    <resultMap id="BaseResultMap" type="com.yoj.web.pojo.User">
+<mapper namespace="com.yoj.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.yoj.model.entity.User">
         <id column="user_id" jdbcType="INTEGER" property="userId"/>
     </resultMap>
 
-    <resultMap id="UserList" type="com.yoj.web.pojo.User">
+    <resultMap id="UserList" type="com.yoj.model.entity.User">
         <id column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="rank" jdbcType="INTEGER" property="rank"/>
         <association property="attempted" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.countAttemptedByUserId"
+                     select="com.yoj.mapper.SolutionMapper.countAttemptedByUserId"
                      column="user_id">
         </association>
         <association property="solved" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.countSolvedByUserId"
+                     select="com.yoj.mapper.SolutionMapper.countSolvedByUserId"
                      column="user_id">
         </association>
         <association property="accepted" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.countAcceptedByUserId"
+                     select="com.yoj.mapper.SolutionMapper.countAcceptedByUserId"
                      column="user_id">
         </association>
         <association property="submissions" javaType="INTEGER"
-                     select="com.yoj.web.dao.SolutionMapper.countSubmissionsByUserId"
+                     select="com.yoj.mapper.SolutionMapper.countSubmissionsByUserId"
                      column="user_id">
         </association>
     </resultMap>
 
-    <select id="getUserList" parameterType="com.yoj.web.pojo.User" resultMap="UserList">
+    <select id="getUserList" parameterType="com.yoj.model.entity.User" resultMap="UserList">
            SELECT user_id,username,nick_name FROM user
            <where>
                <if test="username != null">
@@ -37,7 +37,7 @@
            ORDER BY score DESC
     </select>
 
-    <select id="getUserInfoById" parameterType="com.yoj.web.pojo.User" resultMap="UserList">
+    <select id="getUserInfoById" parameterType="com.yoj.model.entity.User" resultMap="UserList">
 
     </select>
 

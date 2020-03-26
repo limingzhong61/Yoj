@@ -1,6 +1,6 @@
 package com.yoj;
 
-import com.yoj.web.pojo.User;
+import com.yoj.model.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

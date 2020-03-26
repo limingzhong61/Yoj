@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yoj.web.dao.ContestMapper">
-    <!--<resultMap id="BaseResultMap" type="com.yoj.web.pojo.Problem">-->
+<mapper namespace="com.yoj.mapper.ContestMapper">
+    <!--<resultMap id="BaseResultMap" type="com.yoj.model.entity.Problem">-->
     <!--<id column="contest_id" jdbcType="INTEGER" property="contestId"/>-->
     <!--<result column="user_id" jdbcType="INTEGER" property="userId"/>-->
     <!--<result column="title" jdbcType="VARCHAR" property="title"/>-->
     <!--</resultMap>-->
-    <resultMap id="ResultList" type="com.yoj.web.pojo.Contest">
+    <resultMap id="ResultList" type="com.yoj.model.entity.Contest">
         <id column="contest_id" jdbcType="INTEGER" property="contestId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="start_time" jdbcType="DATETIMEOFFSET" property="startTime"/>
         <result column="end_time" jdbcType="DATETIMEOFFSET" property="endTime"/>
         <association property="totalProblem" javaType="INTEGER"
-                     select="com.yoj.web.dao.ContestProblemMapper.getTotalProblemByContestId"
+                     select="com.yoj.mapper.ContestProblemMapper.getTotalProblemByContestId"
                      column="contest_id">
         </association>
     </resultMap>
 
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="contest_id" keyProperty="contestId"
-            parameterType="com.yoj.web.pojo.Contest">
+            parameterType="com.yoj.model.entity.Contest">
     INSERT into contest(user_id,title,start_time,end_time,description)
     VALUES(#{userId},#{title},#{startTime},#{endTime},#{description})
   </insert>
-    <select id="getList" parameterType="com.yoj.web.pojo.Contest" resultMap="ResultList">
+    <select id="getList" parameterType="com.yoj.model.entity.Contest" resultMap="ResultList">
         select contest_id,user_id,title,start_time,end_time from contest
         <!--<where>-->
-            <!--<if test="problemId != null">-->
+            <!--<if learn="problemId != null">-->
                 <!--and problem_id LIKE CONCAT('%',#{problemId},'%')-->
             <!--</if>-->
-            <!--<if test="title != null">-->
+            <!--<if learn="title != null">-->
                 <!--and title LIKE CONCAT('%',#{title},'%')-->
             <!--</if>-->
         <!--</where>-->

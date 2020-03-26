@@ -2,23 +2,23 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yoj.web.dao.SolutionMapper">
-    <resultMap id="contestSolution" type="com.yoj.web.pojo.Solution">
+<mapper namespace="com.yoj.mapper.SolutionMapper">
+    <resultMap id="contestSolution" type="com.yoj.model.entity.Solution">
     <id column="solution_id" jdbcType="INTEGER" property="solutionId"/>
     <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
     <result column="user_id" jdbcType="INTEGER" property="userId"/>
     <result column="contest_id" jdbcType="INTEGER" property="contestId"/>
     <result column="runtime" jdbcType="INTEGER" property="runtime"/>
     <association property="score" javaType="INTEGER"
-                 select="com.yoj.web.dao.ContestProblemMapper.getScore"
+                 select="com.yoj.mapper.ContestProblemMapper.getScore"
                  column="{contestId = contest_id,problemId = problem_id}">
     </association>
     <association property="nickName" javaType="String"
-                 select="com.yoj.web.dao.UserMapper.getNickNameById"
+                 select="com.yoj.mapper.UserMapper.getNickNameById"
                  column="user_id">
     </association>
 </resultMap>
-    <resultMap id="solutionList" type="com.yoj.web.pojo.Solution">
+    <resultMap id="solutionList" type="com.yoj.model.entity.Solution">
         <id column="solution_id" jdbcType="INTEGER" property="solutionId"/>
         <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
@@ -32,8 +32,8 @@
     solution_id, problem_id,user.user_id,nick_name,language, result, runtime, memory, submit_time,share
     </sql>
 
-    <select id="getListBySelective" parameterType="com.yoj.web.pojo.Solution"
-            resultType="com.yoj.web.pojo.Solution">
+    <select id="getListBySelective" parameterType="com.yoj.model.entity.Solution"
+            resultType="com.yoj.model.entity.Solution">
         SELECT
         <include refid="Base_Column_List"></include>
         from solution,user
@@ -60,7 +60,7 @@
         </where>
         order by solution_id desc
     </select>
-    <select id="countBySelective" parameterType="com.yoj.web.pojo.Solution" resultType="java.lang.Long">
+    <select id="countBySelective" parameterType="com.yoj.model.entity.Solution" resultType="java.lang.Long">
         SELECT count(*) from solution
         <where>
             <if test="solutionId != null">
@@ -84,11 +84,11 @@
         </where>
     </select>
 
-    <insert id="insertSelective" parameterType="com.yoj.web.pojo.Solution" useGeneratedKeys="true"
+    <insert id="insertSelective" parameterType="com.yoj.model.entity.Solution" useGeneratedKeys="true"
             keyColumn="solution_id" keyProperty="solutionId">
         insert into solution
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <!--<if test="solutionId != null">-->
+            <!--<if learn="solutionId != null">-->
             <!--solution_id,-->
             <!--</if>-->
             <if test="problemId != null">
@@ -124,12 +124,12 @@
             <if test="share != null">
                 share,
             </if>
-            <!--<if test="submitTime != null">-->
+            <!--<if learn="submitTime != null">-->
             submit_time,
             <!--</if>-->
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <!--<if test="solutionId != null">-->
+            <!--<if learn="solutionId != null">-->
             <!--#{solutionId,jdbcType=INTEGER},-->
             <!--</if>-->
             <if test="problemId != null">
@@ -169,7 +169,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKey" parameterType="com.yoj.web.pojo.Solution">
+    <update id="updateByPrimaryKey" parameterType="com.yoj.model.entity.Solution">
       UPDATE solution SET result = #{result},runtime=#{runtime},memory=#{memory},error_message = #{errorMessage},
       test_result=#{testResult} where solution_id = #{solutionId};
     </update>
@@ -179,7 +179,7 @@
         WHERE contest_id = #{contestId} AND result = 0 GROUP BY problem_id,user_id
     </select>
 </mapper>
-        <!--<resultMap id="BaseResultMap" type="com.yoj.web.pojo.Solution">-->
+        <!--<resultMap id="BaseResultMap" type="com.yoj.model.entity.Solution">-->
         <!--<id column="solution_id" jdbcType="INTEGER" property="solutionId"/>-->
         <!--<result column="problem_id" jdbcType="INTEGER" property="problemId"/>-->
         <!--<result column="user_id" jdbcType="INTEGER" property="userId"/>-->
