@@ -1,6 +1,5 @@
-package com.yoj.utils;
+package com.yoj.utils.file;
 
-import com.yoj.utils.judge.ProblemFileUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

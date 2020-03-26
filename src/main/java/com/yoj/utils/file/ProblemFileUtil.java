@@ -1,8 +1,10 @@
-package com.yoj.utils.judge;
+package com.yoj.utils.file;
 
 import com.yoj.model.dto.JudgeCase;
 import com.yoj.model.entity.Problem;
+import com.yoj.model.properties.JudgeProperties;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -13,13 +15,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public interface ProblemFileUtil {
-    /**
-     * @param dirPath
-     * @param problem
-     * @return is or not create file success
-     */
-    default boolean createFile(String dirPath, Problem problem) {
+public class ProblemFileUtil {
+
+    @Autowired
+    private JudgeProperties judgeProperties;
+
+    public boolean createProblemFile(Problem problem) {
+        String dirPath = this.getProblemDirPath(problem.getProblemId());
         List<JudgeCase> judgeData = problem.getJudgeData();
         if (judgeData == null) {
             return false;
@@ -50,9 +52,8 @@ public interface ProblemFileUtil {
         return true;
     }
 
-    boolean createProblemFile(Problem problem);
-
-    default boolean updateFileCommons(String dirPath, List<JudgeCase> judgeData) {
+    public boolean updateProblemFile(int problemId, List<JudgeCase> judgeData) {
+        String dirPath = this.getProblemDirPath(problemId);
         if (judgeData == null) {
             return false;
         }
@@ -90,22 +91,22 @@ public interface ProblemFileUtil {
         return true;
     }
 
-    default String getInputFileFullName(String dirPath, int fileId) {
-        return dirPath + "\\" + "input" + fileId + ".txt";
+    /**
+     * 根据pid返回相应的文件夹
+     *
+     * @param problemId
+     * @return
+     */
+    public String getProblemDirPath(Integer problemId) {
+        if(judgeProperties.isLocal()){
+            return judgeProperties.getLinuxFilePath() + "\\" + problemId;
+        }else {
+            return judgeProperties.getWindowsFilePath() + "\\" + problemId;
+        }
     }
 
-    default String getOutFileFullName(String dirPath, int fileId) {
-        return dirPath + "\\" + "output" + fileId + ".txt";
-    }
-
-    boolean updateProblemFile(int problemId, List<JudgeCase> judgeData);
-
-    String getProblemDirPath(int problemId);
-
-    List<JudgeCase> getJudgeData(Integer problemId);
-
-    default List<JudgeCase> getJudgeDataCommons(String path) {
-        File dir = new File(path);
+    public List<JudgeCase> getJudgeData(Integer problemId) {
+        File dir = new File(this.getProblemDirPath(problemId));
         // dir doesn't exist or isn't directory
         if (!dir.exists() || !dir.isDirectory()) {
             return null;
@@ -139,5 +140,13 @@ public interface ProblemFileUtil {
             }
         }
         return Arrays.asList(judgeData);
+    }
+
+    public String getInputFileFullName(String dirPath, int fileId) {
+        return dirPath + "\\" + "input" + fileId + ".txt";
+    }
+
+    public String getOutFileFullName(String dirPath, int fileId) {
+        return dirPath + "\\" + "output" + fileId + ".txt";
     }
 }

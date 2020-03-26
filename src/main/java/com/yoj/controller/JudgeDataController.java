@@ -3,7 +3,7 @@ package com.yoj.controller;
 import com.yoj.model.entity.Solution;
 import com.yoj.service.DownloadCntService;
 import com.yoj.service.SolutionService;
-import com.yoj.utils.CaseFileUtil;
+import com.yoj.utils.file.CaseFileUtil;
 import com.yoj.utils.auth.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

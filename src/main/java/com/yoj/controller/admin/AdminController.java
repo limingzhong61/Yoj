@@ -3,7 +3,7 @@ package com.yoj.controller.admin;
 import com.yoj.model.entity.Problem;
 import com.yoj.model.vo.Msg;
 import com.yoj.service.ProblemService;
-import com.yoj.utils.judge.ProblemFileUtil;
+import com.yoj.utils.file.ProblemFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

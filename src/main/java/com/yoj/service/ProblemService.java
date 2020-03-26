@@ -4,7 +4,7 @@ import com.yoj.mapper.ProblemMapper;
 import com.yoj.mapper.SolutionMapper;
 import com.yoj.model.dto.JudgeCase;
 import com.yoj.model.entity.Problem;
-import com.yoj.utils.judge.ProblemFileUtil;
+import com.yoj.utils.file.ProblemFileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;

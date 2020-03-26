@@ -1,10 +1,7 @@
 package com.yoj.model.properties;
 
-import com.yoj.model.properties.judge_bean.Linux;
-import com.yoj.model.properties.judge_bean.Windows;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -19,12 +16,15 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "judge")
 @PropertySource("classpath:judge.properties")
-@Setter
-@Getter
-@ToString
+@Data
 public class JudgeProperties {
-    private Linux linux;
-//保存题目的路径，必须存在，path必须有‘/’结尾,不能保存在/tmp目录下，重启会被删除文件
-    private String judgeScriptPath;
-    private Windows windows;
+    private String linuxFilePath;
+    //保存题目的路径，必须存在，path必须有‘/’结尾
+    private String windowsFilePath;
+    @Value("${judge.local}")
+    private String local;
+
+    public boolean isLocal(){
+        return Boolean.getBoolean(this.local);
+    }
 }
