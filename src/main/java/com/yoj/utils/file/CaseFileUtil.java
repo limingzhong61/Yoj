@@ -26,11 +26,11 @@ public class CaseFileUtil {
     }
 
     public String getInputFileFullName(Integer problemId, int fileId) {
-        return problemFileUtil.getProblemDirPath(problemId) + "\\" + "input" + fileId + ".txt";
+        return problemFileUtil.getProblemDirPath(problemId) + File.separator + "input" + fileId + ".txt";
     }
 
     public String getOutFileFullName(Integer problemId, int fileId) {
-        return problemFileUtil.getProblemDirPath(problemId) + "\\" + "output" + fileId + ".txt";
+        return problemFileUtil.getProblemDirPath(problemId) + File.separator + "output" + fileId + ".txt";
     }
 
 

@@ -20,7 +20,7 @@ public class JudgeController {
     @PostMapping("/result")
     @JudgePermitAnnotation
     public void judge(@RequestBody Solution solution) {
-        log.info("result get solution");
+        log.info("result get solution{}",solution);
         solutionService.updateAfterJudge(solution);
     }
 }

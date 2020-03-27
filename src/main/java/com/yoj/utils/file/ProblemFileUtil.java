@@ -99,9 +99,9 @@ public class ProblemFileUtil {
      */
     public String getProblemDirPath(Integer problemId) {
         if(judgeProperties.isLocal()){
-            return judgeProperties.getLinuxFilePath() + "\\" + problemId;
+            return judgeProperties.getLinuxFilePath() + File.separator + problemId;
         }else {
-            return judgeProperties.getWindowsFilePath() + "\\" + problemId;
+            return judgeProperties.getWindowsFilePath() + File.separator + problemId;
         }
     }
 
@@ -143,10 +143,10 @@ public class ProblemFileUtil {
     }
 
     public String getInputFileFullName(String dirPath, int fileId) {
-        return dirPath + "\\" + "input" + fileId + ".txt";
+        return dirPath + File.separator + "input" + fileId + ".txt";
     }
 
     public String getOutFileFullName(String dirPath, int fileId) {
-        return dirPath + "\\" + "output" + fileId + ".txt";
+        return dirPath + File.separator + "output" + fileId + ".txt";
     }
 }
