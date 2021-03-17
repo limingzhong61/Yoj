@@ -3,21 +3,31 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yoj.mapper.SolutionMapper">
+    <resultMap id="user" type="com.yoj.model.entity.User">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
+        <result column="solved" jdbcType="INTEGER" property="solved"/>
+        <result column="totalRunTime" jdbcType="INTEGER" property="totalRunTime"/>
+        <association property="nickName" javaType="String"
+                     select="com.yoj.mapper.UserMapper.getNickNameById"
+                     column="user_id">
+        </association>
+    </resultMap>
     <resultMap id="contestSolution" type="com.yoj.model.entity.Solution">
-    <id column="solution_id" jdbcType="INTEGER" property="solutionId"/>
-    <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
-    <result column="user_id" jdbcType="INTEGER" property="userId"/>
-    <result column="contest_id" jdbcType="INTEGER" property="contestId"/>
-    <result column="runtime" jdbcType="INTEGER" property="runtime"/>
-    <association property="score" javaType="INTEGER"
-                 select="com.yoj.mapper.ContestProblemMapper.getScore"
-                 column="{contestId = contest_id,problemId = problem_id}">
-    </association>
-    <association property="nickName" javaType="String"
-                 select="com.yoj.mapper.UserMapper.getNickNameById"
-                 column="user_id">
-    </association>
-</resultMap>
+        <id column="solution_id" jdbcType="INTEGER" property="solutionId"/>
+        <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="contest_id" jdbcType="INTEGER" property="contestId"/>
+        <result column="runtime" jdbcType="INTEGER" property="runtime"/>
+        <association property="score" javaType="INTEGER"
+                     select="com.yoj.mapper.ContestProblemMapper.getScore"
+                     column="{contestId = contest_id,problemId = problem_id}">
+        </association>
+        <association property="nickName" javaType="String"
+                     select="com.yoj.mapper.UserMapper.getNickNameById"
+                     column="user_id">
+        </association>
+    </resultMap>
     <resultMap id="solutionList" type="com.yoj.model.entity.Solution">
         <id column="solution_id" jdbcType="INTEGER" property="solutionId"/>
         <result column="problem_id" jdbcType="INTEGER" property="problemId"/>
@@ -31,6 +41,15 @@
     <sql id="Base_Column_List">
     solution_id, problem_id,user.user_id,nick_name,language, result, runtime, memory, submit_time,share
     </sql>
+
+    <select id="getContestRankList" parameterType="java.lang.Integer"
+            resultMap="user">
+-- 排序按照解题数降序，运行时间升序排列
+        SELECT user_id,SUM(min_runtime) as totalRunTime,COUNT(problem_id) as solved FROM
+        (SELECT user_id,problem_id,MIN(runtime) as min_runtime FROM solution
+        WHERE contest_id = #{cid} AND result = 0  GROUP BY problem_id,user_id) as ssc GROUP BY user_id
+                ORDER BY solved DESC,totalRunTime ASC
+    </select>
 
     <select id="getListBySelective" parameterType="com.yoj.model.entity.Solution"
             resultType="com.yoj.model.entity.Solution">
@@ -55,6 +74,9 @@
             </if>
             <if test="result != null">
                 and result = #{result}
+            </if>
+            <if test="contestId != null">
+                and contest_id = #{contestId}
             </if>
             and user.user_id = solution.user_id
         </where>
@@ -174,7 +196,7 @@
       test_result=#{testResult} where solution_id = #{solutionId};
     </update>
 
-    <select id="getByContestId" parameterType="java.lang.Integer"  resultMap="contestSolution">
+    <select id="getByContestId" parameterType="java.lang.Integer" resultMap="contestSolution">
         SELECT solution_id,problem_id,user_id,MIN(runtime) as runtime,contest_id FROM solution
         WHERE contest_id = #{contestId} AND result = 0 GROUP BY problem_id,user_id
     </select>

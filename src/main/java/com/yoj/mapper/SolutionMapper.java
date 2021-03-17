@@ -1,6 +1,7 @@
 package com.yoj.mapper;
 
 import com.yoj.model.entity.Solution;
+import com.yoj.model.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -84,4 +85,5 @@ public interface SolutionMapper {
     @Update("UPDATE solution SET result = 10,runtime = NULL,memory = NULL,error_message = NULL," +
             "test_result = NULL WHERE problem_id =  #{problemId}")
     Integer updateByProblemId(Integer problemId);
+    List<User> getContestRankList(Integer cid);
 }

@@ -196,4 +196,9 @@ public class SolutionService {
             userService.updateScoreById(solution.getUserId());
         }
     }
+
+    public List<User> getContestRankList(Integer cid){
+        return solutionMapper.getContestRankList(cid);
+    }
+
 }

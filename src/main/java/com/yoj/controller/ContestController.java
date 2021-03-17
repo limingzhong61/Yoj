@@ -4,10 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yoj.model.entity.Contest;
 import com.yoj.model.entity.Problem;
-import com.yoj.model.entity.Solution;
 import com.yoj.model.entity.User;
 import com.yoj.model.vo.Msg;
-import com.yoj.model.pojo.util.UserDetailsImpl;
 import com.yoj.service.ContestProblemService;
 import com.yoj.service.ContestService;
 import com.yoj.service.SolutionService;
@@ -45,6 +43,7 @@ public class ContestController {
 
     /**
      * request too many information... can optimize
+     *
      * @param cid
      * @return
      */
@@ -62,22 +61,53 @@ public class ContestController {
             List<Problem> contestProblemList = contestProblemService.getContestProblemListByContestId(contest.getContestId());
             msg.add("contestProblemList", contestProblemList);
             // get solutions of user in this contest
-            UserDetailsImpl userDetail = currentUserUtil.getUserDetail();
-            if (userDetail != null) {
-                if (contestUtil.isStarted(contest)) {
-                    List<Solution> solutions = solutionService.getUserContestRecord(contest.getContestId(), userDetail.getUserId());
-                    msg.add("solutionList", solutions);
-                }
-            }
-        }
-        // is already end
-        if (contest.getStatus() == 1) {
-            // get contest rank
-            if (contestUtil.isStarted(contest)) {
-                List<User> users = solutionService.getContestRankByContestId(contest.getContestId());
-                msg.add("userList", users);
-            }
         }
         return msg.add("contest", contest);
     }
+
+    /**
+     * request too many information... can optimize
+     *
+     * @param cid
+     * @return
+     */
+    @GetMapping("/contestProblem/{pageNumber}")
+    public Msg getContestProblem(@PathVariable("pageNumber") Integer pageNumber, Integer cid) {
+        Contest contest = contestService.getById(cid);
+        if (contest == null) {
+            return Msg.fail();
+        }
+        Msg msg = Msg.success();
+        contest.setStatus(contestUtil.computeContestStatus(contest));
+        // already started
+        if (contest.getStatus() >= 0) {
+            //get problems of contest
+            PageHelper.startPage(pageNumber, 10);
+            List<Problem> contestProblemList = contestProblemService.getContestProblemListByContestId(contest.getContestId());
+            PageInfo<Problem> page = new PageInfo<Problem>(contestProblemList, 5);
+            return msg.add("pageInfo", page);
+            // get solutions of user in this contest
+        }
+        return msg.fail();
+    }
+    @GetMapping("/contestRank/{pageNumber}")
+    public Msg getContestRank(@PathVariable("pageNumber") Integer pageNumber, Integer cid) {
+        Contest contest = contestService.getById(cid);
+        if (contest == null) {
+            return Msg.fail();
+        }
+        Msg msg = Msg.success();
+        contest.setStatus(contestUtil.computeContestStatus(contest));
+        // already started
+        if (contest.getStatus() >= 0) {
+            PageHelper.startPage(pageNumber, 10);
+            List<User> userList = solutionService.getContestRankList(cid);
+            PageInfo<User> page = new PageInfo<User>(userList, 5);
+            return msg.add("pageInfo", page);
+            // get solutions of user in this contest
+        }
+        return msg.fail();
+    }
+
+
 }
