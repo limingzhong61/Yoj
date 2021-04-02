@@ -15,9 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement(proxyTargetClass=true)
 public class YojApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(YojApplication.class, args);
     }
-
 }

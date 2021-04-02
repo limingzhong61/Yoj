@@ -3,8 +3,6 @@ package com.yoj.service;
 import com.yoj.mapper.DownloadCntMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,7 @@ public class DownloadCntService {
     @Autowired
     private DownloadCntMapper downloadCntMapper;
 
-    @Cacheable(key = "#uid")
+//    @Cacheable(key = "#uid")，禁用缓存，有问题
     public Integer getDownloadCnt(Integer uid) {
         Integer downloadCnt = downloadCntMapper.getDownloadCnt(uid);
         if (downloadCnt == null) {
@@ -27,7 +25,7 @@ public class DownloadCntService {
         return downloadCnt;
     }
 
-    @CachePut(key = "#userId", unless = "#result == null")
+//    @CachePut(key = "#userId", unless = "#result == null")，禁用缓存
     public Integer update(Integer userId, Integer downloadCnt) {
         Integer update = downloadCntMapper.updateById(userId);
         if (update == 0) {
