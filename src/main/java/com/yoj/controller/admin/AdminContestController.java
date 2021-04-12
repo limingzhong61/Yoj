@@ -6,7 +6,7 @@ import com.yoj.model.vo.Msg;
 import com.yoj.model.pojo.util.UserDetailsImpl;
 import com.yoj.service.ContestService;
 import com.yoj.service.ProblemService;
-import com.yoj.utils.auth.CurrentUserUtil;
+import com.yoj.utils.auth.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class AdminContestController {
     @Autowired
     private ProblemService problemService;
     @Autowired
-    private CurrentUserUtil currentUserUtil;
+    private UserUtil currentUserUtil;
 
     @PostMapping("/add")
     public Msg getProblemAll(@RequestBody Contest contest) {

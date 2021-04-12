@@ -36,6 +36,8 @@ public class User {
 
     //user roles,can be multiple
     private String role;
+    //头像路径
+    private String avatarPath;
 
     //非表中字段
     private String emailCode;

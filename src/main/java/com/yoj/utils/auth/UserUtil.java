@@ -12,7 +12,7 @@ import java.util.Collection;
 
 @Service
 @Slf4j
-public class CurrentUserUtil {
+public class UserUtil {
     @Autowired
     UserService userService;
 

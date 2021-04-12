@@ -10,7 +10,7 @@ import com.yoj.model.vo.Msg;
 import com.yoj.service.ContestService;
 import com.yoj.service.SolutionService;
 import com.yoj.utils.ContestUtil;
-import com.yoj.utils.auth.CurrentUserUtil;
+import com.yoj.utils.auth.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class SolutionController {
     @Autowired
     private SolutionService solutionService;
     @Autowired
-    private CurrentUserUtil userUtils;
+    private UserUtil userUtils;
 
     @Autowired
     private ContestService contestService;
