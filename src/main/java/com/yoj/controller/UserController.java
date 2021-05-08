@@ -6,8 +6,8 @@ import com.yoj.model.entity.User;
 import com.yoj.model.pojo.util.UserDetailsImpl;
 import com.yoj.model.vo.Msg;
 import com.yoj.service.SolutionService;
-import com.yoj.storage.StorageService;
 import com.yoj.service.UserService;
+import com.yoj.storage.StorageService;
 import com.yoj.utils.auth.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +27,7 @@ public class UserController {
     @Autowired
     private UserUtil currentUserUtil;
     @Autowired
-    private StorageService storeService;
+    private StorageService storageService;
 
     @GetMapping("/currentInfo")
     public Msg getCurrentUserInfo() {
@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/set/{pageNumber}")
-    public Msg getUserInfo(@PathVariable("pageNumber") Integer pageNumber, User user) {
+    public Msg getUserSet(@PathVariable("pageNumber") Integer pageNumber, User user) {
         PageHelper.startPage(pageNumber, 10);
         List<User> users = userService.getUserList(user);
         PageInfo<User> page = new PageInfo<User>(users, 5);
@@ -76,12 +76,20 @@ public class UserController {
     @PostMapping("/update/avatar")
     @PreAuthorize("isAuthenticated()")//    need login
     public Msg updateUserAvatar(MultipartFile uploadFile, HttpServletRequest req) {
-        String originalFilename = uploadFile.getOriginalFilename();
 
-        boolean successful = storeService.storeAvatar(uploadFile, req);
+//        String originalFilename = uploadFile.getOriginalFilename();
+        boolean successful = storageService.storeAvatar(uploadFile, req);
         if (!successful) {
             return Msg.fail();
         }
         return Msg.success();
     }
+
+//    @GetMapping("/avatar/{userId}")
+//    @ResponseBody
+//    public ResponseEntity<Resource> serveFile(@PathVariable Integer userId) {
+//        Resource file = storageService.loadAsResource(String.valueOf(userId));
+//        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+//                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+//    }
 }

@@ -3,6 +3,8 @@ package com.yoj.storage;
 import com.yoj.utils.auth.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +14,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +23,7 @@ import java.nio.file.StandardCopyOption;
 @Service
 @Slf4j
 public class StorageService {
-//    @Value("${spring.servlet.multipart.location}")
+    //    @Value("${spring.servlet.multipart.location}")
     private final Path storeRootLocation;
     @Autowired
     private UserUtil currentUserUtil;
@@ -68,7 +71,7 @@ public class StorageService {
         }
         //related path : static/uploadFile
         // newFile is composed of saveDirectory + useId.originSuffix
-        String newFileName = currentUserUtil.getUserDetail().getUsername() + oldName.substring(oldName.lastIndexOf("."), oldName.length());
+        String newFileName = currentUserUtil.getUserDetail().getUserId() + oldName.substring(oldName.lastIndexOf("."), oldName.length());
         Path storePath = Paths.get(storeRootLocation.normalize().toAbsolutePath().toString(), "avatar", newFileName);
         try (InputStream inputStream = uploadFile.getInputStream()) {
             Files.copy(inputStream, storePath,
@@ -109,5 +112,30 @@ public class StorageService {
         } finally {
             img = null;
         }
+    }
+
+    public Path load(String filename) {
+        return storeRootLocation.resolve(filename);
+    }
+
+    /**
+     * 加载图片
+     * @param filename
+     * @return
+     */
+    public Resource loadAsResource(String filename) {
+        try {
+            Path file = load(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+//                throw new StorageFileNotFoundException(
+//                        "Could not read file: " + filename);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
