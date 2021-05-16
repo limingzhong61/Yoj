@@ -201,4 +201,7 @@ public class SolutionService {
         return solutionMapper.getContestRankList(cid);
     }
 
+    public boolean delSolutionById(Integer solutionId) {
+        return  solutionMapper.delSolutionById(solutionId) == 1;
+    }
 }

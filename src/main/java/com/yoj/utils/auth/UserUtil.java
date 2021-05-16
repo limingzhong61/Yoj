@@ -5,6 +5,7 @@ import com.yoj.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,9 @@ public class UserUtil {
 
     public Collection<? extends GrantedAuthority>  getAuthorities(){
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+    }
+
+    public boolean isAdmin(){
+        return AuthorityUtils.authorityListToSet(getUserDetail().getAuthorities()).contains("ADMIN");
     }
 }

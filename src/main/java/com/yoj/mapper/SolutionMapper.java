@@ -86,4 +86,6 @@ public interface SolutionMapper {
             "test_result = NULL WHERE problem_id =  #{problemId}")
     Integer updateByProblemId(Integer problemId);
     List<User> getContestRankList(Integer cid);
+    @Delete("DELETE FROM  solution  WHERE solution_id= #{solutionId}")
+    int delSolutionById(Integer solutionId);
 }

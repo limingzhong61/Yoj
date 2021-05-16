@@ -58,16 +58,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/solution/submit", "/solution/detail").authenticated()
                 .anyRequest().permitAll();
-
-        http.formLogin()  //开启登录
-                //如果不开启，会导致前端代理proxy定向失败
+//                            SecurityContextHolder.getContext().setAuthentication(authentication);
+        http.formLogin()  //开启登录 //如果不开启，会导致前端代理proxy定向失败
                 .successHandler( // 登录成功返回的 JSON 格式数据给前端（否则为 html）
                         (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
                             Msg msg = Msg.success();
                             msg.setState(200);
                             response.setCharacterEncoding("utf-8");
                             response.getWriter().write(JSON.toJSONString(msg));
-//                            SecurityContextHolder.getContext().setAuthentication(authentication);
                         }
                 )//  登录失败返回的 JSON 格式数据给前端（否则为 html）
                 .failureHandler((HttpServletRequest request,

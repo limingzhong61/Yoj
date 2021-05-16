@@ -36,7 +36,6 @@ public class JudgeDataController {
         Integer userId = currentUserUtil.getUserDetail().getUserId();
         Integer downloadCnt = downloadCntService.getDownloadCnt(userId);
         if (downloadCnt > 10) {
-//            return Msg.fail("download too mach");
             return null;
         }
         Solution solution = solutionService.getById(solutionId);

@@ -44,8 +44,7 @@ public class ProblemController {
     }
 
     @PostMapping("/add")
-    // 只有管理员才能添加
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // 只有管理员才能添加
     public Msg addProblem(@RequestBody Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
         if (userDetail == null) {
@@ -65,8 +64,7 @@ public class ProblemController {
      * @Author: lmz
      */
     @PutMapping("/alter")
-    // 只有管理员才能添加
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")// 只有管理员才能添加
     public Msg alterProblem(@RequestBody Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
         problem.setUserId(userDetail.getUserId());

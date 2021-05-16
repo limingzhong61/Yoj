@@ -37,7 +37,7 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
-    public Integer getUserId(){
+    public Integer getUserId() {
         return useId;
     }
 

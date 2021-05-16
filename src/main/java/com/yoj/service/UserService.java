@@ -1,11 +1,10 @@
 package com.yoj.service;
 
-import com.yoj.utils.cache.UserCacheUtil;
 import com.yoj.mapper.SolutionMapper;
 import com.yoj.mapper.UserMapper;
 import com.yoj.model.entity.User;
-import com.yoj.model.vo.Msg;
 import com.yoj.model.pojo.util.UserDetailsImpl;
+import com.yoj.model.vo.Msg;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,7 @@ public class UserService implements UserDetailsService {
     private UserMapper userMapper;
     @Autowired
     private StringEncryptor encryptor;
-    @Autowired
-    private UserCacheUtil userCache;
+
     @Autowired
     private SolutionMapper solutionMapper;
 
@@ -138,11 +136,29 @@ public class UserService implements UserDetailsService {
 
     /**
      * the strategy of update score is 10 multiple counts whose user soled problems
+     *
      * @param userId
      */
     @Async
     public void updateScoreById(Integer userId) {
         Integer solvedProblem = solutionMapper.countSolvedByUserId(userId);
-        userMapper.updateScoreById(solvedProblem*10,userId);
+        userMapper.updateScoreById(solvedProblem * 10, userId);
+    }
+
+    public boolean judgePasswordByUserId(Integer userId, String password) {
+        String userPassword = encryptor.decrypt(userMapper.getPasswordById(userId));
+        return userPassword.equals(password);
+    }
+
+    public boolean updateMyPassword(Integer userId, String oldPassword, String newPassword) {
+        if (!this.judgePasswordByUserId(userId, oldPassword)) {
+            return false;
+        }
+        newPassword = encryptor.encrypt(newPassword);
+        return userMapper.updateMyPassword(userId, newPassword) == 1;
+    }
+
+    public List<User> getAdminUserList(User user) {
+        return userMapper.getAdminUserList(user);
     }
 }

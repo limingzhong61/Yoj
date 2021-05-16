@@ -29,7 +29,6 @@ public class SolutionController {
     private ContestService contestService;
     @Autowired
     private ContestUtil contestUtil;
-
     /**
      * learn thread pool with out authority，don't delete it.
      *
@@ -86,7 +85,7 @@ public class SolutionController {
     @GetMapping("/reSubmit/{sid}")
     public Msg reSubmit(@PathVariable("sid") Integer sid) {
         Solution solution = solutionService.getById(sid);
-        if(solution.getResult() != JudgeResult.WAIT_REJUDGE.ordinal()){
+        if (solution.getResult() != JudgeResult.WAIT_REJUDGE.ordinal()) {
             return Msg.fail("Solution doesn't need rejudge");
         }
         return solutionService.submit(solution);

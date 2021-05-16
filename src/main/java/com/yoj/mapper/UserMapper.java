@@ -38,13 +38,14 @@ public interface UserMapper {
 
 
     /**
-    * @Description: by user return userList 
-    * @Param: [user]
-    * @return: java.utils.List<com.yoj.model.entity.User>
-    * @Author: lmz
-    * @Date: 2019/10/25 
-    */ 
+     * @Description: by user return userList
+     * @Param: [user]
+     * @return: java.utils.List<com.yoj.model.entity.User>
+     * @Author: lmz
+     * @Date: 2019/10/25
+     */
     List<User> getUserList(User user);
+
     @Update("UPDATE user set username = #{username}, nick_name = #{nickName},intro = #{intro} where user_id = #{userId}")
     Integer updateUserInfoById(User user);
 
@@ -53,5 +54,14 @@ public interface UserMapper {
     String getNickNameById(Integer userId);
 
     @Update("UPDATE `user` SET score = #{score} WHERE user_id = #{userId}")
-    void updateScoreById(@Param("score") Integer score,@Param("userId") Integer userId);
+    void updateScoreById(@Param("score") Integer score, @Param("userId") Integer userId);
+
+    @Select("SELECT password FROM `user` WHERE user_id = #{userId} LIMIT 1")
+    String getPasswordById(Integer userId);
+
+    @Update("UPDATE `user` SET password = #{newPassword} WHERE user_id = #{userId}")
+    int updateMyPassword(Integer userId, String newPassword);
+
+
+    List<User> getAdminUserList(User user);
 }
