@@ -10,7 +10,7 @@ import com.yoj.service.ContestProblemService;
 import com.yoj.service.ContestService;
 import com.yoj.service.SolutionService;
 import com.yoj.utils.ContestUtil;
-import com.yoj.utils.auth.CurrentUserUtil;
+import com.yoj.utils.auth.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +27,7 @@ public class ContestController {
     @Autowired
     private ContestProblemService contestProblemService;
     @Autowired
-    private CurrentUserUtil currentUserUtil;
+    private UserUtil currentUserUtil;
     @Autowired
     private ContestUtil contestUtil;
     @Autowired

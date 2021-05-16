@@ -31,9 +31,7 @@ public class LoginValidateFilter extends OncePerRequestFilter {
             try {
                 /* 验证保存在session的验证码和表单提交的验证码是否一致 */
                 if (!validateImageUtil.verify(request)) {
-                    /**
-                     * 声明一个验证码异常，用于抛出特定的验证码异常
-                     */
+                    /* 声明一个验证码异常，用于抛出特定的验证码异常 */
                     throw new AuthenticationException("验证码不正确！") {
                     };
                 }

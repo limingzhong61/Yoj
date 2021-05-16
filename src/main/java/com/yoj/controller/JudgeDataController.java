@@ -4,7 +4,7 @@ import com.yoj.model.entity.Solution;
 import com.yoj.service.DownloadCntService;
 import com.yoj.service.SolutionService;
 import com.yoj.utils.file.CaseFileUtil;
-import com.yoj.utils.auth.CurrentUserUtil;
+import com.yoj.utils.auth.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +20,7 @@ public class JudgeDataController {
     @Autowired
     private SolutionService solutionService;
     @Autowired
-    private CurrentUserUtil currentUserUtil;
+    private UserUtil currentUserUtil;
     @Autowired
     private DownloadCntService downloadCntService;
 
@@ -36,7 +36,6 @@ public class JudgeDataController {
         Integer userId = currentUserUtil.getUserDetail().getUserId();
         Integer downloadCnt = downloadCntService.getDownloadCnt(userId);
         if (downloadCnt > 10) {
-//            return Msg.fail("download too mach");
             return null;
         }
         Solution solution = solutionService.getById(solutionId);

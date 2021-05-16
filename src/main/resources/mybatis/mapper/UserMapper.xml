@@ -13,14 +13,6 @@
                      select="com.yoj.mapper.SolutionMapper.countAttemptedByUserId"
                      column="user_id">
         </association>
-        <association property="solved" javaType="INTEGER"
-                     select="com.yoj.mapper.SolutionMapper.countSolvedByUserId"
-                     column="user_id">
-        </association>
-        <association property="accepted" javaType="INTEGER"
-                     select="com.yoj.mapper.SolutionMapper.countAcceptedByUserId"
-                     column="user_id">
-        </association>
         <association property="submissions" javaType="INTEGER"
                      select="com.yoj.mapper.SolutionMapper.countSubmissionsByUserId"
                      column="user_id">
@@ -28,15 +20,25 @@
     </resultMap>
 
     <select id="getUserList" parameterType="com.yoj.model.entity.User" resultMap="UserList">
-           SELECT user_id,username,nick_name FROM user
-           <where>
-               <if test="username != null">
-                  AND username LIKE CONCAT('%',#{username},'%')
-               </if>
-           </where>
-           ORDER BY score DESC
+        SELECT u.user_id,username,nick_name,COUNT(DISTINCT problem_id)
+        as solved,COUNT(solution_id) as accepted FROM `user`u,solution s
+        <where>
+            u.user_id = s.user_id AND result = 0
+            <if test="username != null">
+                AND username LIKE CONCAT('%',#{username},'%')
+            </if>
+        </where>
+        GROUP BY user_id ORDER BY accepted DESC,solved DESC
     </select>
-
+    <!--    -->
+    <select id="getAdminUserList" parameterType="com.yoj.model.entity.User" resultType="com.yoj.model.entity.User">
+        SELECT user_id,username,nick_name,reg_time,email,role FROM `user`
+        <where>
+            <if test="username != null">
+                username LIKE CONCAT('%',#{username},'%')
+            </if>
+        </where>
+    </select>
     <select id="getUserInfoById" parameterType="com.yoj.model.entity.User" resultMap="UserList">
 
     </select>

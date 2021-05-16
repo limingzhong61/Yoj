@@ -7,8 +7,9 @@ target/
 judge.properties
 application.properties
 application.yml
-### xxx ###
+### my setting ###
 application.properties
+upload-dir/**
 
 ### STS ###
 .apt_generated

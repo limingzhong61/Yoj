@@ -10,7 +10,7 @@ import com.yoj.model.vo.Msg;
 import com.yoj.service.ContestService;
 import com.yoj.service.SolutionService;
 import com.yoj.utils.ContestUtil;
-import com.yoj.utils.auth.CurrentUserUtil;
+import com.yoj.utils.auth.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +23,12 @@ public class SolutionController {
     @Autowired
     private SolutionService solutionService;
     @Autowired
-    private CurrentUserUtil userUtils;
+    private UserUtil userUtils;
 
     @Autowired
     private ContestService contestService;
     @Autowired
     private ContestUtil contestUtil;
-
     /**
      * learn thread pool with out authority，don't delete it.
      *
@@ -86,7 +85,7 @@ public class SolutionController {
     @GetMapping("/reSubmit/{sid}")
     public Msg reSubmit(@PathVariable("sid") Integer sid) {
         Solution solution = solutionService.getById(sid);
-        if(solution.getResult() != JudgeResult.WAIT_REJUDGE.ordinal()){
+        if (solution.getResult() != JudgeResult.WAIT_REJUDGE.ordinal()) {
             return Msg.fail("Solution doesn't need rejudge");
         }
         return solutionService.submit(solution);

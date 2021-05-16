@@ -6,7 +6,7 @@ import com.yoj.model.entity.Problem;
 import com.yoj.model.vo.Msg;
 import com.yoj.model.pojo.util.UserDetailsImpl;
 import com.yoj.service.ProblemService;
-import com.yoj.utils.auth.CurrentUserUtil;
+import com.yoj.utils.auth.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class ProblemController {
     @Autowired
     private ProblemService problemService;
     @Autowired
-    private CurrentUserUtil userUtil;
+    private UserUtil userUtil;
 
     @GetMapping("/{pid}")
     public Msg getViewProblem(@PathVariable("pid") Integer pid) {
@@ -44,8 +44,7 @@ public class ProblemController {
     }
 
     @PostMapping("/add")
-    // 只有管理员才能添加
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // 只有管理员才能添加
     public Msg addProblem(@RequestBody Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
         if (userDetail == null) {
@@ -65,8 +64,7 @@ public class ProblemController {
      * @Author: lmz
      */
     @PutMapping("/alter")
-    // 只有管理员才能添加
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")// 只有管理员才能添加
     public Msg alterProblem(@RequestBody Problem problem) {
         UserDetailsImpl userDetail = userUtil.getUserDetail();
         problem.setUserId(userDetail.getUserId());
