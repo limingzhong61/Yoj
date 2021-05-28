@@ -1,5 +1,6 @@
 package com.yoj.storage;
 
+import com.yoj.utils.AppInfo;
 import com.yoj.utils.auth.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,34 +24,16 @@ import java.nio.file.StandardCopyOption;
 @Service
 @Slf4j
 public class StorageService {
-    //    @Value("${spring.servlet.multipart.location}")
+
     private final Path storeRootLocation;
+
     @Autowired
     private UserUtil currentUserUtil;
 
     @Autowired
-    public StorageService(StorageProperties properties) {
-        this.storeRootLocation = Paths.get(properties.getLocation());
+    public StorageService(AppInfo appInfo) {
+        this.storeRootLocation = Paths.get(appInfo.getStoreRootLocationStr());
     }
-//    //存储文件
-//    public String store(MultipartFile uploadFile) {
-//        String newName = null;
-//        try {
-//            if (uploadFile.isEmpty()) {
-//                throw new IOException("Failed to store empty file.");
-//            }
-//            String oldName = uploadFile.getOriginalFilename();
-//            newName = UUID.randomUUID().toString()
-//                    + oldName.substring(oldName.lastIndexOf("."), oldName.length());
-//            uploadFile.transferTo(new File(storeLocation, newName));
-//            Files.copy(inputStream, destinationFile,
-//                    StandardCopyOption.REPLACE_EXISTING);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//        return newName;
-//    }
 
     /**
      * @param uploadFile
@@ -79,8 +62,7 @@ public class StorageService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // judge is or not a image file
-        File savedImage = new File(storePath.toString());
+        File savedImage = new File(storePath.toString());// judge is or not a image file
         if (!isImage(savedImage)) {
             log.info("is not a image file");
             savedImage.delete();
@@ -120,6 +102,7 @@ public class StorageService {
 
     /**
      * 加载图片
+     *
      * @param filename
      * @return
      */

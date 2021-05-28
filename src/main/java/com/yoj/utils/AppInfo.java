@@ -13,6 +13,13 @@ public class AppInfo {
     @Value("${judge.local}")
     private String local;
 
+    @Value("${spring.resources.static-locations}")
+    private String storeRootLocationStr;
+
+    public String getStoreRootLocationStr(){
+        return this.storeRootLocationStr.substring(5);
+    }
+
     public boolean isLocal(){
         return "local".equals(this.local);
     }

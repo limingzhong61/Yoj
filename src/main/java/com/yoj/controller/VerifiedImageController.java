@@ -19,7 +19,7 @@ public class VerifiedImageController {
 
     /**
      * 2、生成验证码
-     * @param httpServletRequest
+     * @param {HttpServletRequest} httpServletRequest
      * @param httpServletResponse
      * @throws Exception
      */

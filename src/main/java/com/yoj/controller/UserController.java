@@ -62,8 +62,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    //    need login
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()") //  need login
     public Msg updateUserInfo(@RequestBody User user) {
         int currentUserId = currentUserUtil.getUserDetail().getUserId();
         if(user.getUserId() != currentUserId || currentUserUtil.isAdmin()){
@@ -88,13 +87,6 @@ public class UserController {
         return Msg.success();
     }
 
-    //    @GetMapping("/avatar/{userId}")
-//    @ResponseBody
-//    public ResponseEntity<Resource> serveFile(@PathVariable Integer userId) {
-//        Resource file = storageService.loadAsResource(String.valueOf(userId));
-//        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-//                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-//    }
     @GetMapping("/judgePassword")
     @PreAuthorize("isAuthenticated()")//    need login
     public Msg JudgePassword(User user) {

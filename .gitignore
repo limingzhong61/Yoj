@@ -23,11 +23,11 @@ upload-dir/**
 ### IntelliJ IDEA ###
 .svn/
 target/
-.idea/
-*.iml
-.mvn/
-mvnw
-mvnw.*
+#.idea/
+#*.iml
+#.mvn/
+#mvnw
+#mvnw.*
 build/
 dist/
 
