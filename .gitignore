@@ -4,8 +4,6 @@ target/
 !**/src/main/**
 !**/src/test/**
 ###ignore configuration file###
-judge.properties
-application.properties
 application.yml
 ### my setting ###
 application.properties

@@ -64,4 +64,6 @@ public interface UserMapper {
 
 
     List<User> getAdminUserList(User user);
+    @Update("DELETE FROM `user` WHERE user_id = #{userId}")
+    boolean deleteByUserId(Integer userId);
 }

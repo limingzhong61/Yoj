@@ -3,6 +3,7 @@ package com.yoj.mapper;
 import com.yoj.model.entity.Contest;
 import com.yoj.model.entity.ContestProblem;
 import com.yoj.model.entity.Problem;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,7 @@ public interface ContestProblemMapper {
     @Select("SELECT score FROM contest_problem WHERE contest_id = #{contestId} " +
             "AND problem_id =#{problemId} LIMIT 1")
     Integer getScore(Map<String, Object> map);
+
+    @Delete("DELETE FROM contest_problem WHERE contest_id = #{contestId}")
+    boolean deleteByContestId(Integer contestId);
 }

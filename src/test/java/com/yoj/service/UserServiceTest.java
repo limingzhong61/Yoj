@@ -1,6 +1,5 @@
 package com.yoj.service;
 
-import com.yoj.model.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,6 @@ public class UserServiceTest {
 
     @Test
     public void updateScoreById() {
-        for(User user : userService.getUserList(new User())){
-            userService.updateScoreById(user.getUserId());
-        }
 
     }
 }

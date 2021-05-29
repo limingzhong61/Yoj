@@ -21,6 +21,6 @@ public class AppInfo {
     }
 
     public boolean isLocal(){
-        return "local".equals(this.local);
+        return "true".equals(this.local);
     }
 }

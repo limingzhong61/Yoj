@@ -12,7 +12,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class SolutionService {
         return null;
     }
 
-    @Cacheable(unless = "#result == null")
+//    @Cacheable(unless = "#result == null")
     public Solution getById(Integer sid) {
         return solutionMapper.getById(sid);
     }
@@ -190,10 +189,6 @@ public class SolutionService {
             log.error("update error at judgeTask");
         } else {
             log.info("update successfully at judgeTask");
-        }
-        // correct solution to update user score.
-        if (solution.getResult() == JudgeResult.ACCEPTED.ordinal()) {
-            userService.updateScoreById(solution.getUserId());
         }
     }
 

@@ -1,5 +1,7 @@
 package com.yoj.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.yoj.model.entity.Solution;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -15,11 +17,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+
 @Slf4j
 @Service
 public class HttpUtil {
-
-    public CloseableHttpResponse doPostWithRequestBody(String url, StringEntity entity, List<BasicHeader> headers) {
+    public Solution doPostWithRequestBody(String url, StringEntity entity, List<BasicHeader> headers) {
         // 获得Http客户端(可以理解为:你得先有一个浏览器;注意:实际上HttpClient与浏览器是不一样的)
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         // 创建Post请求
@@ -36,13 +38,14 @@ public class HttpUtil {
             response = httpClient.execute(httpPost);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
-
+            String responseEntityStr = EntityUtils.toString(responseEntity);
             log.info("响应状态为:" + response.getStatusLine());
             if (responseEntity != null) {
                 log.info("响应内容长度为:" + responseEntity.getContentLength());
-                log.info("响应内容为:" + EntityUtils.toString(responseEntity));
+                log.info("响应内容为:" + responseEntityStr);
             }
-            return response;
+            Solution solution = JSON.parseObject(responseEntityStr,Solution.class);
+            return solution;
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -64,6 +67,51 @@ public class HttpUtil {
         }
         return null;
     }
+//    public CloseableHttpResponse doPostWithRequestBody(String url, StringEntity entity, List<BasicHeader> headers) {
+//        // 获得Http客户端(可以理解为:你得先有一个浏览器;注意:实际上HttpClient与浏览器是不一样的)
+//        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+//        // 创建Post请求
+//        HttpPost httpPost = new HttpPost(url);
+//        // post请求是将参数放在请求体里面传过去的;这里将entity放入post请求体中
+//        httpPost.setEntity(entity);
+//        for (BasicHeader basicHeader : headers) {
+//            httpPost.addHeader(basicHeader);
+//        }
+//        // 响应模型
+//        CloseableHttpResponse response = null;
+//        try {
+//            // 由客户端执行(发送)Post请求
+//            response = httpClient.execute(httpPost);
+//            // 从响应模型中获取响应实体
+//            HttpEntity responseEntity = response.getEntity();
+//
+//            log.info("响应状态为:" + response.getStatusLine());
+//            if (responseEntity != null) {
+//                log.info("响应内容长度为:" + responseEntity.getContentLength());
+//                log.info("响应内容为:" + EntityUtils.toString(responseEntity));
+//            }
+//            return response;
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                // 释放资源
+//                if (httpClient != null) {
+//                    httpClient.close();
+//                }
+//                if (response != null) {
+//                    response.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
 
 //    public  getResponseEntity(CloseableHttpResponse response){
         // 从响应模型中获取响应实体

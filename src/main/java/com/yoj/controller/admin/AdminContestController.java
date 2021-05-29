@@ -34,12 +34,20 @@ public class AdminContestController {
         if (!contestService.insert(contest)) {
             return Msg.fail();
         }
-        return Msg.success();
+        return Msg.success().add("contestId",contest.getContestId());
     }
 
     @PutMapping("/alter")
     public Msg updateContestById(@RequestBody Contest contest) {
         if (!contestService.updateById(contest)) {
+            return Msg.fail();
+        }
+        return Msg.success();
+    }
+
+    @DeleteMapping("/{contestId}")
+    public Msg updateContestById(@PathVariable("contestId") Integer contestId) {
+        if (!contestService.deleteByCid(contestId)) {
             return Msg.fail();
         }
         return Msg.success();

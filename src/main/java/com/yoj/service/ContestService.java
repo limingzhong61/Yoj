@@ -50,4 +50,14 @@ public class ContestService {
     public Contest getFromContestProblem(Integer contestId,Integer problemId) {
         return contestMapper.getFromContestProblem(contestId,problemId);
     }
+    @Transactional
+    public boolean deleteByCid(Integer contestId) {
+        if(!contestProblemMapper.deleteByContestId(contestId)){
+            return false;
+        }
+        if (contestMapper.deleteByCid(contestId) <= 0) {
+            return false;
+        }
+        return true;
+    }
 }

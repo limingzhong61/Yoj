@@ -6,7 +6,6 @@ import com.yoj.model.entity.Solution;
 import com.yoj.utils.AppInfo;
 import com.yoj.utils.HttpUtil;
 import com.yoj.utils.JudgePermitUtil;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +31,10 @@ public class JudgeService {
         List<BasicHeader> headers = new ArrayList<>();
         headers.add(new BasicHeader("Content-Type","application/json;charset=utf8"));
         headers.add(judgePermitUtil.getJudgePermitHeader());
-        CloseableHttpResponse response = httpUtil.doPostWithRequestBody(appInfo.getJudgeUrl(),
+        Solution solution = httpUtil.doPostWithRequestBody(appInfo.getJudgeUrl(),
                 entity, headers);
         // only local have return info
         if(appInfo.isLocal()){
-            Solution solution = (Solution)response.getEntity();
             solutionService.updateAfterJudge(solution);
         }
     }
